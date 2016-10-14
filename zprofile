@@ -6,6 +6,7 @@ export GOPATH="$HOME/go"
 export GOBINPATH="$GOPATH/bin"
 
 # AWS
+#for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do export "$(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done
 export AWSPATH="$HOME/.aws"
 
 # Docker
