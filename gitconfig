@@ -28,3 +28,5 @@
 	interactive = auto
 	ui = true
 	pager = true
+
+# vim: filetype=gitconfig noexpandtab

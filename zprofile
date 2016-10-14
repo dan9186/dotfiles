@@ -21,3 +21,5 @@ export RVM_PATH="$HOME/.rvm/bin"
 export PATH="$PATH:$HOMEBREW_PATH"
 export PATH="$PATH:$GOBINPATH"
 export PATH="$PATH:$RVM_PATH"
+
+# vim: filetype=exports noexpandtab
