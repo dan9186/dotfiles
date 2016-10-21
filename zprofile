@@ -11,6 +11,7 @@ export AWSPATH="$HOME/.aws"
 
 # Docker
 export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.gitconfig:/home/dan9186/.gitconfig -v $GOPATH/src:/gopath/src -v $AWSPATH:/home/dan9186/.aws"
+#export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $GOPATH/src:/gopath/src -v $AWSPATH:/home/dan9186/.aws"
 export DOCKER_DEV_ENVS=""
 export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 

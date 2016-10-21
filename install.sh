@@ -10,15 +10,6 @@ function link_file () {
 	fi
 }
 
-if [ ! $(hash git 2>/dev/null) ]; then
-	link_file gitconfig
-fi
-
-if [ ! $(hash tmux 2>/dev/null) ]; then
-	link_file tmux.conf
-fi
-
-if [ ! $(hash zsh 2>/dev/null) ]; then
-	link_file zprofile
-	link_file zshrc
-fi
+$(hash git 2>/dev/null) && link_file gitconfig
+$(hash tmux 2>/dev/null) && link_file tmux.conf
+$(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
