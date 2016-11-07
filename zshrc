@@ -17,16 +17,28 @@ LSECONDARY=(exitcode userhost gettime)
 RPRIMARY=(ipaddr)
 
 # This is the list of modules that generate Right Secondary output.
-RSECONDARY=(getdate battery)
+if [ "$DOCKER" = "true" ]; then
+	RSECONDARY=(getdate)
+else
+	RSECONDARY=(getdate battery)
+fi
 
 # This is the title of the terminal
 TITLE=(pwd)
 
 # This is the list of modules that get processed once at shell start.
 # They shouldn't generate output.
-EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history releases)
+if [ "$DOCKER" = "true" ]; then
+	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer history releases)
+else
+	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history releases)
+fi
 
-PR_PRIMARY='$PR_GREEN'
+if [ "$DOCKER" = "true" ]; then
+	PR_PRIMARY='$PR_BLUE'
+else
+	PR_PRIMARY='$PR_GREEN'
+fi
 
 ################################################################################
 # This kicks off our processing now that we have variables
