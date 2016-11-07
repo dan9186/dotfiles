@@ -1,13 +1,16 @@
-[work]
+[services]
 	animal = /Users/danielhess/projects/ruby-projects/animal
 	bunsen = /Users/danielhess/projects/ruby-projects/bunsen
 	doozers = /Users/danielhess/projects/ruby-projects/doozers
 	janice = /Users/danielhess/projects/ruby-projects/janice
 	kermit = /Users/danielhess/projects/ruby-projects/kermit
-	mulch = /Users/danielhess/projects/ruby-projects/mulch-api
+	mulch = /Users/danielhess/projects/ruby-projects/mulch
 	statler = /Users/danielhess/projects/ruby-projects/statler
 	waldorf = /Users/danielhess/projects/ruby-projects/waldorf
 	yolanda = /Users/danielhess/projects/ruby-projects/yolanda
+[ui]
+	bunsen-ui = /Users/danielhess/projects/ui/bunsen-ui
+	ion-ui = /Users/danielhess/projects/ui/ion-ui
 [personal]
-	devops-base-image = ~/projects/docker-devopsbase
-	dan9186-image = ~/projects/docker-dan9186
+	devops-base-image = /Users/danielhess/projects/docker-devopsbase
+	dan9186-image = /Users/danielhess/projects/docker-dan9186
