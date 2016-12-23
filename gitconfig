@@ -28,5 +28,7 @@
 	interactive = auto
 	ui = true
 	pager = true
+[rebase]
+	autosquash = true
 
 # vim: filetype=gitconfig noexpandtab
