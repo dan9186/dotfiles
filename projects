@@ -1,17 +1,18 @@
 [work]
 	animal = /Users/danielhess/projects/ruby-projects/animal
 	bunsen = /Users/danielhess/projects/ruby-projects/bunsen
+	bunsen-ui = /Users/danielhess/projects/ui/bunsen-ui
 	doozers = /Users/danielhess/projects/ruby-projects/doozers
+	ion-channel-base = /Users/danielhess/projects/deployment-projects/ion-channel-base
+	ion-ui = /Users/danielhess/projects/ui/ion-ui
 	janice = /Users/danielhess/projects/ruby-projects/janice
 	kermit = /Users/danielhess/projects/ruby-projects/kermit
+	lew = /Users/danielhess/projects/ruby-projects/lew
 	mulch = /Users/danielhess/projects/ruby-projects/mulch
 	pepe = /Users/danielhess/go/src/github.com/ion-channel/pepe
 	statler = /Users/danielhess/projects/ruby-projects/statler
 	waldorf = /Users/danielhess/projects/ruby-projects/waldorf
 	yolanda = /Users/danielhess/projects/ruby-projects/yolanda
-	bunsen-ui = /Users/danielhess/projects/ui/bunsen-ui
-	ion-ui = /Users/danielhess/projects/ui/ion-ui
-	ion-channel-base = /Users/danielhess/projects/deployment-projects/ion-channel-base
 [personal]
 	devops-base-image = /Users/danielhess/projects/docker-devopsbase
 	dan9186-image = /Users/danielhess/projects/docker-dan9186
