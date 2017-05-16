@@ -42,7 +42,7 @@ fi
 
 ################################################################################
 # This kicks off our processing now that we have variables
-BATT_METER="1"
+BATT_METER="0"
 BATT_PCT="1"
 BATT_TIME="1"
 GIT_USE_ICONS="1"
