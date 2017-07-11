@@ -31,7 +31,7 @@ TITLE=(pwd)
 if [ "$DOCKER" = "true" ]; then
 	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors golang timer history releases)
 else
-	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history releases)
+	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history releases aws)
 fi
 
 if [ "$DOCKER" = "true" ]; then
