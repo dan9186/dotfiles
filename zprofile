@@ -23,6 +23,9 @@ export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
 
+# Travis
+[ -f "$HOME/.travis/travis.sh" ] && source "$HOME/.travis/travis.sh"
+
 # PATH
 export PATH="$PATH:$HOMEBREW_PATH"
 export PATH="$PATH:$GOBINPATH"
