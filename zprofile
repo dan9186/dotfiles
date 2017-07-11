@@ -33,4 +33,7 @@ export PATH="$PATH:$RVM_PATH"
 export PATH="$PATH:$RUST_PATH"
 export PATH="$PATH:$NODE_PATH"
 
+# Private Envs
+[ -f "$HOME/.private_envs" ] && source "$HOME/.private_envs"
+
 # vim: filetype=exports noexpandtab
