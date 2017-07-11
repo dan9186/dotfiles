@@ -1,7 +1,6 @@
 [work]
 	animal = /Users/danielhess/projects/ruby-projects/animal
 	bunsen = /Users/danielhess/projects/ruby-projects/bunsen
-	bunsen-ui = /Users/danielhess/projects/ui/bunsen-ui
 	doozers = /Users/danielhess/projects/ruby-projects/doozers
 	ion-channel-base = /Users/danielhess/projects/deployment-projects/ion-channel-base
 	ion-ui = /Users/danielhess/projects/ui/ion-ui
