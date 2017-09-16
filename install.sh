@@ -4,8 +4,11 @@ function link_file () {
 	if (( $# > 0 )); then
 		FILE=$1
 		if [ -f "$HOME/.$FILE" ]; then
+			echo "$FILE dotfile found, moving it out of the way"
 			mv "$HOME/.$FILE" "$HOME/.$FILE.old"
 		fi
+
+		echo "Linking $FILE to \$HOME/.$FILE"
 		ln -s "$PWD/$FILE" "$HOME/.$FILE"
 	fi
 }
