@@ -20,11 +20,12 @@
 	clean = git media clean %f
 	smudge = git media smudge %f
 	required = true
-[remote "origin"]
+[fetch]
 	prune = true
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
+	ff = only
 [mergetool]
 	prompt = false
 [color]
