@@ -15,6 +15,9 @@ export NODE_PATH="/usr/local/opt/node@6/bin"
 AWS_ENVS=`for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do echo "-e $(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done | tr '\n' ' '`
 export AWSPATH="$HOME/.aws"
 
+# GODADDY
+source $HOME/.godaddy/credentials
+
 # Docker
 export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.ionchannel:/home/dan9186/.ionchannel -v $GOPATH/src:/gopath/src"
 export DOCKER_DEV_ENVS="$AWS_ENVS"
