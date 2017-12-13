@@ -1,0 +1,6 @@
+Include work/config
+
+Host github.com
+	User git
+	IdentityFile ~/.ssh/github
+	IdentitiesOnly yes
