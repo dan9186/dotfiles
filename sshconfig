@@ -5,3 +5,6 @@ Host github.com
 	User git
 	IdentityFile ~/.ssh/github
 	IdentitiesOnly yes
+
+Host *.onion
+	ProxyCommand /usr/bin/nc -xlocalhost:9050 -X5 %h %p
