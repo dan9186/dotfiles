@@ -11,7 +11,7 @@ THEME="default"
 LPRIMARY=(pwd git jobs vim)
 
 # This is the list of modules that generate Left Secondary output.
-LSECONDARY=(exitcode userhost gettime)
+LSECONDARY=(exitcode userhost gettime gettime-utc)
 
 # This is the list of modules that generate Right Primary output.
 RPRIMARY=(ipaddr)
