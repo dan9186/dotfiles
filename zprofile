@@ -8,8 +8,8 @@ export GOBINPATH="$GOPATH/bin"
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
 
-# Node
-export NODE_PATH="/usr/local/opt/node@6/bin"
+# Npm
+export NPM_TOKEN=$(cat ~/.npmjs/credentials)
 
 # AWS
 AWS_ENVS=`for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do echo "-e $(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done | tr '\n' ' '`
