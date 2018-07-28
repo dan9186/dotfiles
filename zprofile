@@ -9,21 +9,23 @@ export GOBINPATH="$GOPATH/bin"
 export RUST_PATH="$HOME/.cargo/bin"
 
 # Npm
-export NPM_TOKEN=$(cat ~/.npmjs/credentials)
+[ -f "~/.npmjs/credentials" ] && export NPM_TOKEN=$(cat ~/.npmjs/credentials)
 
 # AWS
-AWS_ENVS=`for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do echo "-e $(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done | tr '\n' ' '`
+[ -f "~/.aws/credentials" ] && AWS_ENVS=`for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do echo "-e $(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done | tr '\n' ' '`
 export AWSPATH="$HOME/.aws"
 
 # GCP
-if [ -f '/Users/danielhess/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/danielhess/google-cloud-sdk/path.zsh.inc'; fi
-if [ -f '/Users/danielhess/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/danielhess/google-cloud-sdk/completion.zsh.inc'; fi
-export GCLOUD_KEYFILE_JSON=$(cat ~/.gcp/credentials.json)
-export GOOGLE_CREDENTIALS="$HOME/.gcp/credentials.json"
-export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
+[ -f '/Users/danielhess/google-cloud-sdk/path.zsh.inc' ] && source '/Users/danielhess/google-cloud-sdk/path.zsh.inc'
+[ -f '/Users/danielhess/google-cloud-sdk/completion.zsh.inc' ] && source '/Users/danielhess/google-cloud-sdk/completion.zsh.inc'
+if [ -f "~/.gcp/credentials.json" ]; then
+	export GCLOUD_KEYFILE_JSON=$(cat ~/.gcp/credentials.json)
+	export GOOGLE_CREDENTIALS="$HOME/.gcp/credentials.json"
+	export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
+fi
 
 # GODADDY
-source $HOME/.godaddy/credentials
+[ -f "~/.godaddy/credentials" ] && source $HOME/.godaddy/credentials
 
 # Docker
 export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.ionchannel:/home/dan9186/.ionchannel -v $GOPATH/src:/gopath/src"
