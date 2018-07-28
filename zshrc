@@ -29,9 +29,9 @@ TITLE=(pwd)
 # This is the list of modules that get processed once at shell start.
 # They shouldn't generate output.
 if [ "$DOCKER" = "true" ]; then
-	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors golang timer history releases)
+	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors golang timer history)
 else
-	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history releases aws)
+	EXTRA=(ssh-add localbin completions lesscolors lscolors ll coloncolon longcmd safe-paste grepcolors tmux alwaystmux golang timer docker history aws)
 fi
 
 if [ "$DOCKER" = "true" ]; then
