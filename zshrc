@@ -36,6 +36,8 @@ fi
 
 if [ "$DOCKER" = "true" ]; then
 	PR_PRIMARY='$PR_BLUE'
+elif [ "$(whoami)" = "root" ]; then
+	PR_PRIMARY='$PR_RED'
 else
 	PR_PRIMARY='$PR_GREEN'
 fi
