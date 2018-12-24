@@ -29,6 +29,8 @@
 	ff = only
 [mergetool]
 	prompt = false
+[diff]
+	tool = vimdiff
 [color]
 	diff = auto
 	status = auto
