@@ -32,6 +32,10 @@ export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.ionchannel:/h
 export DOCKER_DEV_ENVS="$AWS_ENVS"
 export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 
+# NVM
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
+
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
 
