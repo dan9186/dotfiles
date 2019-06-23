@@ -13,6 +13,7 @@ function link_file () {
 	fi
 }
 
+$(hash ack 2>/dev/null) && link_file ackrc
 $(hash git 2>/dev/null) && link_file gitconfig
 $(hash tmux 2>/dev/null) && link_file tmux.conf
 $(hash wget 2>/dev/null) && link_file wgetrc
