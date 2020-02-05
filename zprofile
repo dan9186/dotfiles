@@ -1,3 +1,6 @@
+# Private Envs
+[ -f "$HOME/.private_envs" ] && source "$HOME/.private_envs"
+
 # Homebrew
 export HOMEBREW_PATH="/usr/local/bin:/usr/local/sbin"
 
@@ -48,8 +51,5 @@ export PATH="$PATH:$GOBINPATH"
 export PATH="$PATH:$RVM_PATH"
 export PATH="$PATH:$RUST_PATH"
 export PATH="$PATH:$NODE_PATH"
-
-# Private Envs
-[ -f "$HOME/.private_envs" ] && source "$HOME/.private_envs"
 
 # vim: filetype=exports noexpandtab
