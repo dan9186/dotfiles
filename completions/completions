@@ -1,1 +1,3 @@
-source "$HOME/.completions/_service"
+for comp in $(ls "$HOME/.completions/"_*); do
+	source "$comp"
+done
