@@ -20,3 +20,4 @@ $(hash wget 2>/dev/null) && link_file wgetrc
 $(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
 
 mkdir -p "$HOME/.ssh" && ln -s "$PWD/sshconfig" "$HOME/.ssh/config"
+ln -s "$PWD/completions" "$HOME/.completions"

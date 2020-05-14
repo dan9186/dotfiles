@@ -1,6 +1,9 @@
 # Private Envs
 [ -f "$HOME/.private_envs" ] && source "$HOME/.private_envs"
 
+# Custom and additional completions
+[ -f "$HOME/.completions/completions" ] && source "$HOME/.completions/completions"
+
 # Homebrew
 export HOMEBREW_PATH="/usr/local/bin:/usr/local/sbin"
 
