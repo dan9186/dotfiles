@@ -1,3 +1,0 @@
-for comp in $(ls "$HOME/.completions/"_*); do
-	source "$comp"
-done
