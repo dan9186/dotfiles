@@ -7,6 +7,9 @@
 [url "git@github.com:embedfi"]
 	insteadOf = https://github.com/embedfi
 	email = dan9186@gmail.com
+[url "git@github.com:embedfi"]
+	insteadOf = https://github.com/EmbedFi
+	email = dan9186@gmail.com
 [url "git@github.com:gomicro"]
 	insteadOf = https://github.com/gomicro
 	email = dan9186@gmail.com
