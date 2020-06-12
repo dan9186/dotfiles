@@ -45,3 +45,5 @@
 	autosquash = true
 
 # vim: filetype=gitconfig noexpandtab
+[pull]
+	ff = only
