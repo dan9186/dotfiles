@@ -2,39 +2,54 @@
 	name = Daniel Hess
 	email = dan9186@gmail.com
 	signingKey = A02043E7C7816EA6
+
+
+# URL Rewrites
 [url "git@github.com:dan9186"]
 	insteadOf = https://github.com/dan9186
 	email = dan9186@gmail.com
+
 [url "git@github.com:embedfi"]
 	insteadOf = https://github.com/embedfi
 	email = dan9186@gmail.com
+
 [url "git@github.com:embedfi"]
 	insteadOf = https://github.com/EmbedFi
 	email = dan9186@gmail.com
+
 [url "git@github.com:gomicro"]
 	insteadOf = https://github.com/gomicro
 	email = dan9186@gmail.com
-[push]
-	default = matching
+
+
 [alias]
 	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 	lgm = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --merges
 	cleanup = "!changes=$(git branch --merged master | grep -v '\\ master$'); if [[ -n "$changes" ]]; then echo $changes | xargs git branch -d; fi"
 	forcepush = push --force-with-lease
+
+
 [filter "media"]
 	clean = git media clean %f
 	smudge = git media smudge %f
 	required = true
+
+
+# CLI Options
 [fetch]
 	prune = true
+
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
 	ff = only
+
 [mergetool]
 	prompt = false
+
 [diff]
 	tool = vimdiff
+
 [color]
 	diff = auto
 	status = auto
@@ -42,11 +57,17 @@
 	interactive = auto
 	ui = true
 	pager = true
+
 [rebase]
 	autosquash = true
 
-# vim: filetype=gitconfig noexpandtab
 [pull]
 	ff = only
+
+[push]
+	default = matching
+
 [commit]
 	gpgsign = true
+
+# vim: filetype=gitconfig noexpandtab
