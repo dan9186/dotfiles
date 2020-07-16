@@ -1,6 +1,7 @@
 [user]
 	name = Daniel Hess
 	email = dan9186@gmail.com
+	signingKey = A02043E7C7816EA6
 [url "git@github.com:dan9186"]
 	insteadOf = https://github.com/dan9186
 	email = dan9186@gmail.com
