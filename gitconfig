@@ -47,3 +47,5 @@
 # vim: filetype=gitconfig noexpandtab
 [pull]
 	ff = only
+[commit]
+	gpgsign = true
