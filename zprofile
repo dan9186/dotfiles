@@ -33,9 +33,6 @@ if [ -f "~/.gcp/credentials.json" ]; then
 	export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_CREDENTIALS
 fi
 
-# GODADDY
-[ -f "~/.godaddy/credentials" ] && source $HOME/.godaddy/credentials
-
 # Docker
 export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.ionchannel:/home/dan9186/.ionchannel -v $GOPATH/src:/gopath/src"
 export DOCKER_DEV_ENVS="$AWS_ENVS"
