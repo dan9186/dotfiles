@@ -1,6 +1,3 @@
-# Private Envs
-[ -f "$HOME/.private_envs" ] && source "$HOME/.private_envs"
-
 # Custom and additional completions
 [ -f "$HOME/.completions/completions" ] && source "$HOME/.completions/completions"
 
@@ -54,5 +51,17 @@ export PATH="$PATH:$GOBINPATH"
 export PATH="$PATH:$RVM_PATH"
 export PATH="$PATH:$RUST_PATH"
 export PATH="$PATH:$NODE_PATH"
+
+# Private Envs
+if [ -f "$HOME/.private_envs" ]; then
+	[ $(stat -f %A "$HOME/.private_envs") != "600" ] && echo "Warning: permissions for .private_envs is too permissive"
+	source "$HOME/.private_envs"
+fi
+
+#  Work Envs
+if [ -f "$HOME/.work_envs" ]; then
+	[ $(stat -f %A "$HOME/.work_envs") != "600" ] && echo "Warning: permissions for .work_envs is too permissive"
+	source "$HOME/.work_envs"
+fi
 
 # vim: filetype=exports noexpandtab
