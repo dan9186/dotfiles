@@ -7,7 +7,7 @@ export HOMEBREW_PATH="/usr/local/bin:/usr/local/sbin"
 # Golang
 export GOPATH="$HOME/go"
 export GOBINPATH="$GOPATH/bin"
-export GOPRIVATE="github.com/dan9186,github.com/gomicro"
+export GOPRIVATE="github.com/dan9186,github.com/gomicro,github.com/hemlocklabs"
 
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
