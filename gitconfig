@@ -11,11 +11,11 @@
 
 [url "git@github.com:embedfi"]
 	insteadOf = https://github.com/embedfi
-	email = dan9186@gmail.com
+	email = daniel@embed.com
 
 [url "git@github.com:embedfi"]
 	insteadOf = https://github.com/EmbedFi
-	email = dan9186@gmail.com
+	email = daniel@embed.com
 
 [url "git@github.com:gomicro"]
 	insteadOf = https://github.com/gomicro
@@ -23,11 +23,28 @@
 
 
 [alias]
+	# Show a graphed history of the repo
 	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
+	# Show a history of the merges
 	lgm = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --merges
+
+	# List contributors with number of commits
+	contributors = shortlog --summary --numbered
+
+	# Clean up branches that have already been merged into master
 	cleanup = "!changes=$(git branch --merged master | grep -v '\\ master$'); if [[ -n "$changes" ]]; then echo $changes | xargs git branch -d; fi"
+
+	# Force push only if no one else has pushed up additional commits
 	forcepush = push --force-with-lease
 
+	# Remove the old tag with this name and tag the latest commit with it.
+	retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
+
+	# Show verbose output about tags, branches or remotes
+	tags = tag -l
+	branches = branch -a
+	remotes = remote -v
 
 [filter "media"]
 	clean = git media clean %f
@@ -49,6 +66,7 @@
 
 [diff]
 	tool = vimdiff
+	renames = copies # Detect copies as well as renames
 
 [color]
 	diff = auto
@@ -66,10 +84,12 @@
 
 [push]
 	default = matching
+	followTags = true
 
 [commit]
 	gpgsign = true
 
-# vim: filetype=gitconfig noexpandtab
 [init]
 	defaultBranch = master
+
+# vim: filetype=gitconfig noexpandtab
