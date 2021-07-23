@@ -3,6 +3,7 @@
 
 # Homebrew
 export HOMEBREW_PATH="/usr/local/bin:/usr/local/sbin"
+FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
 # Golang
 export GOPATH="$HOME/go"
