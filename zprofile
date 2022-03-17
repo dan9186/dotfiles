@@ -17,11 +17,8 @@ export RUST_PATH="$HOME/.cargo/bin"
 [ -f "~/.npmjs/credentials" ] && export NPM_TOKEN=$(cat ~/.npmjs/credentials)
 
 # AWS
-[ -f "~/.aws/credentials" ] && AWS_ENVS=`for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do echo "-e $(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"; done | tr '\n' ' '`
-for env in $(cat ~/.aws/credentials | grep -i -A 2 "\[default\]" | tail -n 2 | sed 's/\ =\ /=/'); do
-	export "$(echo $env | cut -d "=" -f 1 | tr '[:lower:]' '[:upper:]')=$(echo $env | cut -d "=" -f 2)"
-done
 export AWSPATH="$HOME/.aws"
+export AWS_SDK_LOAD_CONFIG=1
 
 # GCP
 [ -f '/Users/danielhess/google-cloud-sdk/path.zsh.inc' ] && source '/Users/danielhess/google-cloud-sdk/path.zsh.inc'
@@ -34,7 +31,7 @@ fi
 
 # Docker
 export DOCKER_DEV_VOLS="-v $HOME/.ssh:/home/dan9186/.ssh -v $HOME/.ionchannel:/home/dan9186/.ionchannel -v $GOPATH/src:/gopath/src"
-export DOCKER_DEV_ENVS="$AWS_ENVS"
+export DOCKER_DEV_ENVS=""
 export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 
 # NVM
