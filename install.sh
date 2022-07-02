@@ -3,19 +3,23 @@
 function link_file () {
 	if (( $# > 0 )); then
 		FILE=$1
-		LINK=$FILE
+		DEST=$FILE
 
 		if [ -n "$2" ]; then
-			LINK=$2
+			DEST=$2
 		fi
 
-		if [ -f "$HOME/.$FILE" ]; then
-			echo "$FILE dotfile found, moving it out of the way"
-			mv "$HOME/.$FILE" "$HOME/.$FILE.old"
-		fi
+		if [ -L "$HOME/.$DEST" ]; then
+			echo "$FILE already symlinked, skipping."
+		else
+			if [ -f "$HOME/.$DEST" ]; then
+				echo "$FILE dotfile found, moving it out of the way"
+				mv "$HOME/.$DEST" "$HOME/.$DEST.old"
+			fi
 
-		echo "Linking $FILE to \$HOME/.$LINK"
-		ln -s "$PWD/$FILE" "$HOME/.$LINK"
+			echo "Linking $FILE to \$HOME/.$DEST"
+			ln -s "$PWD/$FILE" "$HOME/.$DEST"
+		fi
 
 		echo -ne "\n"
 	fi
