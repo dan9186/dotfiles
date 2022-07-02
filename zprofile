@@ -13,9 +13,6 @@ export GOPRIVATE="github.com/dan9186,github.com/gomicro,github.com/hemlocklabs"
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
 
-# Npm
-[ -f "~/.npmjs/credentials" ] && export NPM_TOKEN=$(cat ~/.npmjs/credentials)
-
 # AWS
 export AWSPATH="$HOME/.aws"
 export AWS_SDK_LOAD_CONFIG=1
@@ -40,9 +37,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
-
-# Travis
-[ -f "$HOME/.travis/travis.sh" ] && source "$HOME/.travis/travis.sh"
 
 # PATH
 export PATH="$PATH:$HOMEBREW_PATH"
