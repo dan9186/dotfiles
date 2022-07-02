@@ -21,4 +21,4 @@ $(hash tmux 2>/dev/null) && link_file tmux.conf
 $(hash wget 2>/dev/null) && link_file wgetrc
 $(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
 
-mkdir -p "$HOME/.ssh" && ln -s "$PWD/sshconfig" "$HOME/.ssh/config"
+$(hash ssh 2>/dev/null) && mkdir -p "$HOME/.ssh" && ln -s "$PWD/sshconfig" "$HOME/.ssh/config"
