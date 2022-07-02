@@ -3,13 +3,19 @@
 function link_file () {
 	if (( $# > 0 )); then
 		FILE=$1
+		LINK=$FILE
+
+		if [ -n "$2" ]; then
+			LINK=$2
+		fi
+
 		if [ -f "$HOME/.$FILE" ]; then
 			echo "$FILE dotfile found, moving it out of the way"
 			mv "$HOME/.$FILE" "$HOME/.$FILE.old"
 		fi
 
-		echo "Linking $FILE to \$HOME/.$FILE"
-		ln -s "$PWD/$FILE" "$HOME/.$FILE"
+		echo "Linking $FILE to \$HOME/.$LINK"
+		ln -s "$PWD/$FILE" "$HOME/.$LINK"
 
 		echo -ne "\n"
 	fi
