@@ -51,10 +51,7 @@ if [ -f "$HOME/.private_env_secrets" ]; then
 	source "$HOME/.private_env_secrets"
 fi
 
-#  Work Envs
-if [ -f "$HOME/.work_envs" ]; then
-	[ $(stat -f %A "$HOME/.work_envs") != "600" ] && echo "Warning: permissions for .work_envs is too permissive"
-	source "$HOME/.work_envs"
-fi
+#  Work Zprofile
+[ -f "$HOME/.work_zprofile" ] && source "$HOME/.work_zprofile"
 
 # vim: filetype=exports noexpandtab
