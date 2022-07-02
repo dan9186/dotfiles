@@ -29,6 +29,8 @@ $(hash ack 2>/dev/null) && link_file ackrc
 $(hash git 2>/dev/null) && link_file gitconfig
 $(hash tmux 2>/dev/null) && link_file tmux.conf
 $(hash wget 2>/dev/null) && link_file wgetrc
-$(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
+$(hash zsh 2>/dev/null) && link_file zprofile \
+	&& link_file zshrc
+$(hash ssh 2>/dev/null) && link_file sshconfig ssh/config
 
-$(hash ssh 2>/dev/null) && mkdir -p "$HOME/.ssh" && ln -s "$PWD/sshconfig" "$HOME/.ssh/config"
+# vim: filetype=config noexpandtab
