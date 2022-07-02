@@ -10,6 +10,8 @@ function link_file () {
 
 		echo "Linking $FILE to \$HOME/.$FILE"
 		ln -s "$PWD/$FILE" "$HOME/.$FILE"
+
+		echo -ne "\n"
 	fi
 }
 
