@@ -45,10 +45,10 @@ export PATH="$PATH:$RVM_PATH"
 export PATH="$PATH:$RUST_PATH"
 export PATH="$PATH:$NODE_PATH"
 
-# Private Envs
-if [ -f "$HOME/.private_envs" ]; then
-	[ $(stat -f %A "$HOME/.private_envs") != "600" ] && echo "Warning: permissions for .private_envs is too permissive"
-	source "$HOME/.private_envs"
+# Private Env Secrets
+if [ -f "$HOME/.private_env_secrets" ]; then
+	[ $(stat -f %A "$HOME/.private_env_secrets") != "600" ] && echo "Warning: permissions for .private_env_secrets is too permissive"
+	source "$HOME/.private_env_secrets"
 fi
 
 #  Work Envs
