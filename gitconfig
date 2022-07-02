@@ -3,24 +3,18 @@
 	email = dan9186@gmail.com
 	signingKey = A02043E7C7816EA6
 
+# Work specific settings
+[include]
+	path = .work_gitconfig
 
 # URL Rewrites
 [url "git@github.com:dan9186"]
 	insteadOf = https://github.com/dan9186
 	email = dan9186@gmail.com
 
-[url "git@github.com:embedfi"]
-	insteadOf = https://github.com/embedfi
-	email = daniel@embed.com
-
-[url "git@github.com:embedfi"]
-	insteadOf = https://github.com/EmbedFi
-	email = daniel@embed.com
-
 [url "git@github.com:gomicro"]
 	insteadOf = https://github.com/gomicro
 	email = dan9186@gmail.com
-
 
 [alias]
 	# Show a graphed history of the repo
