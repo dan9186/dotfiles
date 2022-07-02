@@ -15,6 +15,8 @@ function link_file () {
 			if [ -f "$HOME/.$DEST" ]; then
 				echo "$FILE dotfile found, moving it out of the way"
 				mv "$HOME/.$DEST" "$HOME/.$DEST.old"
+			else
+				mkdir -p "$HOME/.$(dirname $DEST)"
 			fi
 
 			echo "Linking $FILE to \$HOME/.$DEST"
