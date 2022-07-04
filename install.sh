@@ -29,10 +29,9 @@ function link_file () {
 
 $(hash ack 2>/dev/null) && link_file ackrc
 $(hash git 2>/dev/null) && link_file gitconfig
+$(hash ssh 2>/dev/null) && link_file sshconfig ssh/config
 $(hash tmux 2>/dev/null) && link_file tmux.conf
 $(hash wget 2>/dev/null) && link_file wgetrc
-$(hash zsh 2>/dev/null) && link_file zprofile \
-	&& link_file zshrc
-$(hash ssh 2>/dev/null) && link_file sshconfig ssh/config
+$(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
 
 # vim: filetype=config noexpandtab
