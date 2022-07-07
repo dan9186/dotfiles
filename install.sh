@@ -34,4 +34,7 @@ $(hash tmux 2>/dev/null) && link_file tmux.conf
 $(hash wget 2>/dev/null) && link_file wgetrc
 $(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
 
+# TODO: setup check for osx application
+link_file alacritty.yml
+
 # vim: filetype=config noexpandtab
