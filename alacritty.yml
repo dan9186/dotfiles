@@ -60,7 +60,7 @@ font:
 # Colors (Tomorrow Night)
 colors:
   primary:
-    background: '#1d1f21'
+    background: '#000000'
     foreground: '#c5c8c6'
 
     #dim_foreground: '#828482'
