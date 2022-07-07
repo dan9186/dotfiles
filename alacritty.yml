@@ -27,7 +27,7 @@ scrolling:
 
 #draw_bold_text_with_bright_colors: false
 font:
-  size: 11.0
+  size: 12.0
   builtin_box_drawing: true
 
   #use_thin_strokes: true
@@ -80,7 +80,7 @@ colors:
   normal:
     black:   '#565855'
     red:     '#cc6666'
-    green:   '#7ad649'
+    green:   '#8bf20c'
     yellow:  '#f0c674'
     blue:    '#81a2be'
     magenta: '#b294bb'
