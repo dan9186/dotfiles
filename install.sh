@@ -27,12 +27,18 @@ function link_file () {
 	fi
 }
 
-$(hash ack 2>/dev/null) && link_file ackrc
-$(hash git 2>/dev/null) && link_file gitconfig
-$(hash ssh 2>/dev/null) && link_file sshconfig ssh/config
-$(hash tmux 2>/dev/null) && link_file tmux.conf
-$(hash wget 2>/dev/null) && link_file wgetrc
-$(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
+function deps () {
+	for dep in $@; do
+		$(hash $dep 2>/dev/null)
+	done
+}
+
+deps ack && link_file ackrc
+deps git && link_file gitconfig
+deps ssh && link_file sshconfig ssh/config
+deps tmux && link_file tmux.conf
+deps wget && link_file wgetrc
+deps zsh && link_file zprofile && link_file zshrc
 
 # TODO: setup check for osx application
 link_file alacritty.yml
