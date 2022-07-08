@@ -36,5 +36,6 @@ $(hash zsh 2>/dev/null) && link_file zprofile && link_file zshrc
 
 # TODO: setup check for osx application
 link_file alacritty.yml
+link_file alacritty_themes alacritty/themes
 
 # vim: filetype=config noexpandtab
