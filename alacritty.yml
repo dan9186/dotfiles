@@ -33,7 +33,7 @@ font:
   #use_thin_strokes: true
 
   normal:
-    family: DejaVu Sans Mono for Powerline
+    family: DejaVuSansMono Nerd Font Mono
     #style: Regular
 
   #bold:
