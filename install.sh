@@ -27,11 +27,34 @@ function link_file () {
 	fi
 }
 
+function install_font () {
+	if (( $# > 0 )); then
+		submodule nerd-font
+
+		FONT=$1
+		echo "Installing font $FONT"
+
+		./fonts/nerd-fonts/install.sh $FONT 2>&1>/dev/null
+
+		echo -ne "\n"
+	fi
+}
+
+function submodule () {
+	if (( $# > 0 )); then
+		MOD=$1
+
+		deps git grep cut && \
+			$(git submodule status | grep $MOD | cut -d " " -f 1 | grep -v '^-')
+	fi
+}
+
 function deps () {
 	for dep in $@; do
 		$(hash $dep 2>/dev/null)
 	done
 }
+
 
 deps ack && link_file ackrc
 deps git && link_file gitconfig
