@@ -67,4 +67,6 @@ deps zsh && link_file zprofile && link_file zshrc
 link_file alacritty.yml
 link_file alacritty_themes alacritty/themes
 
+install_font 'DejaVuSansMono'
+
 # vim: filetype=config noexpandtab
