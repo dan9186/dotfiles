@@ -1,7 +1,7 @@
 [user]
 	name = Daniel Hess
 	email = dan9186@gmail.com
-	signingKey = A02043E7C7816EA6
+	signingKey = 9E9957DF1655FD23
 
 # Work specific settings
 [include]

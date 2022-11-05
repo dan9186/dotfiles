@@ -2,8 +2,7 @@
 [ -f "$HOME/.completions/completions" ] && source "$HOME/.completions/completions"
 
 # Homebrew
-export HOMEBREW_PATH="/usr/local/bin:/usr/local/sbin"
-FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+eval $(/opt/homebrew/bin/brew shellenv)
 
 # Golang
 export GOPATH="$HOME/go"
@@ -33,7 +32,7 @@ export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
