@@ -46,8 +46,7 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
 
 # PATH
-export PATH="$PATH:$HOMEBREW_PATH"
-export PATH="$PATH:$GOBINPATH"
+export PATH="$GOBINPATH:$PATH"
 export PATH="$PATH:$RVM_PATH"
 export PATH="$PATH:$RUST_PATH"
 export PATH="$PATH:$NODE_PATH"
