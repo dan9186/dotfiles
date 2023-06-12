@@ -8,6 +8,9 @@ else
 	eval $(/usr/local/bin/brew shellenv)
 fi
 
+# GPG
+export GPG_TTY=$(tty)
+
 # Golang
 export GOPATH="$HOME/go"
 export GOBINPATH="$GOPATH/bin"
