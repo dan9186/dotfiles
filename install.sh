@@ -58,6 +58,7 @@ function deps () {
 
 deps ack && link_file ackrc
 deps git && link_file gitconfig
+deps gpg-agent && link_file gpg-agent.conf gnupg/gpg-agent.conf
 deps ssh && link_file sshconfig ssh/config
 deps tmux && link_file tmux.conf
 deps wget && link_file wgetrc
