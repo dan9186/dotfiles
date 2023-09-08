@@ -2,11 +2,11 @@
 [ -f "$HOME/.completions/completions" ] && source "$HOME/.completions/completions"
 
 # Homebrew
+export HOMEBREW_ROOT="/usr/local"
 if [ -s "/opt/homebrew/bin/brew" ]; then
-	eval $(/opt/homebrew/bin/brew shellenv)
-else
-	eval $(/usr/local/bin/brew shellenv)
+	export HOMEBREW_ROOT="/opt/homebrew"
 fi
+eval $("$HOMEBREW_ROOT/bin/brew" shellenv)
 
 # GPG
 export GPG_TTY=$(tty)
@@ -39,14 +39,14 @@ export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
 
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
 
 # Java
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+export PATH="$HOMEBREW_ROOT/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I$HOMEBREW_ROOT/opt/openjdk/include"
 
 # PATH
 export PATH="$GOBINPATH:$PATH"
