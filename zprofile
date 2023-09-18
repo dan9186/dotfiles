@@ -19,6 +19,9 @@ export GOPRIVATE="github.com/dan9186,github.com/gomicro,github.com/hemlocklabs,g
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
 
+# Python
+alias python=python3
+
 # AWS
 export AWSPATH="$HOME/.aws"
 export AWS_SDK_LOAD_CONFIG=1
