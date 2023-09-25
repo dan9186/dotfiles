@@ -2,11 +2,12 @@
 [ -f "$HOME/.completions/completions" ] && source "$HOME/.completions/completions"
 
 # Homebrew
-export HOMEBREW_ROOT="/usr/local"
+export HOMEBREW_PREFIX="/usr/local"
 if [ -s "/opt/homebrew/bin/brew" ]; then
-	export HOMEBREW_ROOT="/opt/homebrew"
+	export HOMEBREW_PREFIX="/opt/homebrew"
 fi
-eval $("$HOMEBREW_ROOT/bin/brew" shellenv)
+eval $("$HOMEBREW_PREFIX/bin/brew" shellenv)
+export HOMEBREW_NO_ENV_HINTS=1
 
 # GPG
 export GPG_TTY=$(tty)
