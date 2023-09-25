@@ -34,7 +34,7 @@ function install_font () {
 		FONT=$1
 		echo "Installing font $FONT"
 
-		./fonts/nerd-fonts/install.sh $FONT 2>&1>/dev/null
+		./fonts/install.sh $FONT 2>&1>/dev/null
 
 		echo -ne "\n"
 	fi
