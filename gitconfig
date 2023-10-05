@@ -27,7 +27,7 @@
 	contributors = shortlog --summary --numbered
 
 	# Clean up branches that have already been merged into master
-	cleanup = "!changes=$(git branch --merged master | grep -v '\\ master$'); if [[ -n "$changes" ]]; then echo $changes | xargs git branch -d; fi"
+	cleanup = "!changes=$(git branch --merged | egrep -v '(master|main)'); if [[ -n "$changes" ]]; then echo $changes | xargs git branch -d; fi"
 
 	# Force push only if no one else has pushed up additional commits
 	forcepush = push --force-with-lease
