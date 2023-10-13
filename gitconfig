@@ -84,6 +84,9 @@
 	gpgsign = true
 
 [init]
-	defaultBranch = master
+	defaultBranch = main
+
+[gpg]
+	program = gpg2
 
 # vim: filetype=gitconfig noexpandtab
