@@ -44,14 +44,14 @@ export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
 
 # Java
-export PATH="$HOMEBREW_ROOT/opt/openjdk/bin:$PATH"
-export CPPFLAGS="-I$HOMEBREW_ROOT/opt/openjdk/include"
+export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include"
 
 # PATH
 export PATH="$GOBINPATH:$PATH"
