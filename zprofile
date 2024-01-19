@@ -16,6 +16,7 @@ export GPG_TTY=$(tty)
 export GOPATH="$HOME/go"
 export GOBINPATH="$GOPATH/bin"
 export GOPRIVATE="github.com/dan9186,github.com/gomicro,github.com/hemlocklabs"
+alias gocoverweb="TEMP=$(mktemp); go test -covermode=count -coverpkg=./... -coverprofile $TEMP -v ./... && go tool cover -html $TEMP && rm $TEMP"
 
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
