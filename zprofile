@@ -16,7 +16,7 @@ export GPG_TTY=$(tty)
 export GOPATH="$HOME/go"
 export GOBINPATH="$GOPATH/bin"
 export GOPRIVATE="github.com/dan9186,github.com/gomicro,github.com/hemlocklabs"
-alias gocoverweb="TEMP=$(mktemp); go test -covermode=count -coverpkg=./... -coverprofile $TEMP -v ./... && go tool cover -html $TEMP && rm $TEMP"
+alias gocoverweb="go test -covermode=count -coverpkg=./... -coverprofile /tmp/cover.out -v ./... && cat /tmp/cover.out | grep -v '.pb.go' > /tmp/cover.mod && go tool cover -html /tmp/cover.mod && rm /tmp/cover.out /tmp/cover.mod"
 
 # Rust
 export RUST_PATH="$HOME/.cargo/bin"
