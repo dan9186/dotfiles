@@ -65,7 +65,7 @@ deps wget && link_file wgetrc
 deps zsh && link_file zprofile && link_file zshrc
 
 # TODO: setup check for osx application
-link_file alacritty.yml
+link_file alacritty.toml
 link_file alacritty_themes alacritty/themes
 
 install_font 'DejaVuSansMono'
