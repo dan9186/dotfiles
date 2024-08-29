@@ -1,21 +1,53 @@
 #!/bin/bash
 
-echo "Installing Brew"
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+base_ssh_dir="$HOME/.ssh"
 
-echo "Creating ssh home directory"
-mkdir -p ~/.ssh/home
-chmod 700 ~/.ssh/home
+install_brew () {
+	echo "Installing Brew"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
 
-echo "Creating ssh work directory"
-mkdir -p ~/.ssh/work
-chmod 700 ~/.ssh/work
+init_ssh_dir () {
+  if [ -z "$1" ]; then
+    return
+  fi
 
-# TODO: prompt for email
-echo "Generating github key"
-ssh-keygen -t ed25519 -C "dan9186@gmail.com" -f ~/.ssh/github -q -N ""
+  local name=$1
 
-echo "Generating default rsa key"
-ssh-keygen -f ~/.ssh/id_rsa -q -N ""
+	echo "Creating ssh $name directory"
+	mkdir -p "$base_ssh_dir/$name"
+	chmod 700 "$base_ssh_dir/$name"
+}
 
-# vim: filetype=config noexpandtab
+init_service_ssh_key () {
+  if [ -z "$1" ]; then
+    return
+  fi
+
+  local service=$1
+
+  echo "Init ssh keys for $service"
+
+  until [ -n "$email" ]; do
+    echo -n "Email: "
+    read email
+  done
+
+  echo "Generating key for $service with $email"
+  ssh-keygen -t ed25519 -C "$email" -f "$base_ssh_dir/$service" -q -N ""
+}
+
+init_default_ssh_key () {
+  echo "Generating default rsa key"
+  ssh-keygen -f "$base_ssh_dir/id_rsa" -q -N ""
+}
+
+init_ssh () {
+  init_ssh_dir "home"
+  init_ssh_dir "work"
+  init_service_ssh_key "github"
+  init_default_ssh_key
+}
+
+install_brew
+init_ssh

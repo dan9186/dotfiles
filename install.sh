@@ -69,5 +69,3 @@ link_file alacritty.toml
 link_file alacritty_themes alacritty/themes
 
 install_font 'DejaVuSansMono'
-
-# vim: filetype=config noexpandtab
