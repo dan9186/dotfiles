@@ -6,11 +6,6 @@ Host github.com
 	IdentityFile ~/.ssh/github
 	IdentitiesOnly yes
 
-Host 200levelgo.com
-	User ec2-user
-	IdentityFile ~/.ssh/litesail2.pem
-	IdentitiesOnly yes
-
 Host source.developers.google.com
 	User dan9186@gmail.com
 	IdentityFile ~/.ssh/github
