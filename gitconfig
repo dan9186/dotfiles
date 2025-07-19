@@ -1,5 +1,5 @@
 [user]
-	name = Daniel Hess
+	name = dan9186
 	email = dan9186@gmail.com
 	signingKey = 9E9957DF1655FD23
 
@@ -45,6 +45,11 @@
 	smudge = git media smudge %f
 	required = true
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 
 # CLI Options
 [fetch]
