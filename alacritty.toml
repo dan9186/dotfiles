@@ -1,28 +1,28 @@
 [general]
-import = ["/Users/danielhess/.alacritty/themes/horizon-dark.toml"]
+import = ["/Users/danielhess/.alacritty/themes/monokai_charcoal.toml"]
 live_config_reload = true
-
-[bell]
-animation = "EaseOutExpo"
-duration = 10
 
 [env]
 TERM = "xterm-256color"
-
-[font]
-builtin_box_drawing = true
-size = 12.0
-
-[font.normal]
-family = "DejaVuSansMono Nerd Font Mono"
-
-[mouse]
-hide_when_typing = true
-
-[scrolling]
-history = 100000
 
 [window]
 decorations = "full"
 opacity = 1.0
 startup_mode = "Fullscreen"
+
+[scrolling]
+history = 100000
+
+[font]
+builtin_box_drawing = true
+size = 11.25
+
+[font.normal]
+family = "DejaVuSansMono Nerd Font Mono"
+
+[bell]
+animation = "EaseOutExpo"
+duration = 10
+
+[mouse]
+hide_when_typing = true
