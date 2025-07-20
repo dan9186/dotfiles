@@ -35,6 +35,6 @@ COMPLETION_WAITING_DOTS="true"
 
 # HIST_STAMPS="mm/dd/yyyy"
 
-plugins=(alwaystmux git gh aws docker battery)
+plugins=(alwaystmux git gh aws docker)
 
 source $ZSH/oh-my-zsh.sh
