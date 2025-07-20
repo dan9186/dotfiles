@@ -7,6 +7,11 @@ install_brew () {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
+install_omz () {
+  echo "Installing Oh My Zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+}
+
 init_ssh_dir () {
   if [ -z "$1" ]; then
     return
@@ -50,4 +55,5 @@ init_ssh () {
 }
 
 install_brew
+install_omz
 init_ssh
