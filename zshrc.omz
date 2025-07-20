@@ -1,7 +1,5 @@
 export ZSH="$HOME/.oh-my-zsh"
-
-# Default $ZSH/custom
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM="$HOME/dotfiles/omz"
 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="dan9186"
