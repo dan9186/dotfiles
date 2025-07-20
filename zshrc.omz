@@ -45,7 +45,7 @@ ZSH_THEME="dan9186"
 
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-plugins=(git)
+plugins=(alwaystmux git)
 
 source $ZSH/oh-my-zsh.sh
 
