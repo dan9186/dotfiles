@@ -62,7 +62,7 @@ deps gpg-agent && link_file gpg-agent.conf gnupg/gpg-agent.conf
 deps ssh && link_file sshconfig ssh/config
 deps tmux && link_file tmux.conf
 deps wget && link_file wgetrc
-deps zsh && link_file zprofile && link_file zshrc
+deps zsh && link_file zprofile && link_file zshrc.omz zshrc
 
 # TODO: setup check for osx application
 link_file alacritty.toml
