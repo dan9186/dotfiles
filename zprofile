@@ -27,6 +27,7 @@ alias python=python3
 # AWS
 export AWSPATH="$HOME/.aws"
 export AWS_SDK_LOAD_CONFIG=1
+SHOW_AWS_PROMPT=false
 
 # GCP
 [ -f '/Users/danielhess/google-cloud-sdk/path.zsh.inc' ] && source '/Users/danielhess/google-cloud-sdk/path.zsh.inc'

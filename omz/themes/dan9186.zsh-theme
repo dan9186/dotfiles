@@ -34,7 +34,6 @@ esac
 : ${DAN9186_GIT_BG:=blue}
 
 # AWS Profile
-: ${SHOW_AWS_PROMPT:=false}  # If aws plugin is enabled, we will control the view
 : ${DAN9186_AWS_PROD_FG:=black}
 : ${DAN9186_AWS_PROD_BG:=red}
 : ${DAN9186_AWS_FG:=black}
