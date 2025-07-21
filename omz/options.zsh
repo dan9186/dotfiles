@@ -1,0 +1,2 @@
+setopt CORRECT
+setopt EXTENDED_GLOB
