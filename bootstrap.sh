@@ -1,5 +1,9 @@
 #!/bin/bash
 
+clone_dotfiles () {
+	git clone git@github.com:dan9186/dotfiles.git $HOME/dotfiles
+}
+
 base_ssh_dir="$HOME/.ssh"
 
 install_brew () {
@@ -54,6 +58,7 @@ init_ssh () {
   init_default_ssh_key
 }
 
+clone_dotfiles
 install_brew
 install_omz
 init_ssh
