@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clone_dotfiles () {
-	git clone git@github.com:dan9186/dotfiles.git $HOME/dotfiles
+	git clone https://github.com/dan9186/dotfiles.git $HOME/dotfiles
 }
 
 base_ssh_dir="$HOME/.ssh"
