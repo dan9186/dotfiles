@@ -53,7 +53,7 @@
 
 # CLI Options
 [core]
-	pager =
+	pager = less -R
 
 [fetch]
 	prune = true
