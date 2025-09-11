@@ -47,6 +47,14 @@ export DOCKER_DEV="$DOCKER_DEV_VOLS $DOCKER_DEV_ENVS"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 
+# pnpm
+export PNPM_HOME="/Users/danielhess/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
 # RVM
 export RVM_PATH="$HOME/.rvm/bin"
 
