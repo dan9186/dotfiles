@@ -51,6 +51,9 @@
 	process = git-lfs filter-process
 	required = true
 
+[gpg]
+	program = gpg2
+
 # CLI Options
 [core]
 	pager = less -R
@@ -94,7 +97,7 @@
 [init]
 	defaultBranch = main
 
-[gpg]
-	program = gpg2
+[advice]
+	skippedCherryPicks = false
 
 # vim: filetype=gitconfig noexpandtab
