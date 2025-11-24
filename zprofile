@@ -9,6 +9,9 @@ fi
 eval $("$HOMEBREW_PREFIX/bin/brew" shellenv)
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Ripgrep
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 # GPG
 export GPG_TTY=$(tty)
 

@@ -57,6 +57,7 @@ function deps () {
 
 
 deps ack && link_file ackrc
+deps rg && link_file ripgreprc
 deps git && link_file gitconfig
 deps gpg-agent && link_file gpg-agent.conf gnupg/gpg-agent.conf
 deps ssh && link_file sshconfig ssh/config

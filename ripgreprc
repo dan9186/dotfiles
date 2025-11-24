@@ -1,0 +1,2 @@
+# Always show colors, even when piping to another program
+--color=always
