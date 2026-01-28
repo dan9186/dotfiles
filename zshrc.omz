@@ -37,6 +37,6 @@ COMPLETION_WAITING_DOTS="true"
 
 LESS="-XR"
 
-plugins=(alwaystmux git gh aws docker tailscale align flow concord forge git-auto-fetch)
+plugins=(alwaystmux git gh aws docker tailscale align flow concord forge git-auto-fetch id62)
 
 source $ZSH/oh-my-zsh.sh
