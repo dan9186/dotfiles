@@ -1,2 +1,12 @@
-# Always show colors, even when piping to another program
---color=always
+# Always show colors, headings, and line numbers
+--pretty
+
+# include searching hidden files and directories
+--hidden
+
+# Global ignore globs
+--glob=!**/.bundle_analysis/**
+--glob=!**/.git/**
+--glob=!**/.idea/**
+--glob=!**/node_modules/**
+--glob=!**/vendor/**
