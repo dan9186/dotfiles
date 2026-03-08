@@ -68,8 +68,9 @@ deps zsh && \
   link_file zprofile && \
   link_file zshrc.omz zshrc
 deps copilot && \
-  link_file copilot-instructions.md copilot/copilot-instructions.md && \
-  link_file lsp-config.json copilot/lsp-config.json
+  link_file copilot/copilot-instructions.md copilot/copilot-instructions.md && \
+  link_file copilot/lsp-config.json copilot/lsp-config.json && \
+  link_file copilot/skills copilot/skills
 
 # TODO: setup check for osx application
 link_file alacritty.toml
