@@ -16,14 +16,14 @@ function link_file () {
 				echo "$FILE dotfile found, moving it out of the way"
 				mv "$HOME/.$DEST" "$HOME/.$DEST.old"
 			else
-				mkdir -p "$HOME/.$(dirname $DEST)"
+				mkdir -p "$HOME/.$(dirname "$DEST")"
 			fi
 
 			echo "Linking $FILE to \$HOME/.$DEST"
 			ln -s "$PWD/$FILE" "$HOME/.$DEST"
 		fi
 
-		echo -ne "\n"
+		echo
 	fi
 }
 
@@ -34,9 +34,9 @@ function install_font () {
 		FONT=$1
 		echo "Installing font $FONT"
 
-		./fonts/install.sh $FONT 2>&1>/dev/null
+		./fonts/install.sh "$FONT" >/dev/null 2>&1
 
-		echo -ne "\n"
+		echo
 	fi
 }
 
@@ -45,7 +45,7 @@ function submodule () {
 		MOD=$1
 
 		deps git grep cut && \
-			$(git submodule status | grep $MOD | cut -d " " -f 1 | grep -v '^-')
+			$(git submodule status | grep "$MOD" | cut -d " " -f 1 | grep -v '^-')
 	fi
 }
 
