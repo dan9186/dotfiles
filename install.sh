@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+
 function link_file () {
 	if (( $# > 0 )); then
 		FILE=$1
