@@ -14,7 +14,7 @@ function link_file () {
 		if [ -L "$HOME/.$DEST" ]; then
 			echo "$FILE already symlinked, skipping."
 		else
-			if [ -f "$HOME/.$DEST" ]; then
+			if [ -f "$HOME/.$DEST" ] || [ -d "$HOME/.$DEST" ]; then
 				echo "$FILE dotfile found, moving it out of the way"
 				mv "$HOME/.$DEST" "$HOME/.$DEST.old"
 			else
