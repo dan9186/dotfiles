@@ -17,9 +17,19 @@
   mirroring native Go package style (e.g. `"parsing config: %w"`)
 - Use sentinel errors when reuse across call sites is beneficial; wrap with `%w` to preserve
   comparability and add context
-- Tests: use the standard Go test runner; alternate assertion libraries are acceptable
+- Assign errors on a separate line from the `err != nil` check; do not combine into a single
+  `if err := ...; err != nil` statement
+- Pass `context.Context` as the first argument to any function that does I/O, blocking work, or
+  may need cancellation
+- Prefer functional options (`WithXxx(...)`) for constructors that take multiple optional settings
+- Avoid goroutines unless there is a clear, demonstrated need; keep things sequential by default
+- Avoid `init()` functions unless strictly unavoidable
+- Prefer explicit return values over named return values
+- Format with `gofmt`/`goimports`; vet with `go vet`
+- Tests: use the standard Go test runner; `testify/assert` is the preferred assertion library
 - Tests should be easy to read and have independent setup — avoid relying on production code
   internals in test setup to prevent self-fulfilling test results
+- Call `t.Parallel()` at the top of each unit test
 - Prefer a failing test first to demonstrate the problem before writing the fix
 - Minimum coverage of the happy path is the baseline; table-driven tests where they add clarity
 
