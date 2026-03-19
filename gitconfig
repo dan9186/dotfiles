@@ -1,7 +1,10 @@
 [user]
 	name = dan9186
 	email = dan9186@gmail.com
-	signingKey = 9E9957DF1655FD23
+
+# Machine-local overrides (signingKey, etc.) — not tracked in dotfiles
+[include]
+	path = ~/.gitconfig.local
 
 # Work specific settings
 [include]
