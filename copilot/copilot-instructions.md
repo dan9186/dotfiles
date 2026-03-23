@@ -25,6 +25,10 @@
 - Avoid goroutines unless there is a clear, demonstrated need; keep things sequential by default
 - Avoid `init()` functions unless strictly unavoidable
 - Prefer explicit return values over named return values
+- Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
+  contents is via `go mod vendor`
+- When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
+  explicitly exclude the `vendor/` directory from the scope of the review
 - Format with `gofmt`/`goimports`; vet with `go vet`
 - Tests: use the standard Go test runner; `testify/assert` is the preferred assertion library
 - Tests should be easy to read and have independent setup — avoid relying on production code
