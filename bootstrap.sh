@@ -9,7 +9,7 @@ clone_dotfiles () {
 base_ssh_dir="$HOME/.ssh"
 
 install_brew () {
-	echo "Installing Brew"
+	echo "Installing Homebrew"
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
