@@ -58,7 +58,44 @@ init_ssh () {
   init_default_ssh_key
 }
 
+set_hostname () {
+	local hostname=""
+	until [ -n "$hostname" ]; do
+		echo -n "Hostname: "
+		read hostname
+	done
+
+	local os
+	os="$(uname -s 2>/dev/null || echo "Windows")"
+
+	case "$os" in
+		Darwin)
+			echo "Setting hostname on macOS: $hostname"
+			sudo scutil --set HostName "$hostname"
+			sudo scutil --set LocalHostName "$hostname"
+			sudo scutil --set ComputerName "$hostname"
+			;;
+		Linux)
+			echo "Setting hostname on Linux: $hostname"
+			if command -v hostnamectl &>/dev/null; then
+				sudo hostnamectl set-hostname "$hostname"
+			else
+				echo "$hostname" | sudo tee /etc/hostname > /dev/null
+				sudo hostname "$hostname"
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			echo "Setting hostname on Windows: $hostname"
+			powershell.exe -Command "Rename-Computer -NewName '$hostname' -Force"
+			;;
+		*)
+			echo "Unknown OS ($os), skipping hostname change"
+			;;
+	esac
+}
+
 clone_dotfiles
 install_brew
 install_omz
 init_ssh
+set_hostname
