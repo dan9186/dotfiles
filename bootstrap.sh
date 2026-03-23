@@ -1,5 +1,7 @@
 #!/bin/bash
 
+OS="$(uname -s 2>/dev/null || echo "Windows")"
+
 clone_dotfiles () {
 	git clone https://github.com/dan9186/dotfiles.git "$HOME/dotfiles"
 }
@@ -65,10 +67,7 @@ set_hostname () {
 		read hostname
 	done
 
-	local os
-	os="$(uname -s 2>/dev/null || echo "Windows")"
-
-	case "$os" in
+	case "$OS" in
 		Darwin)
 			echo "Setting hostname on macOS: $hostname"
 			sudo scutil --set HostName "$hostname"
@@ -89,7 +88,7 @@ set_hostname () {
 			powershell.exe -Command "Rename-Computer -NewName '$hostname' -Force"
 			;;
 		*)
-			echo "Unknown OS ($os), skipping hostname change"
+			echo "Unknown OS ($OS), skipping hostname change"
 			;;
 	esac
 }
