@@ -14,8 +14,8 @@ install_brew () {
 }
 
 install_omz () {
-  echo "Installing Oh My Zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+	echo "Installing Oh My Zsh"
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 }
 
 init_ssh_dir () {
