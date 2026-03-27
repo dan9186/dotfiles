@@ -1,0 +1,62 @@
+# Linux packages
+# Package names are Debian/Ubuntu (apt) — names may differ on Fedora (dnf) or Arch (pacman).
+# Lines beginning with # and blank lines are ignored.
+
+# Shell & terminal
+zsh
+tmux
+vim
+
+# Build tools
+autoconf
+automake
+cmake
+make
+
+# Development
+git
+golang-go
+nodejs
+perl
+python3
+universal-ctags
+cscope
+
+# CLI tools
+ack
+coreutils
+dos2unix
+doxygen
+emacs
+ffmpeg
+findutils
+gnupg
+graphviz
+htop
+inetutils-tools
+jq
+nmap
+pandoc
+redis-server
+rename
+ripgrep
+subversion
+telnet
+tig
+wget
+wireguard-tools
+yarn
+yq
+yt-dlp
+
+# Cloud & infrastructure
+awscli
+kubernetes-client
+
+# GUI applications (comment out if running headless)
+alacritty
+firefox
+inkscape
+obs-studio
+signal-desktop
+vlc

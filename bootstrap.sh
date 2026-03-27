@@ -238,14 +238,83 @@ ensure_zsh () {
 	esac
 }
 
+install_linux_packages () {
+	local pkg_file="$HOME/dotfiles/packages/linux.txt"
+	if [ ! -f "$pkg_file" ]; then
+		echo "No Linux package list found at $pkg_file, skipping"
+		return
+	fi
+
+	echo "Installing Linux packages"
+	while IFS= read -r pkg || [ -n "$pkg" ]; do
+		[[ "$pkg" =~ ^[[:space:]]*$ ]] && continue
+		[[ "$pkg" =~ ^# ]] && continue
+		if command -v apt-get &>/dev/null; then
+			sudo apt-get install -y "$pkg" || echo "Warning: failed to install $pkg"
+		elif command -v dnf &>/dev/null; then
+			sudo dnf install -y "$pkg" || echo "Warning: failed to install $pkg"
+		elif command -v yum &>/dev/null; then
+			sudo yum install -y "$pkg" || echo "Warning: failed to install $pkg"
+		elif command -v pacman &>/dev/null; then
+			sudo pacman -S --noconfirm "$pkg" || echo "Warning: failed to install $pkg"
+		elif command -v zypper &>/dev/null; then
+			sudo zypper install -y "$pkg" || echo "Warning: failed to install $pkg"
+		fi
+	done < "$pkg_file"
+}
+
+install_windows_packages () {
+	local pkg_file="$HOME/dotfiles/packages/windows.txt"
+	if [ ! -f "$pkg_file" ]; then
+		echo "No Windows package list found at $pkg_file, skipping"
+		return
+	fi
+
+	echo "Installing Windows packages"
+	while IFS= read -r pkg || [ -n "$pkg" ]; do
+		[[ "$pkg" =~ ^[[:space:]]*$ ]] && continue
+		[[ "$pkg" =~ ^# ]] && continue
+		winget install --id "$pkg" --silent --accept-package-agreements --accept-source-agreements \
+			|| echo "Warning: failed to install $pkg"
+	done < "$pkg_file"
+}
+
+install_go_tools () {
+	if ! command -v go &>/dev/null; then
+		echo "go not found, skipping Go tool installation"
+		return
+	fi
+
+	local pkg_file="$HOME/dotfiles/packages/go.txt"
+	if [ ! -f "$pkg_file" ]; then
+		echo "No Go tools list found at $pkg_file, skipping"
+		return
+	fi
+
+	echo "Installing Go tools"
+	while IFS= read -r pkg || [ -n "$pkg" ]; do
+		[[ "$pkg" =~ ^[[:space:]]*$ ]] && continue
+		[[ "$pkg" =~ ^# ]] && continue
+		go install "${pkg}@latest" || echo "Warning: failed to install $pkg"
+	done < "$pkg_file"
+}
+
 install_packages () {
 	case "$OS" in
 		Darwin)
 			echo "Installing packages from Brewfile"
 			brew bundle --file="$HOME/dotfiles/Brewfile"
 			;;
+		Linux)
+			install_linux_packages
+			install_go_tools
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			install_windows_packages
+			install_go_tools
+			;;
 		*)
-			echo "Package installation via Brewfile not supported on $OS, skipping"
+			echo "Package installation not supported on $OS, skipping"
 			;;
 	esac
 }

@@ -1,0 +1,61 @@
+# Windows packages (winget package IDs)
+# Lines beginning with # and blank lines are ignored.
+
+# Shell & terminal
+Alacritty.Alacritty
+vim.vim
+
+# Development
+Git.Git
+GitHub.cli
+GoLang.Go
+OpenJS.NodeJS
+StrawberryPerl.StrawberryPerl
+Kitware.CMake
+Doxygen.Doxygen
+Graphviz.Graphviz
+
+# CLI tools
+jqlang.jq
+BurntSushi.ripgrep.MSVC
+JohnMacFarlane.Pandoc
+mikefarah.yq
+yt-dlp.yt-dlp
+GnuWin32.Wget
+GnuPG.GnuPG
+gohugo.hugo
+
+# Cloud & infrastructure
+Amazon.AWSCLI
+Kubernetes.kubectl
+HashiCorp.Terraform
+
+# Browsers
+Mozilla.Firefox
+Google.Chrome
+
+# Communication
+Discord.Discord
+Slack.Slack
+OpenWhisperSystems.Signal
+
+# Media
+VideoLAN.VLC
+OBSProject.OBSStudio
+
+# Development GUI
+Docker.DockerDesktop
+Inkscape.Inkscape
+
+# Productivity
+Notion.Notion
+AgileBits.1Password
+
+# Entertainment
+Valve.Steam
+Mojang.MinecraftLauncher
+
+# Utilities
+Google.Drive
+iterate.Cyberduck
+OpenSCAD.OpenSCAD
