@@ -15,15 +15,15 @@ ensure_sudo () {
 				return 1
 			fi
 			if command -v apt-get &>/dev/null; then
-				apt-get install -y sudo
+				apt-get update -y && apt-get install -y sudo
 			elif command -v dnf &>/dev/null; then
 				dnf install -y sudo
 			elif command -v yum &>/dev/null; then
 				yum install -y sudo
 			elif command -v pacman &>/dev/null; then
-				pacman -S --noconfirm sudo
+				pacman -Sy --noconfirm sudo
 			elif command -v zypper &>/dev/null; then
-				zypper install -y sudo
+				zypper refresh && zypper install -y sudo
 			else
 				echo "No supported package manager found, cannot install sudo"
 				return 1
