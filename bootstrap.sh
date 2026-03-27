@@ -58,8 +58,38 @@ install_package_manager () {
 	esac
 }
 
+ensure_zsh () {
+	if command -v zsh &>/dev/null; then
+		return
+	fi
+
+	echo "Installing zsh"
+	case "$OS" in
+		Linux)
+			if command -v apt-get &>/dev/null; then
+				sudo apt-get install -y zsh
+			elif command -v dnf &>/dev/null; then
+				sudo dnf install -y zsh
+			elif command -v yum &>/dev/null; then
+				sudo yum install -y zsh
+			elif command -v pacman &>/dev/null; then
+				sudo pacman -S --noconfirm zsh
+			elif command -v zypper &>/dev/null; then
+				sudo zypper install -y zsh
+			else
+				echo "No supported package manager found, cannot install zsh"
+				return 1
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			pacman -S --noconfirm zsh
+			;;
+	esac
+}
+
 install_omz () {
 	echo "Installing Oh My Zsh"
+	ensure_zsh
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 }
 
