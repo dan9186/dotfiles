@@ -2,8 +2,117 @@
 
 OS="$(uname -s 2>/dev/null || echo "Windows")"
 
+ensure_sudo () {
+	if command -v sudo &>/dev/null; then
+		return
+	fi
+
+	echo "Installing sudo"
+	case "$OS" in
+		Linux)
+			if [ "$(id -u)" -ne 0 ]; then
+				echo "sudo not found and not running as root — install sudo or re-run as root"
+				return 1
+			fi
+			if command -v apt-get &>/dev/null; then
+				apt-get install -y sudo
+			elif command -v dnf &>/dev/null; then
+				dnf install -y sudo
+			elif command -v yum &>/dev/null; then
+				yum install -y sudo
+			elif command -v pacman &>/dev/null; then
+				pacman -S --noconfirm sudo
+			elif command -v zypper &>/dev/null; then
+				zypper install -y sudo
+			else
+				echo "No supported package manager found, cannot install sudo"
+				return 1
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			;;
+	esac
+}
+
+ensure_curl () {
+	if command -v curl &>/dev/null; then
+		return
+	fi
+
+	echo "Installing curl"
+	case "$OS" in
+		Linux)
+			if command -v apt-get &>/dev/null; then
+				sudo apt-get install -y curl
+			elif command -v dnf &>/dev/null; then
+				sudo dnf install -y curl
+			elif command -v yum &>/dev/null; then
+				sudo yum install -y curl
+			elif command -v pacman &>/dev/null; then
+				sudo pacman -S --noconfirm curl
+			elif command -v zypper &>/dev/null; then
+				sudo zypper install -y curl
+			else
+				echo "No supported package manager found, cannot install curl"
+				return 1
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			pacman -S --noconfirm curl
+			;;
+		*)
+			echo "curl not found and cannot be installed automatically on $OS"
+			return 1
+			;;
+	esac
+}
+
+ensure_git () {
+	if command -v git &>/dev/null; then
+		return
+	fi
+
+	echo "Installing git"
+	case "$OS" in
+		Darwin)
+			xcode-select --install
+			echo "Xcode Command Line Tools installation started — re-run bootstrap once it completes"
+			exit 0
+			;;
+		Linux)
+			if command -v apt-get &>/dev/null; then
+				sudo apt-get install -y git
+			elif command -v dnf &>/dev/null; then
+				sudo dnf install -y git
+			elif command -v yum &>/dev/null; then
+				sudo yum install -y git
+			elif command -v pacman &>/dev/null; then
+				sudo pacman -S --noconfirm git
+			elif command -v zypper &>/dev/null; then
+				sudo zypper install -y git
+			else
+				echo "No supported package manager found, cannot install git"
+				return 1
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			pacman -S --noconfirm git
+			;;
+		*)
+			echo "git not found and cannot be installed automatically on $OS"
+			return 1
+			;;
+	esac
+}
+
 clone_dotfiles () {
 	git clone https://github.com/dan9186/dotfiles.git "$HOME/dotfiles"
+}
+
+ensure_prerequisites () {
+	ensure_sudo
+	ensure_curl
+	ensure_git
 }
 
 base_ssh_dir="$HOME/.ssh"
@@ -168,8 +277,9 @@ set_hostname () {
 	esac
 }
 
-clone_dotfiles
+ensure_prerequisites
 install_package_manager
+clone_dotfiles
 install_omz
 init_ssh
 set_hostname
