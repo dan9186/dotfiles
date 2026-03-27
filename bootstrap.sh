@@ -265,7 +265,18 @@ init_ssh () {
   init_default_ssh_key
 }
 
+in_container () {
+	[ -f /.dockerenv ] || \
+	[ -f /run/.containerenv ] || \
+	grep -qE 'docker|lxc|containerd' /proc/1/cgroup 2>/dev/null
+}
+
 set_hostname () {
+	if in_container; then
+		echo "Running in a container, skipping hostname change"
+		return
+	fi
+
 	local hostname=""
 	until [ -n "$hostname" ]; do
 		echo -n "Hostname: "
