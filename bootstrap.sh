@@ -117,6 +117,40 @@ ensure_prerequisites () {
 	ensure_sudo
 	ensure_curl
 	ensure_git
+	ensure_ssh_keygen
+}
+
+ensure_ssh_keygen () {
+	if command -v ssh-keygen &>/dev/null; then
+		return
+	fi
+
+	echo "Installing ssh-keygen"
+	case "$OS" in
+		Linux)
+			if command -v apt-get &>/dev/null; then
+				sudo apt-get install -y openssh-client
+			elif command -v dnf &>/dev/null; then
+				sudo dnf install -y openssh-clients
+			elif command -v yum &>/dev/null; then
+				sudo yum install -y openssh-clients
+			elif command -v pacman &>/dev/null; then
+				sudo pacman -S --noconfirm openssh
+			elif command -v zypper &>/dev/null; then
+				sudo zypper install -y openssh
+			else
+				echo "No supported package manager found, cannot install ssh-keygen"
+				return 1
+			fi
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			pacman -S --noconfirm openssh
+			;;
+		*)
+			echo "ssh-keygen not found and cannot be installed automatically on $OS"
+			return 1
+			;;
+	esac
 }
 
 base_ssh_dir="$HOME/.ssh"
