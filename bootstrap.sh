@@ -281,11 +281,14 @@ set_hostname () {
 			;;
 		Linux)
 			echo "Setting hostname on Linux: $hostname"
+			local set=false
 			if command -v hostnamectl &>/dev/null; then
-				sudo hostnamectl set-hostname "$hostname"
-			else
+				sudo hostnamectl set-hostname "$hostname" && set=true
+			fi
+			if [ "$set" = false ]; then
 				echo "$hostname" | sudo tee /etc/hostname > /dev/null
-				sudo hostname "$hostname"
+				sudo hostname "$hostname" \
+					|| echo "Warning: hostname written to /etc/hostname but runtime change failed — a reboot is required to apply it"
 			fi
 			;;
 		CYGWIN*|MINGW*|MSYS*)
