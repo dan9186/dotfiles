@@ -16,12 +16,9 @@ golang.org/x/tools/gopls
 golang.org/x/tools/cmd/gorename
 github.com/jstemmer/gotags
 golang.org/x/tools/cmd/guru
-github.com/interxfi/id62/cmd/id62
 github.com/koron/iferr
 github.com/josharian/impl
-github.com/interxfi/j5/cmd/j5
 honnef.co/go/tools/cmd/keyify
 github.com/fatih/motion
-github.com/interxfi/o5-aws-tool/cmd/o5
 github.com/mgechev/revive
 honnef.co/go/tools/cmd/staticcheck
