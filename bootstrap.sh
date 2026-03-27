@@ -8,9 +8,54 @@ clone_dotfiles () {
 
 base_ssh_dir="$HOME/.ssh"
 
-install_brew () {
-	echo "Installing Homebrew"
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+update_linux_package_manager () {
+	if command -v apt-get &>/dev/null; then
+		echo "Updating apt"
+		sudo apt-get update -y
+	elif command -v dnf &>/dev/null; then
+		echo "Updating dnf"
+		sudo dnf check-update -y || true
+	elif command -v yum &>/dev/null; then
+		echo "Updating yum"
+		sudo yum check-update -y || true
+	elif command -v pacman &>/dev/null; then
+		echo "Syncing pacman"
+		sudo pacman -Sy
+	elif command -v zypper &>/dev/null; then
+		echo "Refreshing zypper"
+		sudo zypper refresh
+	else
+		echo "No supported package manager found on Linux"
+		return 1
+	fi
+}
+
+update_winget () {
+	if command -v winget &>/dev/null; then
+		echo "Updating winget packages"
+		winget upgrade --all
+	else
+		echo "winget not found — install App Installer from the Microsoft Store: https://aka.ms/getwinget"
+		return 1
+	fi
+}
+
+install_package_manager () {
+	case "$OS" in
+		Darwin)
+			echo "Installing Homebrew"
+			/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+			;;
+		Linux)
+			update_linux_package_manager
+			;;
+		CYGWIN*|MINGW*|MSYS*)
+			update_winget
+			;;
+		*)
+			echo "Unknown OS ($OS), skipping package manager installation"
+			;;
+	esac
 }
 
 install_omz () {
@@ -94,7 +139,7 @@ set_hostname () {
 }
 
 clone_dotfiles
-install_brew
+install_package_manager
 install_omz
 init_ssh
 set_hostname
