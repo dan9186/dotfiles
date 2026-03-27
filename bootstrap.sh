@@ -106,6 +106,10 @@ ensure_git () {
 }
 
 clone_dotfiles () {
+	if [ -d "$HOME/dotfiles" ]; then
+		echo "dotfiles already cloned, skipping"
+		return
+	fi
 	git clone https://github.com/dan9186/dotfiles.git "$HOME/dotfiles"
 }
 
@@ -152,6 +156,10 @@ update_winget () {
 install_package_manager () {
 	case "$OS" in
 		Darwin)
+			if command -v brew &>/dev/null; then
+				echo "Homebrew already installed, skipping"
+				return
+			fi
 			echo "Installing Homebrew"
 			/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 			;;
@@ -197,6 +205,10 @@ ensure_zsh () {
 }
 
 install_omz () {
+	if [ -d "$HOME/.oh-my-zsh" ]; then
+		echo "Oh My Zsh already installed, skipping"
+		return
+	fi
 	echo "Installing Oh My Zsh"
 	ensure_zsh
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -221,6 +233,11 @@ init_service_ssh_key () {
 
   local service=$1
 
+  if [ -f "$base_ssh_dir/$service" ]; then
+    echo "SSH key for $service already exists, skipping"
+    return
+  fi
+
   echo "Init ssh keys for $service"
 
   until [ -n "$email" ]; do
@@ -233,6 +250,10 @@ init_service_ssh_key () {
 }
 
 init_default_ssh_key () {
+  if [ -f "$base_ssh_dir/id_rsa" ]; then
+    echo "Default SSH key already exists, skipping"
+    return
+  fi
   echo "Generating default rsa key"
   ssh-keygen -f "$base_ssh_dir/id_rsa" -q -N ""
 }
