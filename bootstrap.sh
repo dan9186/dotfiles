@@ -238,6 +238,18 @@ ensure_zsh () {
 	esac
 }
 
+install_packages () {
+	case "$OS" in
+		Darwin)
+			echo "Installing packages from Brewfile"
+			brew bundle --file="$HOME/dotfiles/Brewfile"
+			;;
+		*)
+			echo "Package installation via Brewfile not supported on $OS, skipping"
+			;;
+	esac
+}
+
 install_omz () {
 	if [ -d "$HOME/.oh-my-zsh" ]; then
 		echo "Oh My Zsh already installed, skipping"
@@ -349,6 +361,7 @@ set_hostname () {
 ensure_prerequisites
 install_package_manager
 clone_dotfiles
+install_packages
 install_omz
 init_ssh
 set_hostname
