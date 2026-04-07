@@ -29,7 +29,7 @@
   contents is via `go mod vendor`
 - When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
   explicitly exclude the `vendor/` directory from the scope of the review
-- Format with `gofmt`/`goimports`; vet with `go vet`
+- After making changes to Go code, always run `go fmt`, `go vet`, `go build`, and `go test` in that order
 - Tests: use the standard Go test runner; `testify/assert` is the preferred assertion library
 - Tests should be easy to read and have independent setup — avoid relying on production code
   internals in test setup to prevent self-fulfilling test results
