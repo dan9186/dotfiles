@@ -37,6 +37,13 @@
 - Prefer a failing test first to demonstrate the problem before writing the fix
 - Minimum coverage of the happy path is the baseline; table-driven tests where they add clarity
 
+## Documentation
+- Do not duplicate information that already exists authoritatively elsewhere — link or reference it instead
+- In particular: never reproduce CLI usage, flags, or command descriptions in a README or doc file;
+  that content lives in the tool's `--help` output and the two will inevitably drift
+- Apply this broadly: if a config file, schema, or API is the source of truth, docs should point to
+  it rather than re-describe it
+
 ## Workflow Preferences
 - Show diffs and targeted changes rather than rewriting whole files
 - Concise by default — skip preamble and get to the point
