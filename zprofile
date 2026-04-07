@@ -65,6 +65,9 @@ export RVM_PATH="$HOME/.rvm/bin"
 export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include"
 
+# Copilot
+alias copilot="copilot --allow-tool='shell(go:\*)'"
+
 # PATH
 export PATH="$GOBINPATH:$PATH"
 export PATH="$PATH:$RVM_PATH"
