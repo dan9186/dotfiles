@@ -10,7 +10,16 @@
 ### General
 - Prefer targeted, surgical changes over full file rewrites
 - Ask before introducing new external dependencies; stdlib and already-present deps are fine
-- Avoid over-engineering — favor simple, readable solutions
+- Strongly prefer **simple over easy**: favor explicit, readable code over convenience abstractions
+  that hide what's happening — even when that means more lines of code
+- Avoid nesting control structures (nested `if`, nested loops) unless the logic requires it; prefer
+  early returns and guard clauses to keep the happy path at the outermost level
+- Avoid inversion of control (callbacks, higher-order functions passed as arguments) unless the
+  explicit goal of the functionality being built demands it
+- Do not reduce to clever one-liners or chain functions as the return value of another function;
+  prefer intermediate variables with clear names so the logic can be followed line by line
+- All of the above share the same goal: minimize the mental load required to read and understand a
+  block of code
 
 ### Go
 - Error handling: never return naked errors; always prefix with short, lowercase context
@@ -25,6 +34,11 @@
 - Avoid goroutines unless there is a clear, demonstrated need; keep things sequential by default
 - Avoid `init()` functions unless strictly unavoidable
 - Prefer explicit return values over named return values
+- Avoid the blank identifier `_` in all cases where it can be avoided:
+  - Use `for i := range` instead of `for i, _ := range`
+  - Never silently discard an error or return value with `_`; if a value is genuinely unused,
+    explain why in a comment or restructure so the value is not produced
+  - Avoid `import _ "pkg"` side-effect imports; if an import is needed, use it explicitly
 - Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
   contents is via `go mod vendor`
 - When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
