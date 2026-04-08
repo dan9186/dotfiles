@@ -12,15 +12,15 @@ function link_file () {
 		fi
 
 		if [ -L "$HOME/.$DEST" ]; then
-			echo "$FILE already symlinked, skipping."
+			echo "  ✓ $FILE already symlinked, skipping."
 		else
 			if [ -f "$HOME/.$DEST" ] || [ -d "$HOME/.$DEST" ]; then
-				echo "$FILE dotfile found, moving it out of the way"
+				echo "  ⚠ $FILE exists, moving it out of the way"
 				mv "$HOME/.$DEST" "$HOME/.$DEST.old"
 			fi
 			mkdir -p "$HOME/.$(dirname "$DEST")"
 
-			echo "Linking $FILE to \$HOME/.$DEST"
+			echo "  → Linking $FILE to \$HOME/.$DEST"
 			ln -s "$PWD/$FILE" "$HOME/.$DEST"
 		fi
 
@@ -33,7 +33,7 @@ function install_font () {
 		submodule nerd-font
 
 		FONT=$1
-		echo "Installing font $FONT"
+		echo "  → Installing font $FONT"
 
 		./fonts/install.sh "$FONT" >/dev/null 2>&1
 
@@ -64,13 +64,13 @@ function link_skill () {
 		local target="$HOME/.copilot/skills/$skill_name"
 
 		if [ -L "$target" ]; then
-			echo "Skill $skill_name already linked, skipping."
+			echo "  ✓ Skill $skill_name already linked, skipping."
 		else
 			if [ -e "$target" ]; then
-				echo "Skill $skill_name exists, moving it out of the way"
+				echo "  ⚠ Skill $skill_name exists, moving it out of the way"
 				mv "$target" "${target}.old"
 			fi
-			echo "Linking skill $skill_name"
+			echo "  → Linking skill $skill_name"
 			ln -s "$PWD/$skill_path" "$target"
 		fi
 
