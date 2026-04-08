@@ -66,7 +66,36 @@ export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include"
 
 # Copilot
-alias copilot="copilot --allow-tool='shell(go:\*)'"
+copilot() {
+    command copilot \
+        --allow-tool='shell(go:\*)' \
+        --allow-tool='shell(rg:\*)' \
+        --allow-tool='shell(grep:\*)' \
+        --allow-tool='shell(cat:\*)' \
+        --allow-tool='shell(ls:\*)' \
+        --allow-tool='shell(find:\*)' \
+        --allow-tool='shell(head:\*)' \
+        --allow-tool='shell(tail:\*)' \
+        --allow-tool='shell(wc:\*)' \
+        --allow-tool='shell(sort:\*)' \
+        --allow-tool='shell(uniq:\*)' \
+        --allow-tool='shell(cut:\*)' \
+        --allow-tool='shell(jq:\*)' \
+        --allow-tool='shell(git:log:\*)' \
+        --allow-tool='shell(git:diff:\*)' \
+        --allow-tool='shell(git:status:\*)' \
+        --allow-tool='shell(git:show:\*)' \
+        --allow-tool='shell(git:blame:\*)' \
+        --allow-tool='shell(gh:pr:view:\*)' \
+        --allow-tool='shell(gh:pr:list:\*)' \
+        --allow-tool='shell(gh:pr:checks:\*)' \
+        --allow-tool='shell(gh:issue:view:\*)' \
+        --allow-tool='shell(gh:issue:list:\*)' \
+        --allow-tool='shell(gh:repo:view:\*)' \
+        --allow-tool='shell(gh:run:view:\*)' \
+        --allow-tool='shell(gh:run:list:\*)' \
+        "$@"
+}
 
 # PATH
 export PATH="$GOBINPATH:$PATH"
