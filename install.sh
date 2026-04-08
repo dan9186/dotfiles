@@ -56,6 +56,28 @@ function deps () {
 	done
 }
 
+function link_skill () {
+	if (( $# > 0 )); then
+		local skill_path=$1
+		local skill_name
+		skill_name=$(basename "$skill_path")
+		local target="$HOME/.copilot/skills/$skill_name"
+
+		if [ -L "$target" ]; then
+			echo "Skill $skill_name already linked, skipping."
+		else
+			if [ -e "$target" ]; then
+				echo "Skill $skill_name exists, moving it out of the way"
+				mv "$target" "${target}.old"
+			fi
+			echo "Linking skill $skill_name"
+			ln -s "$PWD/$skill_path" "$target"
+		fi
+
+		echo
+	fi
+}
+
 
 deps ack && link_file ackrc
 deps rg && link_file ripgreprc
@@ -67,10 +89,14 @@ deps wget && link_file wgetrc
 deps zsh && \
   link_file zprofile && \
   link_file zshrc.omz zshrc
-deps copilot && \
-  link_file copilot/copilot-instructions.md copilot/copilot-instructions.md && \
-  link_file copilot/lsp-config.json copilot/lsp-config.json && \
-  link_file copilot/skills copilot/skills
+deps copilot && {
+  link_file copilot/copilot-instructions.md copilot/copilot-instructions.md
+  link_file copilot/lsp-config.json copilot/lsp-config.json
+  mkdir -p "$HOME/.copilot/skills"
+  for skill_dir in copilot/skills/*/; do
+    [ -d "$skill_dir" ] && link_skill "$skill_dir"
+  done
+}
 
 # TODO: setup check for osx application
 link_file alacritty.toml
