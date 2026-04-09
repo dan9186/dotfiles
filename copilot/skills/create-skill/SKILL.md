@@ -22,12 +22,22 @@ A meta-skill for creating new Agent Skills. Use this skill when you need to scaf
 
 ## Creating a New Skill
 
+### Step 0: Check for an Existing Skill
+
+Before creating anything, check whether a skill with this name already exists:
+
+```bash
+ls ~/.copilot/skills/<skill-name>/
+```
+
+If it exists, read `SKILL.md` fully before deciding whether to update or replace it.
+
 ### Step 1: Create the Skill Directory
 
 Create a new folder with a lowercase, hyphenated name:
 
 ```
-skills/<skill-name>/
+~/.copilot/skills/<skill-name>/
 └── SKILL.md          # Required
 ```
 
@@ -176,7 +186,7 @@ my-awesome-skill/
 - [ ] `description` is 10-1024 characters
 - [ ] `description` explains WHAT and WHEN
 - [ ] `description` is wrapped in single quotes
-- [ ] Body content is under 500 lines
+- [ ] Body content is under 150 lines
 - [ ] Bundled assets are under 5MB each
 
 ## Reference Implementations
