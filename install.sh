@@ -92,6 +92,7 @@ deps zsh && \
 deps copilot && {
   link_file copilot/copilot-instructions.md copilot/copilot-instructions.md
   link_file copilot/lsp-config.json copilot/lsp-config.json
+  link_file copilot/mcp-config.json copilot/mcp-config.json
   mkdir -p "$HOME/.copilot/skills"
   for skill_dir in copilot/skills/*/; do
     [ -d "$skill_dir" ] && link_skill "$skill_dir"
