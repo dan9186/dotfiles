@@ -69,6 +69,26 @@
 - Flag potential issues without being overly cautious
 - Work/personal context is split — don't assume work config applies to personal projects
 
+## Analysis Workflow
+
+When presenting findings from a code review, audit, or any multi-item analysis:
+
+- Group findings into categories for clarity, but **number items globally** across all categories
+  (e.g., 1–12 across three categories, not 1–4 per category) so any item can be referenced by
+  number alone
+- Use styled/formatted list presentation (bold titles, indented detail) — it makes findings
+  easier to scan
+- The user will address items non-sequentially, jumping to whatever is most actionable first;
+  the global numbers are the shorthand reference for discussion
+
+After each round of addressing items:
+- **Reprint the full list** with resolved items visually marked (e.g., ~~strikethrough~~ or `✓`)
+  and remaining items unchanged — do not remove resolved items from the list
+- This keeps the current state of the analysis visible without requiring the user to scroll back
+  through history or mentally track what has been done
+- Wait for the user to manually commit changes between rounds; do not batch unrelated fixes
+  together or suggest squashing separate logical changes into one commit
+
 ## Git Practices
 - Linear history is preferred: fast-forward only merges, autosquash rebases
 - Use `--force-with-lease` over `--force`
