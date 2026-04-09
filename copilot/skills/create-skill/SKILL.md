@@ -24,22 +24,37 @@ A meta-skill for creating new Agent Skills. Use this skill when you need to scaf
 
 ### Step 0: Check for an Existing Skill
 
-Before creating anything, check whether a skill with this name already exists:
+Before creating anything, check whether a skill with this name already exists in either location:
 
 ```bash
-ls ~/.copilot/skills/<skill-name>/
+ls ~/dotfiles/copilot/skills/
+ls -la ~/.copilot/skills/
 ```
 
 If it exists, read `SKILL.md` fully before deciding whether to update or replace it.
 
-### Step 1: Create the Skill Directory
+### Step 1: Create the Skill Directory in Dotfiles
 
-Create a new folder with a lowercase, hyphenated name:
+Skills are **sourced from dotfiles** and **symlinked into the Copilot skills directory**. This allows personal and work-specific skills to coexist in a single `~/.copilot/skills/` directory while keeping each set versioned separately.
+
+Always create the real directory in dotfiles, then symlink it:
+
+```bash
+# 1. Create the skill in dotfiles
+mkdir ~/dotfiles/copilot/skills/<skill-name>
+
+# 2. Symlink it into the Copilot skills directory
+ln -s /Users/danielhess/dotfiles/copilot/skills/<skill-name>/ ~/.copilot/skills/<skill-name>
+```
+
+The canonical layout:
 
 ```
-~/.copilot/skills/<skill-name>/
-└── SKILL.md          # Required
+~/dotfiles/copilot/skills/<skill-name>/   ← real files, committed to dotfiles
+~/.copilot/skills/<skill-name>            → symlink to above
 ```
+
+Never create a skill directory directly in `~/.copilot/skills/` — it will be unversioned and won't survive a dotfiles reinstall.
 
 ### Step 2: Generate SKILL.md with Frontmatter
 
@@ -158,26 +173,27 @@ The following is a realistic skill body with inline comments explaining the inte
 ## Example: Complete Skill Structure
 
 ```
-my-awesome-skill/
-├── SKILL.md                    # Required instructions
-├── LICENSE.txt                 # Optional license file
+~/dotfiles/copilot/skills/my-awesome-skill/   ← committed to dotfiles
+├── SKILL.md
+├── LICENSE.txt
 ├── scripts/
-│   └── helper.py               # Executable automation
+│   └── helper.py
 ├── references/
-│   ├── api-reference.md        # Detailed docs
-│   └── examples.md             # Usage examples
-├── assets/
-│   └── diagram.png             # Static resources
-└── templates/
-    └── starter.ts              # Code scaffold
+│   └── api-reference.md
+└── assets/
+    └── diagram.png
+
+~/.copilot/skills/my-awesome-skill            → symlink to above
 ```
 
 ## Quick Start
 
-1. Create `~/.copilot/skills/<skill-name>/SKILL.md`
-2. Add frontmatter with `name` and `description`
-3. Write the body following the annotated example above
-4. Validate against the checklist below
+1. Check `~/dotfiles/copilot/skills/` — skill must not already exist
+2. Create `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`
+3. Symlink: `ln -s /Users/danielhess/dotfiles/copilot/skills/<skill-name>/ ~/.copilot/skills/<skill-name>`
+4. Add frontmatter with `name` and `description`
+5. Write the body following the annotated example above
+6. Validate against the checklist below
 
 ## Validation Checklist
 
