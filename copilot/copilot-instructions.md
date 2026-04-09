@@ -39,6 +39,10 @@
   - Never silently discard an error or return value with `_`; if a value is genuinely unused,
     explain why in a comment or restructure so the value is not produced
   - Avoid `import _ "pkg"` side-effect imports; if an import is needed, use it explicitly
+- Organize imports into three groups in this order: (1) Go stdlib, (2) local repo packages
+  (i.e. those with the same module prefix as the current repo), (3) external third-party packages.
+  Separate each group with a blank line. `go fmt` will sort within groups alphabetically but does
+  not manage groupings — apply this structure manually when writing or editing import blocks.
 - Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
   contents is via `go mod vendor`
 - When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
