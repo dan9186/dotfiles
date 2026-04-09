@@ -22,39 +22,48 @@ A meta-skill for creating new Agent Skills. Use this skill when you need to scaf
 
 ## Creating a New Skill
 
-### Step 0: Check for an Existing Skill
+### Step 0: Determine Destination and Check for Conflicts
 
-Before creating anything, check whether a skill with this name already exists in either location:
+**First, infer whether this is a personal or work skill from the user's prompt.** Look for signals like "work skill", "personal skill", company names, work-specific tooling, or private repo context. If the prompt is ambiguous, ask before proceeding:
+
+> "Should this be a personal skill (stored in `~/dotfiles`) or a work skill (stored in `$PRIVATE_DOTFILES`)?"
+
+Once destination is known, check whether a skill with this name already exists in either location:
 
 ```bash
-ls ~/dotfiles/copilot/skills/
-ls -la ~/.copilot/skills/
+ls ~/dotfiles/copilot/skills/          # personal skills
+ls $PRIVATE_DOTFILES/copilot/work_skills/  # work skills (if $PRIVATE_DOTFILES is set)
+ls -la ~/.copilot/skills/              # active symlinks — check for name conflicts
 ```
 
-If it exists, read `SKILL.md` fully before deciding whether to update or replace it.
+If `$PRIVATE_DOTFILES` is unset and the destination is work, stop and tell the user: the `PRIVATE_DOTFILES` environment variable is not set.
 
-### Step 1: Create the Skill Directory in Dotfiles
+If the skill already exists anywhere, read its `SKILL.md` fully before deciding whether to update or replace it.
 
-Skills are **sourced from dotfiles** and **symlinked into the Copilot skills directory**. This allows personal and work-specific skills to coexist in a single `~/.copilot/skills/` directory while keeping each set versioned separately.
+### Step 1: Create the Skill Directory
 
-Always create the real directory in dotfiles, then symlink it:
+Skills are **sourced from a versioned dotfiles repo** and **symlinked into `~/.copilot/skills/`** by the `skills-sync` shell function. Never create a skill directly in `~/.copilot/skills/`.
+
+| Destination | Source directory |
+|-------------|-----------------|
+| Personal | `~/dotfiles/copilot/skills/<skill-name>/` |
+| Work | `$PRIVATE_DOTFILES/copilot/work_skills/<skill-name>/` |
+
+Create the directory in the correct location:
 
 ```bash
-# 1. Create the skill in dotfiles
+# Personal
 mkdir ~/dotfiles/copilot/skills/<skill-name>
 
-# 2. Symlink it into the Copilot skills directory
-ln -s /Users/danielhess/dotfiles/copilot/skills/<skill-name>/ ~/.copilot/skills/<skill-name>
+# Work
+mkdir $PRIVATE_DOTFILES/copilot/work_skills/<skill-name>
 ```
 
-The canonical layout:
+After writing `SKILL.md`, run `skills-sync` to link it into `~/.copilot/skills/` automatically:
 
+```bash
+skills-sync
 ```
-~/dotfiles/copilot/skills/<skill-name>/   ← real files, committed to dotfiles
-~/.copilot/skills/<skill-name>            → symlink to above
-```
-
-Never create a skill directory directly in `~/.copilot/skills/` — it will be unversioned and won't survive a dotfiles reinstall.
 
 ### Step 2: Generate SKILL.md with Frontmatter
 
@@ -173,27 +182,28 @@ The following is a realistic skill body with inline comments explaining the inte
 ## Example: Complete Skill Structure
 
 ```
-~/dotfiles/copilot/skills/my-awesome-skill/   ← committed to dotfiles
-├── SKILL.md
-├── LICENSE.txt
-├── scripts/
-│   └── helper.py
-├── references/
-│   └── api-reference.md
-└── assets/
-    └── diagram.png
+# Personal skill
+~/dotfiles/copilot/skills/my-skill/       ← committed to ~/dotfiles
+└── SKILL.md
 
-~/.copilot/skills/my-awesome-skill            → symlink to above
+# Work skill
+$PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfiles
+└── SKILL.md
+
+~/.copilot/skills/my-skill                → symlink managed by skills-sync
 ```
 
 ## Quick Start
 
-1. Check `~/dotfiles/copilot/skills/` — skill must not already exist
-2. Create `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`
-3. Symlink: `ln -s /Users/danielhess/dotfiles/copilot/skills/<skill-name>/ ~/.copilot/skills/<skill-name>`
+1. Infer personal vs. work from the prompt — ask if unclear
+2. Check both source dirs and `~/.copilot/skills/` for name conflicts
+3. Create `SKILL.md` in the correct source directory:
+   - Personal: `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`
+   - Work: `$PRIVATE_DOTFILES/copilot/work_skills/<skill-name>/SKILL.md`
 4. Add frontmatter with `name` and `description`
 5. Write the body following the annotated example above
-6. Validate against the checklist below
+6. Run `skills-sync` to link the skill into `~/.copilot/skills/`
+7. Validate against the checklist below
 
 ## Validation Checklist
 
