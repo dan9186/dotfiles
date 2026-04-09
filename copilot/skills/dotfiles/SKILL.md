@@ -7,10 +7,23 @@ description: 'Toolkit for adding, modifying, and managing dotfiles in the centra
 
 Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186/dotfiles).
 
+## Key Paths (start here — do not search)
+
+| What | Path |
+|---|---|
+| Repo root | `~/dotfiles/` |
+| Custom Copilot instructions | `~/dotfiles/copilot/copilot-instructions.md` |
+| Skills directory | `~/dotfiles/copilot/skills/` |
+| Individual skill | `~/dotfiles/copilot/skills/<skill-name>/SKILL.md` |
+| Install script | `~/dotfiles/install.sh` |
+| Shell env / PATH | `~/dotfiles/zprofile` |
+| Shell plugins / prompt | `~/dotfiles/zshrc.omz` |
+| Aliases | `~/dotfiles/omz/aliases.zsh` |
+
 ## When to Use This Skill
 
 - User asks to "update my dotfiles", "add a new config file", "modify my shell aliases", "change my zsh/tmux/git/alacritty configuration", "update SSH config", or "wire up a new tool config into the install script".
-- User asks to "update my Copilot instructions" or "add a new Copilot skill" that requires changes to the dotfiles repo
+- User asks to "update my custom instructions", "update my Copilot instructions", or "add a new Copilot skill".
 
 ## Repo Layout
 
