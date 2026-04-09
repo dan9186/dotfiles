@@ -47,9 +47,21 @@ Before writing a single line, gather the following. **Take your time here** — 
 - Identify where configuration lives (env files, config packages, infrastructure definitions)
 - Note where tests live and how they are organized (unit vs integration, co-located vs separate)
 
-### 5. Check for existing instructions
-- If `.github/copilot-instructions.md` already exists, read it fully before deciding what to change
-- Preserve accurate information; update stale or missing sections
+### 5. Check for existing AI context files
+
+Other AI tools often have their own context files that may already contain accurate, well-considered descriptions of the codebase. **Read all of these before writing** — they are high-signal sources and should be mined heavily:
+
+| File | Tool | What it typically contains |
+|------|------|---------------------------|
+| `CLAUDE.md` | Anthropic Claude | Architecture, conventions, build commands, gotchas |
+| `AGENTS.md` | OpenAI Codex / custom agents | Agent-specific workflow instructions |
+| `GEMINI.md` | Google Gemini | Repo context and task guidance |
+| `.cursor/rules` or `.cursorrules` | Cursor | Coding style, conventions, file structure |
+| `.github/copilot-instructions.md` | GitHub Copilot | Existing instructions to update rather than replace |
+
+For each file found: extract facts about purpose, tech stack, conventions, build steps, and architecture. Prefer information from these files over your own inference — they were written by someone who knows the repo.
+
+Where sources conflict: **stop and surface each conflict to the user before writing**. Present the differing values, which files they came from, and ask the user which one is correct. Do not resolve conflicts by assumption.
 
 ## Writing the File
 
