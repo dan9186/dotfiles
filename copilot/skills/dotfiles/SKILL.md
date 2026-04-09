@@ -1,6 +1,6 @@
 ---
 name: dotfiles
-description: 'Toolkit for adding, modifying, and managing dotfiles in the centralized dotfiles repository at ~/dotfiles. Use when asked to update my dotfiles, add a new config file, update shell aliases or configuration, update SSH config, or wire up any new tool config into the install script. Understands the symlink-based install pattern, Brewfile management, and the two-stage bootstrap/install workflow.'
+description: 'Toolkit for adding, modifying, and managing dotfiles in the centralized dotfiles repository at ~/dotfiles. Use when asked to update my dotfiles, add a new config file, update shell aliases or configuration, update SSH config, wire up any new tool config into the install script, update my custom Copilot instructions, or add/modify a Copilot skill. Understands the symlink-based install pattern, Brewfile management, and the two-stage bootstrap/install workflow.'
 ---
 
 # Dotfiles Skill
@@ -148,6 +148,22 @@ cd ~/dotfiles && ./install.sh
 # Verify a symlink
 ls -la ~/.<dest>
 ```
+
+## Copilot Instructions and Skills
+
+### Custom Instructions (`copilot/copilot-instructions.md`)
+
+- Lives at `~/dotfiles/copilot/copilot-instructions.md` and is symlinked to `~/.copilot/copilot-instructions.md` by `install.sh`.
+- This is the authoritative source for all custom Copilot behavior: tone, coding style, preferred languages, workflow preferences, etc.
+- When the user asks to update their custom instructions, edit **this file in the dotfiles repo** (not the symlink target directly).
+- After editing, commit and push from `~/dotfiles`.
+
+### Skills (`copilot/skills/`)
+
+- Each skill lives in `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`.
+- `install.sh` symlinks each skill directory into `~/.copilot/skills/<skill-name>`.
+- The `description` frontmatter in `SKILL.md` is what drives automatic skill matching — keep it precise and include the natural-language phrases a user would say to trigger the skill.
+- When adding or modifying a skill, edit the file in the dotfiles repo, then commit and push.
 
 ## Go-Specific Environment (zprofile)
 
