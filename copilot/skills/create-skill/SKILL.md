@@ -86,6 +86,56 @@ After the frontmatter, add markdown instructions. Recommended sections:
 | `## Troubleshooting` | Common issues and solutions |
 | `## References` | Links to bundled docs |
 
+#### How to Write the Body
+
+The body is **instructions to an agent, not documentation for a human**. Write it accordingly:
+
+- Use **imperative voice**: "Read the README first", not "The README should be consulted"
+- Be **prescriptive**: tell the agent exactly what to do, in what order, and why constraints exist
+- Prefer **concrete examples and commands** over abstract descriptions
+- Front-load the most important constraints — the agent must not miss them
+- Keep total body length under 150 lines; every line should change agent behavior
+
+A well-written skill body reads like a checklist written by an expert who has done the task many times and knows exactly where agents go wrong.
+
+#### Annotated Example: Complete Skill Body
+
+The following is a realistic skill body with inline comments explaining the intent of each part. Use it as a style reference when writing new skills.
+
+````markdown
+# My Skill Title
+<!-- One sentence saying what this skill produces or accomplishes. -->
+
+## When to Use This Skill
+<!-- Mirror the description triggers. Helps the agent confirm it picked the right skill. -->
+- User asks to "do X", "create Y", or "set up Z"
+- User mentions keywords: foo, bar, baz
+
+## Constraints (Always Apply)
+<!-- List hard rules FIRST, before any workflow. The agent must internalize these before acting. -->
+- **Length**: Output must be under 100 lines — trim ruthlessly
+- **No duplication**: Never reproduce what `--help` or a schema already says; reference it instead
+- **Format**: Plain markdown only, no frontmatter, no HTML
+
+## Research Phase — Do This Before Writing
+<!-- If the skill involves analyzing something (a codebase, a diff, a config), describe
+     what to read and why. Good research produces dramatically better output. -->
+1. Read `README.md` to understand purpose and audience
+2. Check `package.json` / `go.mod` / `Cargo.toml` for language and framework
+3. Scan `Makefile` or `.github/workflows/` for build and test commands
+
+## Workflow
+<!-- The main steps, in order. Number them. Be specific about inputs, outputs, and decisions. -->
+1. Do the first thing
+2. If condition X, do Y; otherwise do Z
+3. Write the output to `path/to/file` (create parent dirs if needed)
+
+## Output
+<!-- Describe what a correct result looks like: file written, command run, summary printed. -->
+- Write the file to `<target path>`
+- Tell the user: what was included, what was skipped, and why
+````
+
 ### Step 4: Add Optional Directories (If Needed)
 
 | Folder | Purpose | When to Use |
@@ -112,16 +162,12 @@ my-awesome-skill/
     └── starter.ts              # Code scaffold
 ```
 
-## Quick Start: Duplicate This Template
+## Quick Start
 
-1. Copy the `make-skill-template/` folder
-2. Rename to your skill name (lowercase, hyphens)
-3. Update `SKILL.md`:
-   - Change `name:` to match folder name
-   - Write a keyword-rich `description:`
-   - Replace body content with your instructions
-4. Add bundled resources as needed
-5. Validate with `npm run skill:validate`
+1. Create `~/.copilot/skills/<skill-name>/SKILL.md`
+2. Add frontmatter with `name` and `description`
+3. Write the body following the annotated example above
+4. Validate against the checklist below
 
 ## Validation Checklist
 
@@ -132,6 +178,19 @@ my-awesome-skill/
 - [ ] `description` is wrapped in single quotes
 - [ ] Body content is under 500 lines
 - [ ] Bundled assets are under 5MB each
+
+## Reference Implementations
+
+These skills in `~/.copilot/skills/` are good examples to read before writing a new one:
+
+| Skill | Good reference for |
+|-------|--------------------|
+| `changelog` | Workflow-heavy skill: clear research phase, explicit output format, good use of constraints |
+| `copilot-instructions` | Analysis-then-write pattern: thorough research phase, constrained output length, required/optional sections |
+| `dotfiles` | Environment-aware skill: references specific file paths and install patterns |
+| `new-go-cli` | Scaffolding skill: opinionated output, links to existing patterns without duplicating them |
+
+Read at least one reference skill before writing a new one to calibrate tone, depth, and structure.
 
 ## Troubleshooting
 
