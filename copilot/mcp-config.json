@@ -1,8 +1,18 @@
 {
   "mcpServers": {
     "Linear": {
+      "tools": [
+        "*"
+      ],
       "type": "http",
       "url": "https://mcp.linear.app/mcp",
+      "headers": {},
+      "source": "user",
+      "sourcePath": "/Users/danielhess/.copilot/mcp-config.json"
+    },
+    "Notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp",
       "headers": {},
       "tools": [
         "*"
