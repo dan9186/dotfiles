@@ -13,6 +13,8 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 |---|---|
 | Repo root | `~/dotfiles/` |
 | Custom Copilot instructions | `~/dotfiles/copilot/copilot-instructions.md` |
+| LSP server config | `~/dotfiles/copilot/lsp-config.json` |
+| MCP server config | `~/dotfiles/copilot/mcp-config.json` |
 | Skills directory | `~/dotfiles/copilot/skills/` |
 | Individual skill | `~/dotfiles/copilot/skills/<skill-name>/SKILL.md` |
 | Install script | `~/dotfiles/install.sh` |
@@ -48,6 +50,7 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 └── copilot/
     ├── copilot-instructions.md
     ├── lsp-config.json
+    ├── mcp-config.json
     └── skills/
 ```
 
@@ -170,6 +173,16 @@ ls -la ~/.<dest>
 - This is the authoritative source for all custom Copilot behavior: tone, coding style, preferred languages, workflow preferences, etc.
 - When the user asks to update their custom instructions, edit **this file in the dotfiles repo** (not the symlink target directly).
 - After editing, commit and push from `~/dotfiles`.
+
+### Config Files (`copilot/lsp-config.json` and `copilot/mcp-config.json`)
+
+- `lsp-config.json` configures Language Server Protocol (LSP) servers for the Copilot CLI (currently: `gopls` for Go).
+- `mcp-config.json` configures Model Context Protocol (MCP) servers for the Copilot CLI (currently: Linear and Notion).
+- Both files live in `~/dotfiles/copilot/` and are symlinked by `install.sh` to `~/.copilot/`.
+  - `~/.copilot/lsp-config.json` → `~/dotfiles/copilot/lsp-config.json`
+  - `~/.copilot/mcp-config.json` → `~/dotfiles/copilot/mcp-config.json`
+- **These two paths point to the exact same file via symlink.** Never be confused by seeing the file appear in both locations — there is only one copy.
+- Always edit the source in `~/dotfiles/copilot/` (not the symlink), then commit and push from `~/dotfiles`.
 
 ### Skills (`copilot/skills/`)
 
