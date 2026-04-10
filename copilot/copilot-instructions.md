@@ -22,8 +22,12 @@
   block of code
 
 ### Go
-- Error handling: never return naked errors; always prefix with short, lowercase context
-  mirroring native Go package style (e.g. `"parsing config: %w"`)
+- Error handling: never return naked errors; always wrap with `fmt.Errorf` and a short, lowercase
+  context prefix in the form `"methodName: operation: %w"` — the method name (lowercase, no
+  receiver type) followed by a brief description of what was being attempted
+  (e.g. `"load: reading config file: %w"`, `"save: marshaling payload: %w"`). For top-level
+  package functions with no receiver, omit the method segment and use the operation alone
+  (e.g. `"parsing config: %w"`)
 - Use sentinel errors when reuse across call sites is beneficial; wrap with `%w` to preserve
   comparability and add context
 - Assign errors on a separate line from the `err != nil` check; do not combine into a single
