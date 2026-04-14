@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# macOS system preferences profile
+# Applied during bootstrap to establish consistent system settings across all macOS setups.
+# Add new settings here organized by category.
+
+# =============================================================================
+# Bluetooth
+# =============================================================================
+
+set_bluetooth_remote_wake () {
+	echo "  → Enabling Bluetooth remote wake"
+	defaults -currentHost write com.apple.bluetooth RemoteWakeEnabled 1
+}
+
+set_bluetooth_menu_bar () {
+	echo "  → Showing Bluetooth in menu bar"
+	defaults -currentHost write com.apple.controlcenter Bluetooth -int 2
+}
+
+# =============================================================================
+# Battery
+# =============================================================================
+
+set_battery_show_percentage () {
+	echo "  → Showing battery percentage"
+	defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
+}
+
+# =============================================================================
+# Finder
+# =============================================================================
+
+set_finder_show_hard_drives () {
+	echo "  → Showing hard drives on desktop"
+	defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+}
+
+set_finder_show_all_extensions () {
+	echo "  → Showing all file extensions"
+	defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+}
+
+# =============================================================================
+# Apply
+# =============================================================================
+
+echo "Applying macOS preferences"
+echo
+
+echo "Bluetooth"
+set_bluetooth_remote_wake
+set_bluetooth_menu_bar
+echo
+
+echo "Battery"
+set_battery_show_percentage
+echo
+
+echo "Finder"
+set_finder_show_hard_drives
+set_finder_show_all_extensions
+echo
+
+killall Finder 2>/dev/null || true
