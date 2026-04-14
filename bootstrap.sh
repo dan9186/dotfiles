@@ -427,6 +427,39 @@ set_hostname () {
 	esac
 }
 
+apply_preferences () {
+  local pref_script=""
+
+  case "$OS" in
+    Darwin)
+      pref_script="$HOME/dotfiles/preferences/macos.sh"
+      if [ ! -f "$pref_script" ]; then
+        echo "macOS preferences script not found at $pref_script, skipping"
+        return
+      fi
+      ;;
+    Linux)
+      pref_script="$HOME/dotfiles/preferences/linux.sh"
+      if [ ! -f "$pref_script" ]; then
+        echo "linux preferences script not found at $pref_script, skipping"
+        return
+      fi
+      ;;
+    Cygwin*|MINGW*|MSYS*)
+      pref_script="$HOME/dotfiles/preferences/windows.sh"
+      if [ ! -f "$pref_script" ]; then
+        echo "windows preferences script not found at $pref_script, skipping"
+        return
+      fi
+      ;;
+    *)
+      echo "Unknown OS ($OS), skipping preferences application"
+      ;;
+  esac
+
+	bash "$pref_script"
+}
+
 ensure_prerequisites
 install_package_manager
 clone_dotfiles
@@ -434,3 +467,4 @@ install_packages
 install_omz
 init_ssh
 set_hostname
+apply_preferences
