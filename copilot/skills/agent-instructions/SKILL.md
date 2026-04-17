@@ -1,6 +1,6 @@
 ---
-name: copilot-instructions
-description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up copilot context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
+name: agent-instructions
+description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up agent context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
 ---
 
 # Agent Instructions Skill
@@ -118,6 +118,6 @@ Specific files, directories, or patterns to avoid touching or to treat with extr
 ## Output
 
 1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
-2. If an existing instruction file was the source of a conversion, note which file was converted and offer to delete or archive the original
+2. If `.github/copilot-instructions.md` was the source of a conversion, delete it automatically after writing `AGENTS.md`. For any other converted instruction file, note which file was converted and offer to delete or archive it.
 3. If updating an existing `AGENTS.md`, show a brief diff summary of what changed and why
 4. Tell the user: length (line count), what was included, and any gaps you could not fill due to missing documentation
