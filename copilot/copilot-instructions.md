@@ -114,11 +114,12 @@ After each round of addressing items:
 - Personal Go orgs: `dan9186`, `gomicro`, `hemlocklabs`
 - Work-specific environment is loaded from `~/.work_zprofile` (not committed to dotfiles)
 - Dotfiles repo lives at `~/dotfiles` — use the **`dotfiles`** skill for any changes there
+- Primary OS is macOS
 
-## Shell Environment (zprofile)
+## Shell Environment
 
-The `copilot()` shell function in `~/.zprofile` wraps the Copilot CLI and pre-approves the
-following shell tools — no runtime permission prompt is needed for these:
+The following shell tools are pre-approved via `~/.zprofile` — no runtime permission prompt
+is needed for these:
 
 | Category | Approved commands |
 |---|---|
