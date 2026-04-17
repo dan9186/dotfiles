@@ -66,6 +66,13 @@
 - Apply this broadly: if a config file, schema, or API is the source of truth, docs should point to
   it rather than re-describe it
 
+## Linear / Ticket Workflow
+- Always use the **`linear-create`** skill when creating a new Linear ticket — it is a blocking
+  requirement; invoke it before any other action
+- Always use the **`linear-work`** skill when starting work on an existing ticket
+- Always use the **`linear-close`** skill when closing or shipping a ticket
+- Always use the **`linear-update`** skill when writing results or progress back to a ticket
+
 ## Workflow Preferences
 - Show diffs and targeted changes rather than rewriting whole files
 - Concise by default — skip preamble and get to the point
