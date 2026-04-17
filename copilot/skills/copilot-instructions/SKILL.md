@@ -1,17 +1,18 @@
 ---
 name: copilot-instructions
-description: 'Creates or updates a .github/copilot-instructions.md file for the current repository. Use when asked to "add copilot instructions", "create repo instructions", "set up copilot context", "update copilot instructions", "generate agent instructions", or "initialize copilot for this repo". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
+description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up copilot context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
 ---
 
-# Copilot Instructions
+# Agent Instructions Skill
 
-A skill for generating and maintaining `.github/copilot-instructions.md` — the permanent context file that helps any Copilot cloud agent orient quickly and work efficiently in this repository.
+A skill for generating, maintaining, and converting agent instruction files into `AGENTS.md` — the permanent context file that helps any AI coding agent orient quickly and work efficiently in this repository.
 
 ## When to Use This Skill
 
-- User asks to create or update `.github/copilot-instructions.md`
-- User wants to initialize Copilot context for a repository
-- User asks to "add copilot instructions" or "set up agent instructions"
+- User asks to create or update `AGENTS.md`
+- User wants to convert an existing instruction file (`.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`, etc.) into `AGENTS.md`
+- User wants to initialize agent context for a repository
+- User asks to "add agent instructions" or "set up agent context"
 - User wants to improve agent quality by providing standing codebase context
 
 ## Constraints (Always Apply)
@@ -49,7 +50,7 @@ Before writing a single line, gather the following. **Take your time here** — 
 
 ### 5. Check for existing AI context files
 
-Other AI tools often have their own context files that may already contain accurate, well-considered descriptions of the codebase. **Read all of these before writing** — they are high-signal sources and should be mined heavily:
+Other AI tools often have their own context files that may already contain accurate, well-considered descriptions of the codebase. **Read all of these before writing** — they are high-signal sources and should be mined heavily. When the user asks to convert one of these files, it becomes the primary source. If `AGENTS.md` already exists in the repo, treat it as the primary source and update it rather than recreating it from scratch.
 
 | File | Tool | What it typically contains |
 |------|------|---------------------------|
@@ -57,7 +58,7 @@ Other AI tools often have their own context files that may already contain accur
 | `AGENTS.md` | OpenAI Codex / custom agents | Agent-specific workflow instructions |
 | `GEMINI.md` | Google Gemini | Repo context and task guidance |
 | `.cursor/rules` or `.cursorrules` | Cursor | Coding style, conventions, file structure |
-| `.github/copilot-instructions.md` | GitHub Copilot | Existing instructions to update rather than replace |
+| `.github/copilot-instructions.md` | GitHub Copilot | Repo instructions to consolidate into AGENTS.md |
 
 For each file found: extract facts about purpose, tech stack, conventions, build steps, and architecture. Prefer information from these files over your own inference — they were written by someone who knows the repo.
 
@@ -68,7 +69,7 @@ Where sources conflict: **stop and surface each conflict to the user before writ
 ### Required Sections (in order)
 
 ```markdown
-# Copilot Instructions
+# Agent Instructions
 
 ## Overview
 One to three sentences: what this project does and who uses it.
@@ -116,6 +117,7 @@ Specific files, directories, or patterns to avoid touching or to treat with extr
 
 ## Output
 
-1. Write the file to `.github/copilot-instructions.md` (create `.github/` if it does not exist)
-2. If updating an existing file, show a brief diff summary of what changed and why
-3. Tell the user: length (line count), what was included, and any gaps you could not fill due to missing documentation
+1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
+2. If an existing instruction file was the source of a conversion, note which file was converted and offer to delete or archive the original
+3. If updating an existing `AGENTS.md`, show a brief diff summary of what changed and why
+4. Tell the user: length (line count), what was included, and any gaps you could not fill due to missing documentation
