@@ -42,6 +42,8 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 ├── alacritty.toml        # Alacritty terminal config
 ├── alacritty_themes/     # Color theme TOML files
 ├── sshconfig             # SSH hosts and key strategy
+├── preferences/
+│   └── macos.sh          # macOS system preferences (applied by bootstrap.sh)
 ├── omz/
 │   ├── themes/           # Custom zsh themes (dan9186.zsh-theme)
 │   ├── plugins/          # Custom Oh My Zsh plugins
@@ -190,6 +192,43 @@ ls -la ~/.<dest>
 - `install.sh` symlinks each skill directory into `~/.copilot/skills/<skill-name>`.
 - The `description` frontmatter in `SKILL.md` is what drives automatic skill matching — keep it precise and include the natural-language phrases a user would say to trigger the skill.
 - When adding or modifying a skill, edit the file in the dotfiles repo, then commit and push.
+
+## OS Preferences (`preferences/`)
+
+`bootstrap.sh` calls `apply_preferences()` which detects the OS and runs the matching script:
+
+| OS | Script |
+|---|---|
+| macOS | `preferences/macos.sh` |
+| Linux | `preferences/linux.sh` *(not yet created)* |
+| Windows | `preferences/windows.sh` *(not yet created)* |
+
+### Pattern for `macos.sh`
+
+Settings are organized into sections by category. Each setting is a standalone function, then called in the **Apply** block at the bottom of the file:
+
+```bash
+# =============================================================================
+# Category Name
+# =============================================================================
+
+set_<category>_<setting> () {
+    echo "  → Human-readable description"
+    defaults write <domain> <key> <value>
+    # or: defaults -currentHost write <domain> <key> <value>
+}
+
+# ...in the Apply block at the bottom:
+echo "Category Name"
+set_<category>_<setting>
+echo
+```
+
+**When to use `-currentHost`:** Use `defaults -currentHost write` for per-machine settings (e.g., hardware-related like Bluetooth, display). Use `defaults write` for user-level settings (e.g., Finder, apps).
+
+**After adding a new setting:** Run `~/dotfiles/preferences/macos.sh` directly to apply it, or re-run `~/dotfiles/bootstrap.sh` to apply everything from scratch. The script ends with `killall Finder` to pick up Finder-related changes.
+
+**To add a new OS:** Create `preferences/<os>.sh` following the same category/function pattern, then add a branch to the `apply_preferences()` function in `bootstrap.sh`.
 
 ## Go-Specific Environment (zprofile)
 
