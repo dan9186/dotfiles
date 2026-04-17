@@ -104,3 +104,26 @@ After each round of addressing items:
 - Linear history is preferred: fast-forward only merges, autosquash rebases
 - Use `--force-with-lease` over `--force`
 - Commits are GPG signed
+
+## Environment & Workspace
+
+- Go workspace root: `~/go/src/github.com/` — repos are organized by org under this path
+- Work repos live under `~/go/src/github.com/interxfi/` — this is the primary work org (fintech
+  platform: payments, orders, portfolio, trade reporting, regulatory filings, exchange/market
+  simulation, document generation, and supporting infrastructure)
+- Personal Go orgs: `dan9186`, `gomicro`, `hemlocklabs`
+- Work-specific environment is loaded from `~/.work_zprofile` (not committed to dotfiles)
+- Dotfiles repo lives at `~/dotfiles` — use the **`dotfiles`** skill for any changes there
+
+## Shell Environment (zprofile)
+
+The `copilot()` shell function in `~/.zprofile` wraps the Copilot CLI and pre-approves the
+following shell tools — no runtime permission prompt is needed for these:
+
+| Category | Approved commands |
+|---|---|
+| Read / search | `go:*`, `rg:*`, `grep:*`, `cat:*`, `ls:*`, `find:*`, `head:*`, `tail:*`, `wc:*`, `sort:*`, `uniq:*`, `cut:*`, `jq:*` |
+| Git | `git:log:*`, `git:diff:*`, `git:status:*`, `git:show:*`, `git:blame:*` |
+| GitHub CLI | `gh:pr:view:*`, `gh:pr:list:*`, `gh:pr:checks:*`, `gh:issue:view:*`, `gh:issue:list:*`, `gh:repo:view:*`, `gh:run:view:*`, `gh:run:list:*` |
+
+Any shell command outside this list will require explicit approval at runtime.
