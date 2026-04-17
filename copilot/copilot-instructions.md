@@ -66,6 +66,21 @@
 - Apply this broadly: if a config file, schema, or API is the source of truth, docs should point to
   it rather than re-describe it
 
+### Go doc comments
+- Every exported symbol must have a doc comment; unexported symbols only if genuinely non-obvious
+- Start each comment with the symbol name, as Go convention requires — this is not stutter
+- Stutter means redundantly embedding the package or type name in the comment body
+  (e.g. in package `color`, `// BlackFg applies black foreground color` is fine;
+  `// BlackFg is a color.BlackFg function that...` is stutter)
+- Do not be tautological: if the name fully communicates the behavior, omit the comment or say
+  something the name cannot — never write `// Printf formats and prints` when `Printf` already says that
+- For uniform families of symbols (e.g. 16 color helper functions that all follow the same pattern),
+  put the explanation in the package or group doc comment and omit per-symbol comments
+- For grouped `var (...)` sentinel errors that share the same shape, use a single group doc comment
+  rather than per-line inline comments; individual inline comments inside a `var` block are not
+  surfaced by godoc
+- Prefer terse, imperative phrasing; a one-line comment is almost always better than two
+
 ## Linear / Ticket Workflow
 - Always use the **`linear-create`** skill when creating a new Linear ticket — it is a blocking
   requirement; invoke it before any other action
