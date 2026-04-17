@@ -59,11 +59,7 @@ mkdir ~/dotfiles/copilot/skills/<skill-name>
 mkdir $PRIVATE_DOTFILES/copilot/work_skills/<skill-name>
 ```
 
-After writing `SKILL.md`, run `skills-sync` to link it into `~/.copilot/skills/` automatically:
-
-```bash
-skills-sync
-```
+After writing `SKILL.md`, tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`. Do not run it yourself — the agent does not have access to the shell environment where `skills-sync` is defined.
 
 ### Step 2: Generate SKILL.md with Frontmatter
 
@@ -202,7 +198,7 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
    - Work: `$PRIVATE_DOTFILES/copilot/work_skills/<skill-name>/SKILL.md`
 4. Add frontmatter with `name` and `description`
 5. Write the body following the annotated example above
-6. Run `skills-sync` to link the skill into `~/.copilot/skills/`
+6. Tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`
 7. Validate against the checklist below
 
 ## Validation Checklist
