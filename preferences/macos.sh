@@ -42,6 +42,19 @@ set_finder_show_all_extensions () {
 }
 
 # =============================================================================
+# Network
+# =============================================================================
+
+set_network_dns () {
+	echo "  → Setting DNS servers to 8.8.8.8 and 1.1.1.1 on all network services"
+	local services
+	services=$(networksetup -listallnetworkservices | tail -n +2)
+	while IFS= read -r svc; do
+		networksetup -setdnsservers "$svc" 8.8.8.8 1.1.1.1
+	done <<< "$services"
+}
+
+# =============================================================================
 # Apply
 # =============================================================================
 
@@ -60,6 +73,10 @@ echo
 echo "Finder"
 set_finder_show_hard_drives
 set_finder_show_all_extensions
+echo
+
+echo "Network"
+set_network_dns
 echo
 
 killall Finder 2>/dev/null || true
