@@ -115,6 +115,22 @@ Specific files, directories, or patterns to avoid touching or to treat with extr
 - Use backticks for all file paths, commands, directory names, and symbol names
 - Keep each bullet to one line where possible; two lines maximum
 
+## Listen for Standard Updates
+
+If at any point the user says something like:
+- "every AGENTS.md should have a X section"
+- "add Y to the required sections"
+- "we should always include Z"
+
+**Do not update `SKILL.md` immediately.** Instead:
+
+1. Acknowledge the suggestion
+2. Propose the addition: show exactly what it would look like in `SKILL.md`
+3. Note whether it should be required or optional (and if optional, the qualifying condition)
+4. Wait for explicit confirmation before modifying
+5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/agent-instructions/SKILL.md`
+6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
+
 ## Output
 
 1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
