@@ -157,6 +157,22 @@ Include home/config
 ```
 Add new host entries to the appropriate sub-config (`~/.ssh/work/config` or `~/.ssh/home/config`), not directly to `sshconfig` unless it's a shared entry like GitHub.
 
+## Listen for Standard Updates
+
+If at any point the user says something like:
+- "we should always do X when adding dotfiles"
+- "add a new convention to the install workflow"
+- "every new dotfile should have Y"
+
+**Do not update `SKILL.md` immediately.** Instead:
+
+1. Acknowledge the suggestion
+2. Propose the addition: show exactly what it would look like in `SKILL.md`
+3. Note whether it should be a hard rule or a guideline
+4. Wait for explicit confirmation before modifying
+5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/dotfiles/SKILL.md`
+6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
+
 ## Testing Changes
 
 ```bash
