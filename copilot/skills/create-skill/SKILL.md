@@ -113,6 +113,7 @@ After the frontmatter, add markdown instructions. Recommended sections:
 | `## When to Use This Skill` | Reinforces description triggers |
 | `## Prerequisites` | Required tools, dependencies |
 | `## Step-by-Step Workflows` | Numbered steps for tasks |
+| `## Listen for Standard Updates` | Intercepts requests to change the skill's conventions and gates them behind explicit confirmation before writing |
 | `## Troubleshooting` | Common issues and solutions |
 | `## References` | Links to bundled docs |
 
@@ -125,6 +126,7 @@ The body is **instructions to an agent, not documentation for a human**. Write i
 - Prefer **concrete examples and commands** over abstract descriptions
 - Front-load the most important constraints — the agent must not miss them
 - Keep total body length under 150 lines; every line should change agent behavior
+- **Include a `## Listen for Standard Updates` section** that intercepts requests to change the skill's own conventions, proposes the change explicitly, and gates writing to `SKILL.md` behind confirmation. See below for the standard template for this section.
 
 A well-written skill body reads like a checklist written by an expert who has done the task many times and knows exactly where agents go wrong.
 
@@ -210,6 +212,31 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
 - [ ] `description` is wrapped in single quotes
 - [ ] Body content is under 150 lines
 - [ ] Bundled assets are under 5MB each
+- [ ] `## Listen for Standard Updates` section is present
+
+## Standard Template: Listen for Standard Updates
+
+Include this section (adapted to the skill's domain) in every new skill body:
+
+```markdown
+## Listen for Standard Updates
+
+If at any point the user says something like:
+- "we should always X"
+- "add Y to the standard"
+- "every [output] should have Z"
+
+**Do not update SKILL.md immediately.** Instead:
+
+1. Acknowledge the suggestion
+2. Propose the addition: show exactly what it would look like in `SKILL.md`
+3. Note whether it should be required or conditional
+4. Wait for explicit confirmation before modifying
+5. After confirmation, update `SKILL.md` in the skill source directory
+6. Tell the user to commit the change to the appropriate dotfiles repo to persist it
+```
+
+Adapt the trigger phrases and "output" noun to match the skill's domain.
 
 ## Reference Implementations
 
