@@ -42,6 +42,31 @@ set_finder_show_all_extensions () {
 }
 
 # =============================================================================
+# Security
+# =============================================================================
+
+set_security_filevault () {
+	echo "  → Enabling FileVault disk encryption"
+	if fdesetup status | grep -q "FileVault is On"; then
+		echo "    FileVault already enabled, skipping"
+		return
+	fi
+	sudo fdesetup enable
+	echo "    FileVault enabled — a restart is required to complete encryption"
+}
+
+set_security_screensaver_timeout () {
+	echo "  → Setting screensaver idle time to 10 minutes"
+	defaults -currentHost write com.apple.screensaver idleTime -int 600
+}
+
+set_security_screensaver_password () {
+	echo "  → Requiring password immediately on screensaver or sleep"
+	defaults -currentHost write com.apple.screensaver askForPassword -int 1
+	defaults -currentHost write com.apple.screensaver askForPasswordDelay -int 0
+}
+
+# =============================================================================
 # Network
 # =============================================================================
 
@@ -73,6 +98,12 @@ echo
 echo "Finder"
 set_finder_show_hard_drives
 set_finder_show_all_extensions
+echo
+
+echo "Security"
+set_security_filevault
+set_security_screensaver_timeout
+set_security_screensaver_password
 echo
 
 echo "Network"
