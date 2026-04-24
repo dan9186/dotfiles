@@ -1,6 +1,6 @@
 ---
 name: linear-create
-description: 'Creates Linear tickets — either before work starts (pre-work draft) or retroactively when work already exists (branch/commits/PR) but no ticket does yet. Use when asked to "create a ticket", "write a ticket", "make a Linear issue", "I need a ticket for this", "let''s write this up in Linear", "draft a ticket", "I''m working on something without a ticket", or "backfill a ticket".'
+description: 'Creates Linear tickets — either before work starts (pre-work draft) or retroactively when work already exists (branch/commits/PR) but no ticket does yet. Also handles bulk creation of sub-tickets under a parent when content is already drafted and reviewed. Use when asked to "create a ticket", "write a ticket", "make a Linear issue", "I need a ticket for this", "let''s write this up in Linear", "draft a ticket", "I''m working on something without a ticket", "backfill a ticket", "create sub-tickets", "create child tickets", or "go ahead and create those tickets".'
 ---
 
 # Linear Create
@@ -22,16 +22,29 @@ existing branch, commits, or PR.
 
 ## Phase 0 — Determine Mode
 
-Classify into one of the two sub-modes before proceeding:
+Classify into one of the three sub-modes before proceeding:
 
 | Mode | Signal |
 |------|--------|
 | **Pre-work draft** | User is describing work that hasn't started yet |
 | **Retroactive draft** | Work exists (branch/commits/PR) but no ticket; user mentions working without a ticket, submitting a PR, or wanting to backfill a ticket |
+| **Bulk / sub-ticket** | Content is already drafted and reviewed; user wants to create multiple tickets (often children of a known parent) in one go |
 
 If ambiguous, ask one question to clarify before proceeding.
 
-## Pre-Work Draft Mode
+## Bulk / Sub-ticket Mode
+
+Content is already known (e.g., drafted in a plan, reviewed by the user) and multiple tickets need
+to be created — typically as children of a parent ticket:
+
+1. Identify the parent ticket ID if applicable
+2. Show a single consolidated preview of all tickets to be created (title, description, parent,
+   assignee, state) — do not preview each one individually
+3. Confirm once ("Create all X tickets?") before proceeding
+4. Create all tickets in parallel via `Linear-save_issue` with `parentId` set
+5. Report the created ticket IDs and URLs in a table
+
+## Pre-work Draft Mode
 
 1. Ask the user to describe what needs to be done if they haven't already
 2. Infer: title (concise, imperative), description (what + why + context), labels if obvious
