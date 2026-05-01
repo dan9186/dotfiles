@@ -47,6 +47,19 @@
   (i.e. those with the same module prefix as the current repo), (3) external third-party packages.
   Separate each group with a blank line. `go fmt` will sort within groups alphabetically but does
   not manage groupings — apply this structure manually when writing or editing import blocks.
+- Receiver names must be consistent across all methods of a type; use the first letter (or first
+  few letters) of the type name, lowercase (e.g. `w` for `Worker`, `tw` for `TickWorker`). Never
+  mix receiver names for the same type across methods in the same file or package.
+- Use `const` for package-level identifiers whose values never change; reserve `var` for values
+  that are mutable or must be addressable at runtime.
+- Avoid local variable names that shadow imported package names — rename the local variable to
+  something that doesn't collide (e.g. `lkp` when a package named `lookup` is in scope).
+- Prefer format-variant log calls (e.g. `log.Infof`, `log.Errorf`) over wrapping `fmt.Sprintf`
+  inside a non-format log call (e.g. `log.Info(ctx, fmt.Sprintf(...))`).
+- Spacing within function bodies:
+  - Add a blank line after every log statement before the next action.
+  - Add a blank line after every `if err != nil` guard block before the next logical step.
+  - Add a blank line between each `case` block in a `switch` statement.
 - Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
   contents is via `go mod vendor`
 - When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
