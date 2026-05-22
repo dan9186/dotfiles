@@ -93,6 +93,10 @@
   rather than per-line inline comments; individual inline comments inside a `var` block are not
   surfaced by godoc
 - Prefer terse, imperative phrasing; a one-line comment is almost always better than two
+- Doc comments describe what a type or function *is* or *does* — not where its data comes from
+  or how it is wired at a specific call site. Avoid embedding implementation details like env var
+  names, config keys, or caller-specific context in comments on types; those details belong at
+  the call site, not on the type itself
 
 ## Linear / Ticket Workflow
 - Always use the **`linear-create`** skill when creating a new Linear ticket — it is a blocking
