@@ -9,6 +9,14 @@
       "headers": {},
       "source": "user",
       "sourcePath": "/Users/danielhess/.copilot/mcp-config.json"
+    },
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp",
+      "headers": {},
+      "tools": [
+        "*"
+      ]
     }
   }
 }
