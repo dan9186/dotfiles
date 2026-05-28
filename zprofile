@@ -66,6 +66,7 @@ export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include"
 
 # Copilot
+export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="$HOME/dotfiles/copilot"
 copilot() {
     command copilot \
         --allow-tool='shell(go:\*)' \
