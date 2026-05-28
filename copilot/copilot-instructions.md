@@ -135,6 +135,8 @@ After each round of addressing items:
   together or suggest squashing separate logical changes into one commit
 
 ## Git Practices
+- **Never run `git commit`** — always stage changes and stop, letting the user commit. This keeps
+  the user in incremental review rather than waiting until a PR for oversight.
 - Linear history is preferred: fast-forward only merges, autosquash rebases
 - Use `--force-with-lease` over `--force`
 - Commits are GPG signed
