@@ -28,6 +28,8 @@
   (e.g. `"load: reading config file: %w"`, `"save: marshaling payload: %w"`). For top-level
   package functions with no receiver, omit the method segment and use the operation alone
   (e.g. `"parsing config: %w"`)
+- Error strings must not start with a capital letter — errors are commonly wrapped and a capital
+  mid-sentence reads incorrectly (e.g. `"parsing config: %w"` not `"Parsing config: %w"`)
 - Use sentinel errors when reuse across call sites is beneficial; wrap with `%w` to preserve
   comparability and add context
 - Assign errors on a separate line from the `err != nil` check; do not combine into a single
@@ -146,6 +148,8 @@ After each round of addressing items:
 - Personal Go orgs: `dan9186`, `gomicro`, `hemlocklabs`
 - Work-specific environment is loaded from `~/.work_zprofile` (not committed to dotfiles)
 - Dotfiles repo lives at `~/dotfiles` — use the **`dotfiles`** skill for any changes there
+- Work/private dotfiles live at `$PRIVATE_DOTFILES` — use this env var to locate the directory;
+  work skills (e.g. `svc-refactor`) are at `$PRIVATE_DOTFILES/copilot/work_skills/`
 - Primary OS is macOS
 
 ## Shell Environment
