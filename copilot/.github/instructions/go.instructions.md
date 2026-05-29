@@ -14,6 +14,14 @@ applyTo: "**/*.go"
   (e.g. `"parsing config: %w"`)
 - Error strings must not start with a capital letter — errors are commonly wrapped and a capital
   mid-sentence reads incorrectly (e.g. `"parsing config: %w"` not `"Parsing config: %w"`)
+- Place `%w` at the end of the error format string (`"context: %w"`) so the error chain reads
+  newest-to-oldest. Never place `%w` in the middle or at the start of a message.
+- Do not duplicate information the underlying error already provides. If `os.Open` includes the
+  filename in its error, do not also say "could not open settings.txt: %w" — just
+  "loading config: %w".
+- At system boundaries (RPC, IPC, storage layer) use `%v` rather than `%w`, or translate to a
+  canonical error type. Wrapping with `%w` at these boundaries leaks internal implementation
+  details to callers; breaking the chain is intentional here.
 - Use sentinel errors when reuse across call sites is beneficial; wrap with `%w` to preserve
   comparability and add context
 - Assign errors on a separate line from the `err != nil` check; do not combine into a single
@@ -23,7 +31,9 @@ applyTo: "**/*.go"
 
 - Pass `context.Context` as the first argument to any function that does I/O, blocking work, or
   may need cancellation
-- Prefer functional options (`WithXxx(...)`) for constructors that take multiple optional settings
+- Prefer functional options (`WithXxx(...)`) for constructors that take multiple optional settings.
+  When a function's argument list grows large (beyond 3–4 non-context args), introduce an option
+  struct rather than expanding the parameter list further.
 - Avoid goroutines unless there is a clear, demonstrated need; keep things sequential by default
 - Avoid `init()` functions unless strictly unavoidable
 - Prefer explicit return values over named return values
@@ -34,6 +44,10 @@ applyTo: "**/*.go"
   - Avoid `import _ "pkg"` side-effect imports; if an import is needed, use it explicitly
 - Use `const` for package-level identifiers whose values never change; reserve `var` for values
   that are mutable or must be addressable at runtime
+- Prefer `:=` for variable declarations that initialize to a non-zero value. Use `var` (zero-value
+  form) when you want to declare an empty value that will be filled in later — it signals intent.
+- Always specify channel direction (`<-chan T`, `chan<- T`) in function signatures where possible.
+  Unidirectional channel types prevent misuse and document ownership at a glance.
 - Avoid local variable names that shadow imported package names — rename the local variable to
   something that doesn't collide (e.g. `lkp` when a package named `lookup` is in scope)
 - Prefer format-variant log calls (e.g. `log.Infof`, `log.Errorf`) over wrapping `fmt.Sprintf`
@@ -48,6 +62,11 @@ applyTo: "**/*.go"
 - Receiver names must be consistent across all methods of a type; use the first letter (or first
   few letters) of the type name, lowercase (e.g. `w` for `Worker`, `tw` for `TickWorker`). Never
   mix receiver names for the same type across methods in the same file or package.
+- Do not repeat the package name, receiver type, or parameter/return type names in a function or
+  method name — this is redundant and verbose. E.g. in package `yamlconfig`, name the function
+  `Parse`, not `ParseYAMLConfig`. Getters should not have a `Get` prefix.
+- Avoid package names like `util`, `helper`, `common`, or `misc` — they are uninformative, cause
+  import conflicts, and grow without bound. Name packages for what they actually provide.
 
 ## Spacing Within Function Bodies
 
@@ -74,6 +93,12 @@ applyTo: "**/*.go"
 - Call `t.Parallel()` at the top of each unit test
 - Prefer a failing test first to demonstrate the problem before writing the fix
 - Minimum coverage of the happy path is the baseline; table-driven tests where they add clarity
+- In table-driven tests, always name struct fields when initializing test cases. This improves
+  readability and allows zero-value fields to be omitted clearly.
+- Test setup helper functions must call `t.Helper()` as their first statement so that failure
+  output points to the call site in the test, not the line inside the helper.
+- Never call `t.Fatal` (or `t.FailNow`) from a goroutine other than the test's own goroutine —
+  it is a runtime panic. Use `t.Error` + `return` inside spawned goroutines instead.
 
 ## Doc Comments
 
