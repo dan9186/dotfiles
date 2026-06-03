@@ -36,10 +36,30 @@ Before writing a single line, gather the following. **Take your time here** — 
 - Note key frameworks, major libraries, and runtime versions where specified
 - Identify infrastructure tooling: Docker, Terraform, Helm, etc.
 
+**Go version handling**: When a `go.mod` is present, do not blindly surface the declared Go version
+as the target in the generated file. First scan for an explicit reason for the pin — check CI
+workflow files, `README`, `CONTRIBUTING`, `Makefile`, and any build constraint comments.
+- If a clear reason is found (e.g., required by a provider SDK, platform limitation, build
+  constraint), document the specific version **and the reason** in the Tech Stack section.
+- If no clear reason is found, ask the user: "Your `go.mod` declares Go `<version>`. Is there a
+  specific reason to target this version, or should I use latest?" If the user confirms no reason,
+  document **"latest Go"** in the Tech Stack section. If the user provides a reason, document the
+  specific version and note the reason.
+
 ### 3. Map the build and validation workflow
 - Look for `Makefile`, `Taskfile`, `justfile`, `.github/workflows/`, `scripts/`
 - Identify the commands used in CI for: building, testing, linting, formatting
 - Note any required env vars or one-time setup steps documented in the README or CONTRIBUTING
+
+**Database testing**: When discovering test patterns that involve databases, never suggest running
+tests directly against a live or production database. If the codebase has integration or
+data-dependent tests that require real data, the correct workflow is:
+1. Restore a snapshot/dump of the live database to a local database instance
+2. Run tests against that local copy only
+
+Document this workflow in the generated `AGENTS.md` under **Build & Validate** only when the
+codebase has tests that actually touch a database. Do not include this section for projects without
+database-touching tests.
 
 ### 4. Map the layout and architecture
 - Note top-level directory purposes (a single sentence each is enough)
