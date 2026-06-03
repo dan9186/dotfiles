@@ -25,6 +25,10 @@
 Go-specific standards are in `~/dotfiles/copilot/.github/instructions/go.instructions.md` and are
 automatically injected when working on `.go` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
 
+### SQL
+SQL-specific standards are in `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and
+are automatically injected when working on `.sql` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
+
 ## Documentation
 - Do not duplicate information that already exists authoritatively elsewhere — link or reference it instead
 - In particular: never reproduce CLI usage, flags, or command descriptions in a README or doc file;
