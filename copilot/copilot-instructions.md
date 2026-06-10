@@ -46,6 +46,18 @@ Go doc comment standards are in `~/dotfiles/copilot/.github/instructions/go.inst
 - Always use the **`linear-close`** skill when closing or shipping a ticket
 - Always use the **`linear-update`** skill when writing results or progress back to a ticket
 
+## Model Strategy
+
+Copilot runs in **auto model mode**. Default preference: **Claude Haiku 4.5** — fast, lightweight
+reasoning ideal for planning, exploration, architecture decisions, and discovery work.
+
+For explicit model selection during a session:
+- Use `/model` command to switch models interactively
+- Specify model preference directly in your prompt (e.g., "use Claude Sonnet" or "use GPT-5.4")
+
+Available models: `gpt-5.4`, `gpt-5.4-mini`, `gpt-5-mini`, `claude-sonnet-4.6`, `claude-sonnet-4.5`,
+`claude-haiku-4.5`, `gemini-3.1-pro-preview`, `gemini-3.5-flash`.
+
 ## Workflow Preferences
 - Show diffs and targeted changes rather than rewriting whole files
 - Concise by default — skip preamble and get to the point
