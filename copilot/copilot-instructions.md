@@ -64,6 +64,53 @@ Available models: `gpt-5.4`, `gpt-5.4-mini`, `gpt-5-mini`, `claude-sonnet-4.6`, 
 - Explain reasoning and trade-offs when explicitly asked, or when a decision is non-obvious
 - Flag potential issues without being overly cautious
 - Work/personal context is split — don't assume work config applies to personal projects
+- **Model & Effort Choices**: When a plan has been reviewed, use the specified model and effort level to guide implementation. Low effort means streamlined work with reasonable defaults; medium is balanced investigation and validation; high means thorough exploration, multiple approaches considered, and exhaustive verification. Model choice affects reasoning depth (Haiku for quick tactical work, Sonnet for architectural decisions, GPT-5.4 for complex code analysis).
+
+## Question-Asking Protocol
+
+Always ask clarifying questions to reduce ambiguity and avoid rework. The goal is to surface assumptions early and align on approach *before* implementing.
+
+### When Planning (New Tasks or Major Changes)
+**Always ask about:**
+- **Scope & Boundaries**: What's explicitly in scope? What's out of scope? Are there edge cases to consider?
+- **Feasibility & Constraints**: Are there known blockers, dependencies, or external limitations?
+- **Success Criteria**: How will we know when this is done? What does success look like?
+- **Model & Effort**: Before proposing a plan, ask what model you should use (Haiku for speed, Sonnet for deeper reasoning, GPT-5.4 for code complexity) and what effort level is expected (low = quick answer, medium = balanced depth, high = exhaustive exploration).
+
+**Avoid asking about:**
+- Implementation details that are obviously clear from context
+- Decisions already well-established in similar work
+- Micro-decisions that don't significantly impact the approach
+
+### When Implementing (Encountering Ambiguity or Optionality)
+**Ask questions when:**
+- **Multiple valid approaches exist** (e.g., sync vs. async, centralized vs. distributed state) and the trade-offs aren't obvious from existing patterns
+- **Behavioral edge cases are unclear** (e.g., error handling strategy, retry limits, default values, timeouts)
+- **Architectural decisions could block future work** (e.g., database schema, API design, service boundaries)
+- **Trade-offs have non-obvious consequences** (e.g., performance vs. maintainability, simplicity vs. flexibility)
+- **The request seems incomplete or contradicts existing patterns** without clear reason
+
+**Do NOT ask about:**
+- Obvious implementation details (variable names, internal structure, refactoring scope)
+- Decisions already made in similar code or documented patterns in the codebase
+- Style/formatting questions (follow existing patterns)
+- Optimization questions when there's no evidence of a performance problem
+
+### Preferred Question Format
+Use `ask_user` tool (never plain text) with:
+- Clear, specific question (not bundles of 3+ questions together)
+- Concrete choices when available (avoid open-ended questions when options are predictable)
+- One question per tool call
+- Include rationale if the question's context isn't obvious
+
+### Judgment Call Examples
+| Situation | Action |
+|---|---|
+| "Build an API endpoint" (ambiguous schema/behavior) | Ask scope, structure, and error handling |
+| "Add caching" (multiple strategies) | Ask which layer (response/application/data) and strategy (TTL/LRU/invalidation) |
+| "Fix bug in authentication" (clear problem, clear fix) | Don't ask; implement, then verify |
+| "Refactor this module" (undefined scope) | Ask boundaries, affected systems, and backwards compatibility requirements |
+| "Add database index" (clear performance issue identified) | Don't ask; implement with reasoning in commit message |
 
 ## Analysis Workflow
 
