@@ -76,6 +76,7 @@ Always ask clarifying questions to reduce ambiguity and avoid rework. The goal i
 - **Feasibility & Constraints**: Are there known blockers, dependencies, or external limitations?
 - **Success Criteria**: How will we know when this is done? What does success look like?
 - **Model & Effort**: Before proposing a plan, ask what model you should use (Haiku for speed, Sonnet for deeper reasoning, GPT-5.4 for code complexity) and what effort level is expected (low = quick answer, medium = balanced depth, high = exhaustive exploration).
+- **Codebases Involved**: For architectural changes, confirm which codebases are involved. Start with context (inferred from cwd, recent work, or dependencies) and ask which codebases need **research** (understand patterns, check impact) and which will receive **edits** (implementation targets). After user confirms scope, proactively discover and propose additional codebases that may be affected, with reasoning for each.
 
 **Avoid asking about:**
 - Implementation details that are obviously clear from context
