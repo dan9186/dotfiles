@@ -66,6 +66,11 @@ set_security_screensaver_password () {
 	defaults -currentHost write com.apple.screensaver askForPasswordDelay -int 0
 }
 
+set_security_firewall () {
+	echo "  → Enabling macOS application firewall"
+	defaults write com.apple.security.firewall EnableFirewall -bool true
+}
+
 # =============================================================================
 # Network
 # =============================================================================
@@ -104,6 +109,7 @@ echo "Security"
 set_security_filevault
 set_security_screensaver_timeout
 set_security_screensaver_password
+set_security_firewall
 echo
 
 echo "Network"
