@@ -140,6 +140,14 @@ After each round of addressing items:
 - Use `--force-with-lease` over `--force`
 - Commits are GPG signed
 
+## Task Completion
+- **For code changes:** The task is complete when changes are made, staged, and tested. Do not commit.
+  The user reviews the staged changes and commits as part of their workflow, acting as a confirming
+  pair on the work.
+- **For other work** (config, dependencies, infrastructure): The task is complete when changes are
+  applied and tested to verify they work.
+- In both cases, verification (tests passing, linting clean, etc.) is required before reporting completion.
+
 ## Environment & Workspace
 
 - Go workspace root: `~/go/src/github.com/` — repos are organized by org under this path
