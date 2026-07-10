@@ -119,3 +119,11 @@ applyTo: "**/*.go"
   or how it is wired at a specific call site. Avoid embedding implementation details like env var
   names, config keys, or caller-specific context in comments on types; those details belong at
   the call site, not on the type itself
+
+## Keeping This File Current
+
+If the user states a new Go-specific convention, correction, or rule while working, propose adding
+it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
+a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
+at `~/dotfiles/copilot/.github/instructions/go.instructions.md` and remind the user to commit and
+push from `~/dotfiles`.

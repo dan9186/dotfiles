@@ -115,3 +115,11 @@ Migrations that backfill or transform existing data require additional care:
   loop with explicit batch sizing to avoid long-running locks.
 - The `-- +goose Down` section must contain `-- cannot roll back` with a brief explanation of
   why the transformation is not reversible.
+
+## Keeping This File Current
+
+If the user states a new SQL-specific convention, correction, or rule while working, propose adding
+it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
+a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
+at `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and remind the user to commit and
+push from `~/dotfiles`.
