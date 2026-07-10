@@ -160,6 +160,9 @@ After each round of addressing items:
 - Work/private dotfiles live at `$PRIVATE_DOTFILES` — use this env var to locate the directory;
   work skills (e.g. `svc-refactor`) are at `$PRIVATE_DOTFILES/copilot/work_skills/`
 - Primary OS is macOS
+- **Filesystem searches (find, grep, glob) must be scoped to `$GOPATH/src` (or a more specific
+  subdirectory within it) — never the filesystem root or home directory.** Use `$GOPATH` to locate
+  the workspace root rather than hardcoding `~/go`.
 
 ## Shell Environment
 
