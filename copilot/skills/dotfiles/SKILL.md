@@ -17,6 +17,7 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 | MCP server config | `~/dotfiles/copilot/mcp-config.json` |
 | Skills directory | `~/dotfiles/copilot/skills/` |
 | Individual skill | `~/dotfiles/copilot/skills/<skill-name>/SKILL.md` |
+| Language-specific instructions dir | `~/dotfiles/copilot/.github/instructions/` |
 | Install script | `~/dotfiles/install.sh` |
 | Shell env / PATH | `~/dotfiles/zprofile` |
 | Shell plugins / prompt | `~/dotfiles/zshrc.omz` |
@@ -201,6 +202,16 @@ ls -la ~/.<dest>
   - `~/.copilot/mcp-config.json` → `~/dotfiles/copilot/mcp-config.json`
 - **These two paths point to the exact same file via symlink.** Never be confused by seeing the file appear in both locations — there is only one copy.
 - Always edit the source in `~/dotfiles/copilot/` (not the symlink), then commit and push from `~/dotfiles`.
+
+### Language-Specific Instructions (`copilot/.github/instructions/`)
+
+- Each file (`go.instructions.md`, `sql.instructions.md`, `j5.instructions.md`, etc.) carries an
+  `applyTo: "**/*.<ext>"` frontmatter glob and is auto-injected into context via
+  `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` whenever a matching file is being worked on.
+- To add a new language, create `~/dotfiles/copilot/.github/instructions/<lang>.instructions.md`
+  with the same frontmatter pattern — no separate wiring is needed beyond the file existing here.
+- When the user corrects or adds a language-specific convention, edit the source file in the
+  dotfiles repo, then commit and push from `~/dotfiles`.
 
 ### Skills (`copilot/skills/`)
 
