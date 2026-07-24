@@ -1,6 +1,7 @@
 ---
 name: agent-instructions
 description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up agent context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
+lastReviewed: "2026-07-23"
 ---
 
 # Agent Instructions Skill

@@ -1,5 +1,8 @@
 ---
 applyTo: "**/*.sql"
+instructionType: "language"
+language: "sql"
+lastReviewed: "2026-07-23"
 ---
 
 # SQL Instructions

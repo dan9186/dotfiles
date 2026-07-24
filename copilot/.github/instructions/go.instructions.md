@@ -1,5 +1,8 @@
 ---
 applyTo: "**/*.go"
+instructionType: "language"
+language: "go"
+lastReviewed: "2026-07-23"
 ---
 
 # Go Coding Standards

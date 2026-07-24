@@ -1,3 +1,8 @@
+---
+instructionType: "global"
+lastReviewed: "2026-07-23"
+---
+
 # Copilot Global Instructions
 
 ## Preferred Languages & Frameworks
