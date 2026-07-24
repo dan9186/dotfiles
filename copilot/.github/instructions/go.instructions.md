@@ -123,7 +123,7 @@ lastReviewed: "2026-07-23"
   names, config keys, or caller-specific context in comments on types; those details belong at
   the call site, not on the type itself
 
-## Keeping This File Current
+## Update Protocol
 
 If the user states a new Go-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or

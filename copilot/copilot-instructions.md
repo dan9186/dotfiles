@@ -181,3 +181,9 @@ is needed for these:
 | GitHub CLI | `gh:pr:view:*`, `gh:pr:list:*`, `gh:pr:checks:*`, `gh:issue:view:*`, `gh:issue:list:*`, `gh:repo:view:*`, `gh:run:view:*`, `gh:run:list:*` |
 
 Any shell command outside this list will require explicit approval at runtime.
+
+## Update Protocol
+
+If a new global convention is proposed during work, do not silently absorb it. Show the exact text
+to add, classify it as a hard rule or guideline, wait for explicit confirmation, then update this
+file and remind the user to commit from `~/dotfiles`.

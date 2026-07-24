@@ -136,7 +136,7 @@ Specific files, directories, or patterns to avoid touching or to treat with extr
 - Use backticks for all file paths, commands, directory names, and symbol names
 - Keep each bullet to one line where possible; two lines maximum
 
-## Listen for Standard Updates
+## Update Protocol
 
 If at any point the user says something like:
 - "every AGENTS.md should have a X section"

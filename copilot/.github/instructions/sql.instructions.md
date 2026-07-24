@@ -119,7 +119,7 @@ Migrations that backfill or transform existing data require additional care:
 - The `-- +goose Down` section must contain `-- cannot roll back` with a brief explanation of
   why the transformation is not reversible.
 
-## Keeping This File Current
+## Update Protocol
 
 If the user states a new SQL-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
