@@ -7,6 +7,17 @@ lastReviewed: "2026-07-23"
 
 # Go Coding Standards
 
+## Purpose
+
+Define mandatory Go conventions for implementation, testing, and docs to keep behavior predictable across repositories.
+
+## Scope
+
+- Applies to all `*.go` files matched by `applyTo`.
+- These are hard rules unless a repository-specific instruction explicitly overrides them.
+
+## Hard Rules
+
 ## Error Handling
 
 - Never return naked errors; always wrap with `fmt.Errorf` and a short, lowercase context prefix in

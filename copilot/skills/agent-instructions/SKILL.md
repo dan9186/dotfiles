@@ -8,7 +8,22 @@ lastReviewed: "2026-07-23"
 
 A skill for generating, maintaining, and converting agent instruction files into `AGENTS.md` — the permanent context file that helps any AI coding agent orient quickly and work efficiently in this repository.
 
-## When to Use This Skill
+## Purpose
+
+Produce and maintain a concise, durable `AGENTS.md` that captures repository reality for coding agents.
+
+## Scope
+
+- Applies when creating, updating, or converting agent instruction files into `AGENTS.md`.
+- Prioritizes stable codebase context over task-specific guidance.
+
+## Structure Contract
+
+- Keep instructions explicit, imperative, and short.
+- Use fixed section ordering for predictable outputs.
+- Resolve source conflicts with the user before writing.
+
+## Trigger Phrases
 
 - User asks to create or update `AGENTS.md`
 - User wants to convert an existing instruction file (`.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`, etc.) into `AGENTS.md`
@@ -85,7 +100,7 @@ For each file found: extract facts about purpose, tech stack, conventions, build
 
 Where sources conflict: **stop and surface each conflict to the user before writing**. Present the differing values, which files they came from, and ask the user which one is correct. Do not resolve conflicts by assumption.
 
-## Writing the File
+## Structured Output Specification
 
 ### Required Sections (in order)
 
@@ -152,7 +167,7 @@ If at any point the user says something like:
 5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/agent-instructions/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 
-## Output
+## Output Contract
 
 1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
 2. If `.github/copilot-instructions.md` was the source of a conversion, delete it automatically after writing `AGENTS.md`. For any other converted instruction file, note which file was converted and offer to delete or archive it.

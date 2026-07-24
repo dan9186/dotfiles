@@ -5,6 +5,21 @@ lastReviewed: "2026-07-23"
 
 # Copilot Global Instructions
 
+## Purpose
+
+Define global behavior, workflow, and quality expectations for Copilot sessions across personal and work repositories.
+
+## Scope
+
+- Applies to all Copilot interactions unless a more specific repository or language instruction overrides it.
+- Treat these as default hard rules for execution behavior and decision-making.
+
+## Structure Contract
+
+- Section headers are stable and intentionally ordered.
+- Rules should be explicit and imperative.
+- When adding new rules, place them in the most specific section and avoid duplicates.
+
 ## Preferred Languages & Frameworks
 - Go is the primary language — used for microservices, CLIs, and libraries
 - Rust, TypeScript/Node (pnpm), Python, Ruby, and Java are present but secondary

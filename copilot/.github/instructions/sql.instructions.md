@@ -7,6 +7,17 @@ lastReviewed: "2026-07-23"
 
 # SQL Instructions
 
+## Purpose
+
+Define SQL migration, schema, and safety rules used across repositories.
+
+## Scope
+
+- Applies to all `*.sql` files matched by `applyTo`.
+- Rules are mandatory unless repository-specific instructions explicitly override them.
+
+## Hard Rules
+
 ## Goose Migrations
 
 SQL files in `ext/db/` are [goose](https://github.com/pressly/goose) migration files. Every
