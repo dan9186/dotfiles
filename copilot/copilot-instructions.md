@@ -3,31 +3,29 @@ instructionType: "global"
 lastReviewed: "2026-07-23"
 ---
 
-# Copilot Global Instructions
-
-## Purpose
-
+<Purpose>
 Define global behavior, workflow, and quality expectations for Copilot sessions across personal and work repositories.
+</Purpose>
 
-## Scope
-
+<Scope>
 - Applies to all Copilot interactions unless a more specific repository or language instruction overrides it.
 - Treat these as default hard rules for execution behavior and decision-making.
+</Scope>
 
-## Structure Contract
-
+<StructureContract>
 - Section headers are stable and intentionally ordered.
 - Rules should be explicit and imperative.
 - When adding new rules, place them in the most specific section and avoid duplicates.
+</StructureContract>
 
-## Preferred Languages & Frameworks
+<PreferredLanguages>
 - Go is the primary language — used for microservices, CLIs, and libraries
 - Rust, TypeScript/Node (pnpm), Python, Ruby, and Java are present but secondary
 - Infrastructure targets AWS and GCP; containerized workloads via Docker
+</PreferredLanguages>
 
-## Coding Style
-
-### General
+<CodingStyle>
+<General>
 - Prefer targeted, surgical changes over full file rewrites
 - Ask before introducing new external dependencies; stdlib and already-present deps are fine
 - Strongly prefer **simple over easy**: favor explicit, readable code over convenience abstractions
@@ -40,34 +38,40 @@ Define global behavior, workflow, and quality expectations for Copilot sessions 
   prefer intermediate variables with clear names so the logic can be followed line by line
 - All of the above share the same goal: minimize the mental load required to read and understand a
   block of code
+</General>
 
-### Go
+<Go>
 Go-specific standards are in `~/dotfiles/copilot/.github/instructions/go.instructions.md` and are
 automatically injected when working on `.go` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
+</Go>
 
-### SQL
+<SQL>
 SQL-specific standards are in `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and
 are automatically injected when working on `.sql` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
+</SQL>
+</CodingStyle>
 
-## Documentation
+<Documentation>
 - Do not duplicate information that already exists authoritatively elsewhere — link or reference it instead
 - In particular: never reproduce CLI usage, flags, or command descriptions in a README or doc file;
   that content lives in the tool's `--help` output and the two will inevitably drift
 - Apply this broadly: if a config file, schema, or API is the source of truth, docs should point to
   it rather than re-describe it
 
-### Go doc comments
+<GoDocComments>
 Go doc comment standards are in `~/dotfiles/copilot/.github/instructions/go.instructions.md`.
+</GoDocComments>
+</Documentation>
 
-## Linear / Ticket Workflow
+<LinearWorkflow>
 - Always use the **`linear-create`** skill when creating a new Linear ticket — it is a blocking
   requirement; invoke it before any other action
 - Always use the **`linear-work`** skill when starting work on an existing ticket
 - Always use the **`linear-close`** skill when closing or shipping a ticket
 - Always use the **`linear-update`** skill when writing results or progress back to a ticket
+</LinearWorkflow>
 
-## Model Strategy
-
+<ModelStrategy>
 Copilot runs in **auto model mode**. Default preference: **Claude Haiku 4.5** — fast, lightweight
 reasoning ideal for planning, exploration, architecture decisions, and discovery work.
 
@@ -77,20 +81,21 @@ For explicit model selection during a session:
 
 Available models: `gpt-5.4`, `gpt-5.4-mini`, `gpt-5-mini`, `claude-sonnet-4.6`, `claude-sonnet-4.5`,
 `claude-haiku-4.5`, `gemini-3.1-pro-preview`, `gemini-3.5-flash`.
+</ModelStrategy>
 
-## Workflow Preferences
+<WorkflowPreferences>
 - Show diffs and targeted changes rather than rewriting whole files
 - Concise by default — skip preamble and get to the point
 - Explain reasoning and trade-offs when explicitly asked, or when a decision is non-obvious
 - Flag potential issues without being overly cautious
 - Work/personal context is split — don't assume work config applies to personal projects
 - **Model & Effort Choices**: When a plan has been reviewed, use the specified model and effort level to guide implementation. Low effort means streamlined work with reasonable defaults; medium is balanced investigation and validation; high means thorough exploration, multiple approaches considered, and exhaustive verification. Model choice affects reasoning depth (Haiku for quick tactical work, Sonnet for architectural decisions, GPT-5.4 for complex code analysis).
+</WorkflowPreferences>
 
-## Question-Asking Protocol
-
+<QuestionAskingProtocol>
 Always ask clarifying questions to reduce ambiguity and avoid rework. The goal is to surface assumptions early and align on approach *before* implementing.
 
-### When Planning (New Tasks or Major Changes)
+<WhenPlanning>
 **Always ask about:**
 - **Scope & Boundaries**: What's explicitly in scope? What's out of scope? Are there edge cases to consider?
 - **Feasibility & Constraints**: Are there known blockers, dependencies, or external limitations?
@@ -102,8 +107,9 @@ Always ask clarifying questions to reduce ambiguity and avoid rework. The goal i
 - Implementation details that are obviously clear from context
 - Decisions already well-established in similar work
 - Micro-decisions that don't significantly impact the approach
+</WhenPlanning>
 
-### When Implementing (Encountering Ambiguity or Optionality)
+<WhenImplementing>
 **Ask questions when:**
 - **Multiple valid approaches exist** (e.g., sync vs. async, centralized vs. distributed state) and the trade-offs aren't obvious from existing patterns
 - **Behavioral edge cases are unclear** (e.g., error handling strategy, retry limits, default values, timeouts)
@@ -116,15 +122,17 @@ Always ask clarifying questions to reduce ambiguity and avoid rework. The goal i
 - Decisions already made in similar code or documented patterns in the codebase
 - Style/formatting questions (follow existing patterns)
 - Optimization questions when there's no evidence of a performance problem
+</WhenImplementing>
 
-### Preferred Question Format
+<PreferredFormat>
 Use `ask_user` tool (never plain text) with:
 - Clear, specific question (not bundles of 3+ questions together)
 - Concrete choices when available (avoid open-ended questions when options are predictable)
 - One question per tool call
 - Include rationale if the question's context isn't obvious
+</PreferredFormat>
 
-### Judgment Call Examples
+<JudgmentCallExamples>
 | Situation | Action |
 |---|---|
 | "Build an API endpoint" (ambiguous schema/behavior) | Ask scope, structure, and error handling |
@@ -132,9 +140,10 @@ Use `ask_user` tool (never plain text) with:
 | "Fix bug in authentication" (clear problem, clear fix) | Don't ask; implement, then verify |
 | "Refactor this module" (undefined scope) | Ask boundaries, affected systems, and backwards compatibility requirements |
 | "Add database index" (clear performance issue identified) | Don't ask; implement with reasoning in commit message |
+</JudgmentCallExamples>
+</QuestionAskingProtocol>
 
-## Analysis Workflow
-
+<AnalysisWorkflow>
 When presenting findings from a code review, audit, or any multi-item analysis:
 
 - Group findings into categories for clarity, but **number items globally** across all categories
@@ -152,24 +161,26 @@ After each round of addressing items:
   through history or mentally track what has been done
 - Wait for the user to manually commit changes between rounds; do not batch unrelated fixes
   together or suggest squashing separate logical changes into one commit
+</AnalysisWorkflow>
 
-## Git Practices
-- **Never run `git commit`** — always stage changes and stop, letting the user commit. This keeps
-  the user in incremental review rather than waiting until a PR for oversight.
+<GitPractices>
+- **Never run `git commit` or `git add`** — always stop after making file changes, letting the
+  user stage and commit. This keeps the user in control of what gets staged and reviewed.
 - Linear history is preferred: fast-forward only merges, autosquash rebases
 - Use `--force-with-lease` over `--force`
 - Commits are GPG signed
+</GitPractices>
 
-## Task Completion
+<TaskCompletion>
 - **For code changes:** The task is complete when changes are made, staged, and tested. Do not commit.
   The user reviews the staged changes and commits as part of their workflow, acting as a confirming
   pair on the work.
 - **For other work** (config, dependencies, infrastructure): The task is complete when changes are
   applied and tested to verify they work.
 - In both cases, verification (tests passing, linting clean, etc.) is required before reporting completion.
+</TaskCompletion>
 
-## Environment & Workspace
-
+<Environment>
 - Go workspace root: `~/go/src/github.com/` — repos are organized by org under this path
 - Work repos live under `~/go/src/github.com/interxfi/` — this is the primary work org (fintech
   platform: payments, orders, portfolio, trade reporting, regulatory filings, exchange/market
@@ -183,9 +194,9 @@ After each round of addressing items:
 - **Filesystem searches (find, grep, glob) must be scoped to `$GOPATH/src` (or a more specific
   subdirectory within it) — never the filesystem root or home directory.** Use `$GOPATH` to locate
   the workspace root rather than hardcoding `~/go`.
+</Environment>
 
-## Shell Environment
-
+<ShellEnvironment>
 The following shell tools are pre-approved via `~/.zprofile` — no runtime permission prompt
 is needed for these:
 
@@ -196,9 +207,10 @@ is needed for these:
 | GitHub CLI | `gh:pr:view:*`, `gh:pr:list:*`, `gh:pr:checks:*`, `gh:issue:view:*`, `gh:issue:list:*`, `gh:repo:view:*`, `gh:run:view:*`, `gh:run:list:*` |
 
 Any shell command outside this list will require explicit approval at runtime.
+</ShellEnvironment>
 
-## Update Protocol
-
+<UpdateProtocol>
 If a new global convention is proposed during work, do not silently absorb it. Show the exact text
 to add, classify it as a hard rule or guideline, wait for explicit confirmation, then update this
 file and remind the user to commit from `~/dotfiles`.
+</UpdateProtocol>
