@@ -7,15 +7,14 @@ description: 'Generates formatted changelogs and release notes for software proj
 
 A skill for generating formatted changelogs and release notes from git history and session context.
 
-## When to Use This Skill
-
+<TriggerPhrases>
 - User asks to generate release notes or a changelog
 - User wants to summarize changes between two git refs (tags, branches, commits)
 - User wants to know what changed since a specific version
 - User is preparing a release and needs a human-readable summary of changes
+</TriggerPhrases>
 
-## Output Format
-
+<OutputFormat>
 Each line follows this format:
 
 ```
@@ -32,39 +31,43 @@ Use these categories — only include categories that have entries:
 | `REMOVED` | Features, flags, or behaviors that no longer exist |
 | `FIXED` | Bug fixes |
 | `SECURITY` | Security-related fixes or improvements |
+</OutputFormat>
 
-## Step-by-Step Workflow
-
-### Step 1: Determine the commit range
-
-Ask the user for the range if not provided. Common forms:
+<Workflow>
+<Step1>
+Determine the commit range. Ask the user for the range if not provided. Common forms:
 - Tag to HEAD: `v1.2.3..HEAD`
 - Tag to tag: `v1.2.2..v1.2.3`
 - Branch to branch: `main..feature`
+</Step1>
 
-### Step 2: Gather git history
+<Step2>
+Gather git history.
 
 ```bash
 git --no-pager log <range> --oneline
 git --no-pager log <range> --format="%s%n%b"
 ```
+</Step2>
 
-### Step 3: Cross-reference with session context
+<Step3>
+Cross-reference with session context. If the current session involved making code changes, use that context to enrich or clarify the changelog beyond what commit messages alone convey. Commit messages are often terse — the session context fills in the "why" and exact behavioral impact.
+</Step3>
 
-If the current session involved making code changes, use that context to enrich or clarify the changelog beyond what commit messages alone convey. Commit messages are often terse — the session context fills in the "why" and exact behavioral impact.
+<Step4>
+Classify each change. Map commits and session context to the appropriate category. One line per distinct change. Combine closely related commits into a single entry when they represent one logical change.
+</Step4>
 
-### Step 4: Classify each change
-
-Map commits and session context to the appropriate category. One line per distinct change. Combine closely related commits into a single entry when they represent one logical change.
-
-### Step 5: Write the entries
+<Step5>
+Write the entries.
 
 - Start each entry with the affected command, flag, function, or component in backticks where applicable
 - Be specific about behavioral impact, not just implementation details
 - Order entries within each category from most user-visible to least
+</Step5>
+</Workflow>
 
-## Example Output
-
+<ExampleOutput>
 ```
 - `ADDED` &mdash; `status` command to show working tree status across repositories; supports `--short`/`-s` and `--ignore-empty` flags
 - `ADDED` &mdash; `commit --sign`/`-s` flag to create GPG-signed annotated tags (requires `--message`)
@@ -72,10 +75,11 @@ Map commits and session context to the appropriate category. One line per distin
 - `FIXED` &mdash; progress bar was only shown on the delete path; now also shown during tag creation
 - `SECURITY` &mdash; inspects `tag.gpgSign` git config and errors early rather than allowing git to open an interactive subprocess editor
 ```
+</ExampleOutput>
 
-## Tips
-
+<Tips>
 - If commit messages are sparse, rely more heavily on session context and code diffs
 - Omit merge commits from the output unless they convey meaningful information
 - When a change affects multiple commands, list them all in one entry rather than repeating the same description
 - If the user wants a specific version number in a header, add it above the entries: `## v1.2.3`
+</Tips>

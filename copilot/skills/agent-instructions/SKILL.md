@@ -1,53 +1,55 @@
 ---
 name: agent-instructions
 description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up agent context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
-lastReviewed: "2026-07-23"
+lastReviewed: "2026-07-31"
 ---
 
 # Agent Instructions Skill
 
-A skill for generating, maintaining, and converting agent instruction files into `AGENTS.md` — the permanent context file that helps any AI coding agent orient quickly and work efficiently in this repository.
+<Purpose>
+Produce and maintain a concise, durable `AGENTS.md` that captures repository reality for coding agents — the permanent context file that helps any AI coding agent orient quickly and work efficiently in a repository.
+</Purpose>
 
-## Purpose
-
-Produce and maintain a concise, durable `AGENTS.md` that captures repository reality for coding agents.
-
-## Scope
-
+<Scope>
 - Applies when creating, updating, or converting agent instruction files into `AGENTS.md`.
 - Prioritizes stable codebase context over task-specific guidance.
+</Scope>
 
-## Structure Contract
-
+<StructureContract>
 - Keep instructions explicit, imperative, and short.
 - Use fixed section ordering for predictable outputs.
 - Resolve source conflicts with the user before writing.
+</StructureContract>
 
-## Trigger Phrases
-
+<TriggerPhrases>
 - User asks to create or update `AGENTS.md`
 - User wants to convert an existing instruction file (`.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`, etc.) into `AGENTS.md`
 - User wants to initialize agent context for a repository
 - User asks to "add agent instructions" or "set up agent context"
 - User wants to improve agent quality by providing standing codebase context
+</TriggerPhrases>
 
-## Constraints (Always Apply)
-
+<Constraints>
 - **Length**: The finished file must fit within **two printed pages** — roughly 80–120 lines. Be ruthless about brevity. Every sentence must earn its place.
 - **Not task-specific**: Do not include instructions about a current bug, feature, or PR. The file describes the codebase permanently, not a transient task.
 - **No duplication of tool output**: Never reproduce what `--help`, `make help`, or a schema already provides authoritatively. Reference the command instead.
 - **Plain markdown only**: No frontmatter, no HTML. The file is read verbatim by agents, so keep formatting clean and skimmable.
+</Constraints>
 
-## Research Phase — Do This Before Writing
-
+<ResearchPhase>
 Before writing a single line, gather the following. **Take your time here** — thorough research produces dramatically better instructions.
 
-### 1. Understand what the repo does
+<RepoOverview>
+Understand what the repo does.
+
 - Read `README.md` (purpose, audience, key features)
 - Read any top-level docs (`docs/`, `CONTRIBUTING.md`, `ARCHITECTURE.md`) if present
 - Scan entry points (`main.*`, `cmd/`, `app/`, `src/index.*`, `lib/`) to confirm the README matches reality
+</RepoOverview>
 
-### 2. Identify languages, frameworks, and tooling
+<TechStack>
+Identify languages, frameworks, and tooling.
+
 - Check for: `go.mod`, `package.json`, `Cargo.toml`, `pyproject.toml`/`setup.py`, `Gemfile`, `pom.xml`, `build.gradle`
 - Note key frameworks, major libraries, and runtime versions where specified
 - Identify infrastructure tooling: Docker, Terraform, Helm, etc.
@@ -61,8 +63,11 @@ workflow files, `README`, `CONTRIBUTING`, `Makefile`, and any build constraint c
   specific reason to target this version, or should I use latest?" If the user confirms no reason,
   document **"latest Go"** in the Tech Stack section. If the user provides a reason, document the
   specific version and note the reason.
+</TechStack>
 
-### 3. Map the build and validation workflow
+<BuildWorkflow>
+Map the build and validation workflow.
+
 - Look for `Makefile`, `Taskfile`, `justfile`, `.github/workflows/`, `scripts/`
 - Identify the commands used in CI for: building, testing, linting, formatting
 - Note any required env vars or one-time setup steps documented in the README or CONTRIBUTING
@@ -76,17 +81,20 @@ data-dependent tests that require real data, the correct workflow is:
 Document this workflow in the generated `AGENTS.md` under **Build & Validate** only when the
 codebase has tests that actually touch a database. Do not include this section for projects without
 database-touching tests.
+</BuildWorkflow>
 
-### 4. Map the layout and architecture
+<Layout>
+Map the layout and architecture.
+
 - Note top-level directory purposes (a single sentence each is enough)
 - Identify where the main entry points live
 - Note any non-obvious conventions: generated code directories, vendored code, monorepo structure
 - Identify where configuration lives (env files, config packages, infrastructure definitions)
 - Note where tests live and how they are organized (unit vs integration, co-located vs separate)
+</Layout>
 
-### 5. Check for existing AI context files
-
-Other AI tools often have their own context files that may already contain accurate, well-considered descriptions of the codebase. **Read all of these before writing** — they are high-signal sources and should be mined heavily. When the user asks to convert one of these files, it becomes the primary source. If `AGENTS.md` already exists in the repo, treat it as the primary source and update it rather than recreating it from scratch.
+<ExistingAIContext>
+Check for existing AI context files. Other AI tools often have their own context files that may already contain accurate, well-considered descriptions of the codebase. **Read all of these before writing** — they are high-signal sources and should be mined heavily. When the user asks to convert one of these files, it becomes the primary source. If `AGENTS.md` already exists in the repo, treat it as the primary source and update it rather than recreating it from scratch.
 
 | File | Tool | What it typically contains |
 |------|------|---------------------------|
@@ -99,9 +107,11 @@ Other AI tools often have their own context files that may already contain accur
 For each file found: extract facts about purpose, tech stack, conventions, build steps, and architecture. Prefer information from these files over your own inference — they were written by someone who knows the repo.
 
 Where sources conflict: **stop and surface each conflict to the user before writing**. Present the differing values, which files they came from, and ask the user which one is correct. Do not resolve conflicts by assumption.
+</ExistingAIContext>
+</ResearchPhase>
 
-## Structured Output Specification
-
+<OutputSpec>
+<RequiredSections>
 ### Required Sections (in order)
 
 ```markdown
@@ -132,8 +142,10 @@ an agent should know before making changes. Examples:
 Bullet list of 3–8 hard rules or patterns the agent must follow.
 Focus on things that are easy to get wrong and costly to fix.
 ```
+</RequiredSections>
 
-### Optional Sections (include only if genuinely useful)
+<OptionalSections>
+Include only if genuinely useful.
 
 ```markdown
 ## External Dependencies
@@ -142,17 +154,20 @@ Services, APIs, or credentials an agent needs to know about (not secrets — jus
 ## Known Landmines
 Specific files, directories, or patterns to avoid touching or to treat with extra care.
 ```
+</OptionalSections>
 
-### Tone and Style Rules
-
+<ToneAndStyle>
+<Rules>
 - Write for a capable software engineer reading for the first time, not a beginner
 - Use imperative voice for conventions: "Always wrap errors", not "Errors should be wrapped"
 - Prefer concrete examples over abstract descriptions when space allows
 - Use backticks for all file paths, commands, directory names, and symbol names
 - Keep each bullet to one line where possible; two lines maximum
+</Rules>
+</ToneAndStyle>
+</OutputSpec>
 
-## Update Protocol
-
+<UpdateProtocol>
 If at any point the user says something like:
 - "every AGENTS.md should have a X section"
 - "add Y to the required sections"
@@ -166,10 +181,11 @@ If at any point the user says something like:
 4. Wait for explicit confirmation before modifying
 5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/agent-instructions/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
+</UpdateProtocol>
 
-## Output Contract
-
+<OutputContract>
 1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
 2. If `.github/copilot-instructions.md` was the source of a conversion, delete it automatically after writing `AGENTS.md`. For any other converted instruction file, note which file was converted and offer to delete or archive it.
 3. If updating an existing `AGENTS.md`, show a brief diff summary of what changed and why
 4. Tell the user: length (line count), what was included, and any gaps you could not fill due to missing documentation
+</OutputContract>

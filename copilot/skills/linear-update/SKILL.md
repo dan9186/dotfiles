@@ -8,14 +8,13 @@ description: 'Writes findings, results, or progress back to an existing Linear t
 Write a structured update back to a Linear ticket — summarizing what was done, why, and any
 caveats or follow-ups.
 
-## When to Use This Skill
-
+<TriggerPhrases>
 - Work is done or partially done and the user wants to write back to the ticket
 - User wants to post a progress comment or status update on a ticket
 - User wants to update the description or body of a ticket with new information
+</TriggerPhrases>
 
-## Update Mode — Comment vs. Description
-
+<UpdateMode>
 Before drafting content, determine the right update mechanism:
 
 | Signal | Mechanism |
@@ -25,23 +24,24 @@ Before drafting content, determine the right update mechanism:
 
 When unclear, default to a **comment** for progress/status updates and a **description edit** for
 structured reference information (specs, context, migration guides, service lists, etc.).
+</UpdateMode>
 
-## Constraints
-
+<Constraints>
 - Never post a comment without showing a preview and confirming
 - Never change ticket state without confirming the transition
+</Constraints>
 
-## Steps
-
+<Workflow>
 1. Gather what was done: ask the user to summarize, or infer from git context
-2. Determine update mechanism (comment vs. description edit — see above)
+2. Determine update mechanism (comment vs. description edit — see `<UpdateMode>`)
 3. Draft the update:
    - **Comment**: **What changed** · **Why** · **Caveats / follow-ups**
    - **Description edit**: structured Markdown that will replace or augment the existing description
 4. Show a preview and confirm before posting via `Linear-save_comment` or `Linear-save_issue`
 5. For comments: ask whether to transition the ticket state (e.g., "Done") — confirm before applying
+</Workflow>
 
-## References
-
+<References>
 - Use `notion-context` skill when a ticket links to or references a Notion document that provides
   spec or context needed for the work
+</References>

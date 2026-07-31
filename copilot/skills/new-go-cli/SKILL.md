@@ -7,14 +7,13 @@ description: 'Scaffolds a new Go CLI tool following the preferred personal patte
 
 Scaffold a complete, ready-to-extend Go CLI tool following a preferred personal pattern for building CLIs.
 
-## When to Use This Skill
-
+<TriggerPhrases>
 - User asks to create, scaffold, or bootstrap a new CLI tool
 - User says "new cli tool named X" or "start a go cli project called X"
 - User wants a canonical starting point for a Go CLI
+</TriggerPhrases>
 
-## Pre-Flight Questions
-
+<PreFlightQuestions>
 Before scaffolding, confirm:
 1. **Tool name** (e.g. `mytool`) — if not provided, ask
 2. **Org / GitHub user** (e.g. `myorg`) — used in the module path and Docker registry
@@ -24,9 +23,9 @@ Before scaffolding, confirm:
    - If the user provided it in their request, extract and clean it up into a single concise sentence.
    - If not provided, ask before proceeding.
    - Use this as `{description}` throughout.
+</PreFlightQuestions>
 
-## Process
-
+<Process>
 1. Confirm tool name, module path, and target directory
 2. Detect the installed Go version:
    ```
@@ -40,11 +39,11 @@ Before scaffolding, confirm:
    go fmt ./... && go vet ./... && go build . && go test ./...
    ```
 4. Report the tree of created files and confirm everything builds and tests pass
+</Process>
 
 ---
 
-## Directory Structure
-
+<DirectoryStructure>
 ```
 {toolname}/
 ├── .ackrc
@@ -75,10 +74,11 @@ Before scaffolding, confirm:
     └── clienttest/
         └── clienttest.go
 ```
+</DirectoryStructure>
 
 ---
 
-## File Templates
+<FileTemplates>
 
 ### `main.go`
 
@@ -895,9 +895,11 @@ go install github.com/{org}/{toolname}@latest
 
 ---
 
-## Conventions & Patterns
+</FileTemplates>
 
-### Adding a New Subcommand
+<Conventions>
+<NewSubcommand>
+**Adding a New Subcommand**
 
 Each subcommand follows the constructor pattern for testability:
 
@@ -953,36 +955,48 @@ cmd/
     └── remove.go
 ```
 Register the parent in `cmd/root.go` init(), sub-commands in their own `init()` functions.
+</NewSubcommand>
 
-### Output — Use scribe
+<OutputScribe>
+**Output — Use scribe**
 
 Use `github.com/gomicro/scribe` for all output, not bare `fmt.Print*` calls.
 The `forbidigo` linter will flag `fmt.Print*` outside `cmd/` by default.
 In `cmd/` files, prefer writing to the injected `io.Writer` via `cmd.Printf` / `fmt.Fprintf(out, ...)`.
+</OutputScribe>
 
-### Verbose output
+<VerboseOutput>
+**Verbose output**
 
 Gate verbose output behind `viper.GetBool("verbose")` or the scribe logger's verbose level.
+</VerboseOutput>
 
-### Error handling
+<ErrorHandling>
+**Error handling**
 
 - Use `RunE` (not `Run`) for commands that can fail
 - Set `cmd.SilenceUsage = true` before returning runtime errors to prevent cobra from printing the usage message
 - Wrap errors with context: `fmt.Errorf("operation name: %w", err)`
+</ErrorHandling>
 
-### Config file
+<ConfigFile>
+**Config file**
 
 Lives at `~/.{toolname}/config` (YAML, mode 0600).
 `config.ParseFromFile()` returns an empty `Config` without error if the file doesn't exist yet.
 Add new fields to `Config` and sub-structs as needed; write-back via `c.WriteFile()`.
+</ConfigFile>
 
-### Client interface
+<ClientInterface>
+**Client interface**
 
 Add methods to `client.Clienter` as the tool gains functionality.
 The `clienttest.Client` struct must implement `Clienter` — add matching stub methods as you grow the interface.
 Use `PersistentPreRun: setupClient` on any command that calls `clt`.
+</ClientInterface>
 
-### Version injection
+<VersionInjection>
+**Version injection**
 
 The `Version` variable in `cmd/version.go` is set at build time via ldflags:
 ```
@@ -991,8 +1005,10 @@ The `Version` variable in `cmd/version.go` is set at build time via ldflags:
 `forge.yaml` injects `dev-<short-sha>` for local builds.
 goreleaser injects the tag version for releases.
 Anything not injected falls back to `"dev-local"`.
+</VersionInjection>
 
-### Optional: GitHub OAuth auth
+<GitHubOAuth>
+**Optional: GitHub OAuth auth**
 
 If the tool authenticates with GitHub, add:
 - `var clientID, clientSecret string` in `cmd/auth.go` (injected via ldflags)
@@ -1000,3 +1016,5 @@ If the tool authenticates with GitHub, add:
 - Add `gomicro/trust`, `golang.org/x/oauth2`, and `google/go-github` to `go.mod`
 - Update `.goreleaser.yml` to inject `clientID` / `clientSecret`
 - Update `.github/workflows/build.yml` env section with the secret names
+</GitHubOAuth>
+</Conventions>

@@ -8,20 +8,19 @@ description: 'Creates Linear tickets — either before work starts (pre-work dra
 Create a Linear ticket — either before work begins (pre-work draft) or retroactively from an
 existing branch, commits, or PR.
 
-## When to Use This Skill
-
+<TriggerPhrases>
 - User wants to create a ticket for work that hasn't started yet
 - User has work in flight or at PR stage and needs a ticket created retroactively
+</TriggerPhrases>
 
-## Constraints
-
+<Constraints>
 - Never create a ticket without showing a preview and confirming
 - Auto-assign all created tickets to `me` unless explicitly told otherwise
 - When inferring ticket content from git context, always surface your interpretation for
   confirmation before creating — git context tells you *what*, not always *why*
+</Constraints>
 
-## Phase 0 — Determine Mode
-
+<PhaseDetection>
 Classify into one of the three sub-modes before proceeding:
 
 | Mode | Signal |
@@ -31,9 +30,9 @@ Classify into one of the three sub-modes before proceeding:
 | **Bulk / sub-ticket** | Content is already drafted and reviewed; user wants to create multiple tickets (often children of a known parent) in one go |
 
 If ambiguous, ask one question to clarify before proceeding.
+</PhaseDetection>
 
-## Bulk / Sub-ticket Mode
-
+<BulkMode>
 Content is already known (e.g., drafted in a plan, reviewed by the user) and multiple tickets need
 to be created — typically as children of a parent ticket:
 
@@ -43,18 +42,18 @@ to be created — typically as children of a parent ticket:
 3. Confirm once ("Create all X tickets?") before proceeding
 4. Create all tickets in parallel via `Linear-save_issue` with `parentId` set
 5. Report the created ticket IDs and URLs in a table
+</BulkMode>
 
-## Pre-work Draft Mode
-
+<PreWorkMode>
 1. Ask the user to describe what needs to be done if they haven't already
 2. Infer: title (concise, imperative), description (what + why + context), labels if obvious
 3. Ask only for what cannot be inferred — do not run through a form
 4. Show a preview of the ticket draft (title, description, assignee = me, team, labels)
 5. Confirm, then create via `Linear-save_issue`
 6. Share the ticket ID and URL
+</PreWorkMode>
 
-## Retroactive Draft Mode
-
+<RetroactiveMode>
 Work already exists — inspect git context to infer the ticket:
 
 1. Run `git --no-pager log --oneline -20` and `git --no-pager diff main...HEAD --stat` (or
@@ -68,9 +67,9 @@ Work already exists — inspect git context to infer the ticket:
    acceptance criteria)
 7. Show a preview and confirm before creating
 8. After creating, offer to add the branch/PR as a link on the ticket
+</RetroactiveMode>
 
-## Ticket State Guidance
-
+<TicketStateGuidance>
 When creating a ticket, choose the initial state based on the following logic. Always confirm
 the state as part of the preview — do not silently apply a state.
 
@@ -80,8 +79,9 @@ the state as part of the preview — do not silently apply a state.
 | Work is planned for the current cycle but hasn't started | **Todo** |
 | Work is actively being done right now | **In Progress** |
 | Work is complete | **Done** |
+</TicketStateGuidance>
 
-## References
-
+<References>
 - Use `notion-context` skill when a ticket links to or references a Notion document that provides
   spec or context needed for the work
+</References>

@@ -7,24 +7,24 @@ description: 'Create new Agent Skills for GitHub Copilot from prompts or by dupl
 
 A meta-skill for creating new Agent Skills. Use this skill when you need to scaffold a new skill folder, generate a SKILL.md file, or help users understand the Agent Skills specification.
 
-## When to Use This Skill
-
+<TriggerPhrases>
 - User asks to "create a skill", "make a new skill", or "scaffold a skill"
 - User wants to add a specialized capability to their GitHub Copilot setup
 - User needs help structuring a skill with bundled resources
 - User wants to duplicate this template as a starting point
+</TriggerPhrases>
 
-## Prerequisites
-
+<Prerequisites>
 - Understanding of what the skill should accomplish
 - A clear, keyword-rich description of capabilities and triggers
 - Knowledge of any bundled resources needed (scripts, references, assets, templates)
+</Prerequisites>
 
-## Creating a New Skill
+<Workflow>
+<Step0>
+**Determine Destination and Check for Conflicts**
 
-### Step 0: Determine Destination and Check for Conflicts
-
-**First, infer whether this is a personal or work skill from the user's prompt.** Look for signals like "work skill", "personal skill", company names, work-specific tooling, or private repo context. If the prompt is ambiguous, ask before proceeding:
+First, infer whether this is a personal or work skill from the user's prompt. Look for signals like "work skill", "personal skill", company names, work-specific tooling, or private repo context. If the prompt is ambiguous, ask before proceeding:
 
 > "Should this be a personal skill (stored in `~/dotfiles`) or a work skill (stored in `$PRIVATE_DOTFILES`)?"
 
@@ -39,8 +39,10 @@ ls -la ~/.copilot/skills/              # active symlinks — check for name conf
 If `$PRIVATE_DOTFILES` is unset and the destination is work, stop and tell the user: the `PRIVATE_DOTFILES` environment variable is not set.
 
 If the skill already exists anywhere, read its `SKILL.md` fully before deciding whether to update or replace it.
+</Step0>
 
-### Step 1: Create the Skill Directory
+<Step1>
+**Create the Skill Directory**
 
 Skills are **sourced from a versioned dotfiles repo** and **symlinked into `~/.copilot/skills/`** by the `skills-sync` shell function. Never create a skill directly in `~/.copilot/skills/`.
 
@@ -60,8 +62,10 @@ mkdir $PRIVATE_DOTFILES/copilot/work_skills/<skill-name>
 ```
 
 After writing `SKILL.md`, tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`. Do not run it yourself — the agent does not have access to the shell environment where `skills-sync` is defined.
+</Step1>
 
-### Step 2: Generate SKILL.md with Frontmatter
+<Step2>
+**Generate SKILL.md with Frontmatter**
 
 Every skill requires YAML frontmatter with `name` and `description`:
 
@@ -72,7 +76,7 @@ description: '<What it does>. Use when <specific triggers, scenarios, keywords u
 ---
 ```
 
-#### Frontmatter Field Requirements
+**Frontmatter Field Requirements**
 
 | Field | Required | Constraints |
 |-------|----------|-------------|
@@ -83,7 +87,7 @@ description: '<What it does>. Use when <specific triggers, scenarios, keywords u
 | `metadata` | No | Key-value pairs for additional properties |
 | `allowed-tools` | No | Space-delimited list of pre-approved tools (experimental) |
 
-#### Description Best Practices
+**Description Best Practices**
 
 **CRITICAL**: The `description` is the PRIMARY mechanism for automatic skill discovery. Include:
 
@@ -102,22 +106,24 @@ description: 'Toolkit for testing local web applications using Playwright. Use w
 ```yaml
 description: 'Web testing helpers'
 ```
+</Step2>
 
-### Step 3: Write the Skill Body
+<Step3>
+**Write the Skill Body**
 
 After the frontmatter, add markdown instructions. Recommended sections:
 
 | Section | Purpose |
 |---------|---------|
 | `# Title` | Brief overview |
-| `## When to Use This Skill` | Reinforces description triggers |
-| `## Prerequisites` | Required tools, dependencies |
-| `## Step-by-Step Workflows` | Numbered steps for tasks |
-| `## Listen for Standard Updates` | Intercepts requests to change the skill's conventions and gates them behind explicit confirmation before writing |
-| `## Troubleshooting` | Common issues and solutions |
-| `## References` | Links to bundled docs |
+| `<TriggerPhrases>` | Reinforces description triggers |
+| `<Prerequisites>` | Required tools, dependencies |
+| `<Workflow>` | Numbered steps for tasks (use nested `<StepN>` tags) |
+| `<UpdateProtocol>` | Intercepts requests to change the skill's conventions and gates them behind explicit confirmation before writing |
+| `<Troubleshooting>` | Common issues and solutions |
+| `<References>` | Links to bundled docs |
 
-#### How to Write the Body
+**How to Write the Body**
 
 The body is **instructions to an agent, not documentation for a human**. Write it accordingly:
 
@@ -126,11 +132,11 @@ The body is **instructions to an agent, not documentation for a human**. Write i
 - Prefer **concrete examples and commands** over abstract descriptions
 - Front-load the most important constraints — the agent must not miss them
 - Keep total body length under 150 lines; every line should change agent behavior
-- **Include a `## Listen for Standard Updates` section** that intercepts requests to change the skill's own conventions, proposes the change explicitly, and gates writing to `SKILL.md` behind confirmation. See below for the standard template for this section.
+- **Include a `<UpdateProtocol>` section** that intercepts requests to change the skill's own conventions, proposes the change explicitly, and gates writing to `SKILL.md` behind confirmation. See `<UpdateProtocolTemplate>` for the standard template.
 
 A well-written skill body reads like a checklist written by an expert who has done the task many times and knows exactly where agents go wrong.
 
-#### Annotated Example: Complete Skill Body
+**Annotated Example: Complete Skill Body**
 
 The following is a realistic skill body with inline comments explaining the intent of each part. Use it as a style reference when writing new skills.
 
@@ -138,37 +144,44 @@ The following is a realistic skill body with inline comments explaining the inte
 # My Skill Title
 <!-- One sentence saying what this skill produces or accomplishes. -->
 
-## When to Use This Skill
+<TriggerPhrases>
 <!-- Mirror the description triggers. Helps the agent confirm it picked the right skill. -->
 - User asks to "do X", "create Y", or "set up Z"
 - User mentions keywords: foo, bar, baz
+</TriggerPhrases>
 
-## Constraints (Always Apply)
+<Constraints>
 <!-- List hard rules FIRST, before any workflow. The agent must internalize these before acting. -->
 - **Length**: Output must be under 100 lines — trim ruthlessly
 - **No duplication**: Never reproduce what `--help` or a schema already says; reference it instead
 - **Format**: Plain markdown only, no frontmatter, no HTML
+</Constraints>
 
-## Research Phase — Do This Before Writing
+<ResearchPhase>
 <!-- If the skill involves analyzing something (a codebase, a diff, a config), describe
      what to read and why. Good research produces dramatically better output. -->
 1. Read `README.md` to understand purpose and audience
 2. Check `package.json` / `go.mod` / `Cargo.toml` for language and framework
 3. Scan `Makefile` or `.github/workflows/` for build and test commands
+</ResearchPhase>
 
-## Workflow
+<Workflow>
 <!-- The main steps, in order. Number them. Be specific about inputs, outputs, and decisions. -->
 1. Do the first thing
 2. If condition X, do Y; otherwise do Z
 3. Write the output to `path/to/file` (create parent dirs if needed)
+</Workflow>
 
-## Output
+<OutputContract>
 <!-- Describe what a correct result looks like: file written, command run, summary printed. -->
 - Write the file to `<target path>`
 - Tell the user: what was included, what was skipped, and why
+</OutputContract>
 ````
+</Step3>
 
-### Step 4: Add Optional Directories (If Needed)
+<Step4>
+**Add Optional Directories (If Needed)**
 
 | Folder | Purpose | When to Use |
 |--------|---------|-------------|
@@ -176,9 +189,10 @@ The following is a realistic skill body with inline comments explaining the inte
 | `references/` | Documentation agent reads | API references, schemas, guides |
 | `assets/` | Static files used AS-IS | Images, fonts, templates |
 | `templates/` | Starter code agent modifies | Scaffolds to extend |
+</Step4>
+</Workflow>
 
-## Example: Complete Skill Structure
-
+<ExampleStructure>
 ```
 # Personal skill
 ~/dotfiles/copilot/skills/my-skill/       ← committed to ~/dotfiles
@@ -190,9 +204,9 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
 
 ~/.copilot/skills/my-skill                → symlink managed by skills-sync
 ```
+</ExampleStructure>
 
-## Quick Start
-
+<QuickStart>
 1. Infer personal vs. work from the prompt — ask if unclear
 2. Check both source dirs and `~/.copilot/skills/` for name conflicts
 3. Create `SKILL.md` in the correct source directory:
@@ -202,9 +216,9 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
 5. Write the body following the annotated example above
 6. Tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`
 7. Validate against the checklist below
+</QuickStart>
 
-## Validation Checklist
-
+<ValidationChecklist>
 - [ ] Folder name is lowercase with hyphens
 - [ ] `name` field matches folder name exactly
 - [ ] `description` is 10-1024 characters
@@ -212,15 +226,14 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
 - [ ] `description` is wrapped in single quotes
 - [ ] Body content is under 150 lines
 - [ ] Bundled assets are under 5MB each
-- [ ] `## Listen for Standard Updates` section is present
+- [ ] `<UpdateProtocol>` section is present
+</ValidationChecklist>
 
-## Standard Template: Listen for Standard Updates
-
+<UpdateProtocolTemplate>
 Include this section (adapted to the skill's domain) in every new skill body:
 
 ```markdown
-## Listen for Standard Updates
-
+<UpdateProtocol>
 If at any point the user says something like:
 - "we should always X"
 - "add Y to the standard"
@@ -234,12 +247,13 @@ If at any point the user says something like:
 4. Wait for explicit confirmation before modifying
 5. After confirmation, update `SKILL.md` in the skill source directory
 6. Tell the user to commit the change to the appropriate dotfiles repo to persist it
+</UpdateProtocol>
 ```
 
 Adapt the trigger phrases and "output" noun to match the skill's domain.
+</UpdateProtocolTemplate>
 
-## Reference Implementations
-
+<ReferenceImplementations>
 These skills in `~/.copilot/skills/` are good examples to read before writing a new one:
 
 | Skill | Good reference for |
@@ -250,16 +264,17 @@ These skills in `~/.copilot/skills/` are good examples to read before writing a 
 | `new-go-cli` | Scaffolding skill: opinionated output, links to existing patterns without duplicating them |
 
 Read at least one reference skill before writing a new one to calibrate tone, depth, and structure.
+</ReferenceImplementations>
 
-## Troubleshooting
-
+<Troubleshooting>
 | Issue | Solution |
 |-------|----------|
 | Skill not discovered | Improve description with more keywords and triggers |
 | Validation fails on name | Ensure lowercase, no consecutive hyphens, matches folder |
 | Description too short | Add capabilities, triggers, and keywords |
 | Assets not found | Use relative paths from skill root |
+</Troubleshooting>
 
-## References
-
+<References>
 - Agent Skills official spec: <https://agentskills.io/specification>
+</References>
