@@ -38,6 +38,12 @@ Define global behavior, workflow, and quality expectations for Copilot sessions 
   prefer intermediate variables with clear names so the logic can be followed line by line
 - All of the above share the same goal: minimize the mental load required to read and understand a
   block of code
+- **Scripts and executable tasks must be idempotent**: running them multiple times must produce the
+  same result as running them once. For SQL, use `INSERT ... ON CONFLICT DO NOTHING`, `ON CONFLICT
+  DO UPDATE`, or `IF NOT EXISTS` guards. For shell scripts, check before acting (e.g., `if ! grep
+  -q ... ; then ...`). For infrastructure changes, prefer declarative tooling over imperative
+  commands. When true idempotency is not achievable, document clearly why and what the operator
+  must do before re-running.
 </General>
 
 <Go>
