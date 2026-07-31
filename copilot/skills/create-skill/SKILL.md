@@ -132,6 +132,7 @@ The body is **instructions to an agent, not documentation for a human**. Write i
 - Prefer **concrete examples and commands** over abstract descriptions
 - Front-load the most important constraints — the agent must not miss them
 - Keep total body length under 150 lines; every line should change agent behavior
+- **Use XML tags for all section structure — never `##` markdown headers.** Every section in the body must be wrapped in a PascalCase XML tag (e.g., `<TriggerPhrases>`, `<Constraints>`, `<Workflow>`). Nested sub-sections become nested tags.
 - **Include a `<UpdateProtocol>` section** that intercepts requests to change the skill's own conventions, proposes the change explicitly, and gates writing to `SKILL.md` behind confirmation. See `<UpdateProtocolTemplate>` for the standard template.
 
 A well-written skill body reads like a checklist written by an expert who has done the task many times and knows exactly where agents go wrong.
@@ -224,6 +225,7 @@ $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfil
 - [ ] `description` is 10-1024 characters
 - [ ] `description` explains WHAT and WHEN
 - [ ] `description` is wrapped in single quotes
+- [ ] All sections use XML tags (not `##` markdown headers)
 - [ ] Body content is under 150 lines
 - [ ] Bundled assets are under 5MB each
 - [ ] `<UpdateProtocol>` section is present
@@ -259,7 +261,7 @@ These skills in `~/.copilot/skills/` are good examples to read before writing a 
 | Skill | Good reference for |
 |-------|--------------------|
 | `changelog` | Workflow-heavy skill: clear research phase, explicit output format, good use of constraints |
-| `copilot-instructions` | Analysis-then-write pattern: thorough research phase, constrained output length, required/optional sections |
+| `agent-instructions` | Analysis-then-write pattern: thorough research phase, constrained output length, required/optional sections |
 | `dotfiles` | Environment-aware skill: references specific file paths and install patterns |
 | `new-go-cli` | Scaffolding skill: opinionated output, links to existing patterns without duplicating them |
 
