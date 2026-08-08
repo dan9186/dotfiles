@@ -2,8 +2,29 @@ if (( ! $+commands[copilot] )); then
   return
 fi
 
+function _copilot_max_skill_width() {
+  local -a dirs=("$@")
+  local max=20
+  local name len
+
+  setopt local_options nullglob
+
+  for dir in "${dirs[@]}"; do
+    [[ -d "$dir" ]] || continue
+    for skill_dir in "$dir"/*/; do
+      [[ -d "$skill_dir" ]] || continue
+      name=$(basename "$skill_dir")
+      len=${#name}
+      (( len > max )) && max=$len
+    done
+  done
+
+  echo $(( max + 2 ))
+}
+
 function _copilot_link_skills_from() {
   local skills_src="$1"
+  local -i _col_width="${2:-20}"
   local skills_home="$HOME/.copilot/skills"
 
   [[ -d "$skills_src" ]] || return
@@ -20,16 +41,16 @@ function _copilot_link_skills_from() {
 
     if [[ -L "$target" ]]; then
       if [[ "$(readlink "$target")" != "$skill_dir" ]]; then
-        printf "  %-30s %s\n" "$skill_name" "${fg[yellow]}⚠ conflict — linked elsewhere${reset_color}"
+        printf "  %-${_col_width}s %s\n" "$skill_name" "${fg[yellow]}⚠ conflict — linked elsewhere${reset_color}"
         (( _cnt_conflict++ ))
       else
-        printf "  %-30s %s\n" "$skill_name" "${fg[green]}✓${reset_color}"
+        printf "  %-${_col_width}s %s\n" "$skill_name" "${fg[green]}✓${reset_color}"
         (( _cnt_already++ ))
       fi
     else
       [[ -e "$target" ]] && mv "$target" "${target}.old"
       ln -s "$skill_dir" "$target"
-      printf "  %-30s %s\n" "$skill_name" "${fg[cyan]}→ linked${reset_color}"
+      printf "  %-${_col_width}s %s\n" "$skill_name" "${fg[cyan]}→ linked${reset_color}"
       (( _cnt_new++ ))
     fi
   done
@@ -45,21 +66,27 @@ function skills-sync() {
 
   local -i _cnt_exists=0 _cnt_already=0 _cnt_new=0 _cnt_removed=0 _cnt_conflict=0
 
+  # Compute column width from all skill sources
+  local -a _skill_dirs=("$dotfiles/copilot/skills")
+  [[ -n "$PRIVATE_DOTFILES" ]] && _skill_dirs+=("$PRIVATE_DOTFILES/copilot/work_skills")
+  local -i _col_width
+  _col_width=$(_copilot_max_skill_width "${_skill_dirs[@]}")
+
   # Prune broken symlinks
   for link in "$skills_home"/*/; do
     if [[ -L "${link%/}" && ! -e "${link%/}" ]]; then
-      printf "  %-30s %s\n" "$(basename "${link%/}")" "${fg[red]}✗ removed${reset_color}"
+      printf "  %-${_col_width}s %s\n" "$(basename "${link%/}")" "${fg[red]}✗ removed${reset_color}"
       rm "${link%/}"
       (( _cnt_removed++ ))
     fi
   done
 
   # Link personal skills
-  _copilot_link_skills_from "$dotfiles/copilot/skills"
+  _copilot_link_skills_from "$dotfiles/copilot/skills" "$_col_width"
 
   # Link work skills if PRIVATE_DOTFILES is set
   if [[ -n "$PRIVATE_DOTFILES" ]]; then
-    _copilot_link_skills_from "$PRIVATE_DOTFILES/copilot/work_skills"
+    _copilot_link_skills_from "$PRIVATE_DOTFILES/copilot/work_skills" "$_col_width"
   fi
 
   local -i _cnt_linked=$(( _cnt_already + _cnt_new ))
