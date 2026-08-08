@@ -72,6 +72,30 @@ set_security_firewall () {
 }
 
 # =============================================================================
+# Dock
+# =============================================================================
+
+set_dock_minimize_to_app () {
+	echo "  → Enabling minimize windows into application icon"
+	defaults write com.apple.dock minimize-to-application -bool true
+}
+
+set_dock_autohide () {
+	echo "  → Enabling automatically show and hide the dock"
+	defaults write com.apple.dock autohide -bool true
+}
+
+set_dock_show_recents () {
+	echo "  → Disabling show suggested and recent apps in dock"
+	defaults write com.apple.dock show-recents -bool false
+}
+
+set_dock_click_wallpaper () {
+	echo "  → Setting click wallpaper to show desktop to only in stage manager"
+	defaults write com.apple.dock click-wallpaper-to-reveal-desktop -int 1
+}
+
+# =============================================================================
 # Network
 # =============================================================================
 
@@ -105,6 +129,13 @@ set_finder_show_hard_drives
 set_finder_show_all_extensions
 echo
 
+echo "Dock"
+set_dock_minimize_to_app
+set_dock_autohide
+set_dock_show_recents
+set_dock_click_wallpaper
+echo
+
 echo "Security"
 set_security_filevault
 set_security_screensaver_timeout
@@ -117,3 +148,4 @@ set_network_dns
 echo
 
 killall Finder 2>/dev/null || true
+killall Dock 2>/dev/null || true
