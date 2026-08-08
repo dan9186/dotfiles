@@ -45,6 +45,8 @@ brew "libusb"
 brew "libusb-compat"
 # Atmel AVR MCU programmer
 brew "avrdude"
+# Portable Foreign Function Interface library
+brew "libffi"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # AWS Cloud Development Kit - framework for defining AWS infra as code
@@ -73,16 +75,12 @@ brew "cairomm@1.14"
 brew "gmp"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
-# Asynchronous event library
-brew "libevent"
 # ASN.1 structure parser library
 brew "libtasn1"
 # Low-level cryptographic library
 brew "nettle"
 # Library to load and enumerate PKCS#11 modules
 brew "p11-kit"
-# Validating, recursive, caching DNS resolver
-brew "unbound"
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
 # GNU Emacs text editor
@@ -117,8 +115,6 @@ brew "doxygen"
 brew "ffmpeg"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
-# New file format for still image compression
-brew "jpeg-xl"
 # Library for encoding and decoding .avif files
 brew "libavif"
 # Graphics library to dynamically manipulate images
@@ -205,14 +201,16 @@ brew "intltool"
 brew "istioctl"
 # Image manipulation library
 brew "jpeg"
+# New file format for still image compression
+brew "jpeg-xl"
 # Regular expressions library
 brew "oniguruma"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Kubernetes command-line interface
 brew "kubernetes-cli"
-# Portable Foreign Function Interface library
-brew "libffi"
+# Asynchronous event library
+brew "libevent"
 # C library implementing the SSH2 protocol
 brew "libssh2"
 # YAML Parser
@@ -287,6 +285,8 @@ brew "telnet", link: false
 brew "tig"
 # Terminal multiplexer
 brew "tmux"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
 # Vi 'workalike' with many additional features
 brew "vim"
 # Executes a program periodically, showing output fullscreen
