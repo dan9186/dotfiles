@@ -68,7 +68,10 @@ function skills-sync() {
 
   # Compute column width from all skill sources
   local -a _skill_dirs=("$dotfiles/copilot/skills")
-  [[ -n "$PRIVATE_DOTFILES" ]] && _skill_dirs+=("$PRIVATE_DOTFILES/copilot/work_skills")
+  if [[ -n "$PRIVATE_DOTFILES" ]]; then
+    _skill_dirs+=("$PRIVATE_DOTFILES/copilot/work_skills")
+    _skill_dirs+=("$PRIVATE_DOTFILES/copilot/private_skills")
+  fi
   local -i _col_width
   _col_width=$(_copilot_max_skill_width "${_skill_dirs[@]}")
 
@@ -84,9 +87,10 @@ function skills-sync() {
   # Link personal skills
   _copilot_link_skills_from "$dotfiles/copilot/skills" "$_col_width"
 
-  # Link work skills if PRIVATE_DOTFILES is set
+  # Link work and private skills if PRIVATE_DOTFILES is set
   if [[ -n "$PRIVATE_DOTFILES" ]]; then
     _copilot_link_skills_from "$PRIVATE_DOTFILES/copilot/work_skills" "$_col_width"
+    _copilot_link_skills_from "$PRIVATE_DOTFILES/copilot/private_skills" "$_col_width"
   fi
 
   local -i _cnt_linked=$(( _cnt_already + _cnt_new ))
