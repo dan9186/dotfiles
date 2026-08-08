@@ -157,6 +157,8 @@ brew "pkgconf"
 brew "gobject-introspection"
 # Fast linters runner for Go
 brew "golangci-lint"
+# CLI for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, and more
+brew "googleworkspace-cli"
 # Deliver Go binaries as fast and easily as possible
 brew "goreleaser"
 # Smart font renderer for non-Roman scripts
@@ -369,6 +371,8 @@ cask "openscad"
 cask "signal"
 # Team communication and collaboration software
 cask "slack"
+# Control your Sonos system
+cask "sonos"
 # Video game digital distribution service
 cask "steam"
 # Multimedia player
