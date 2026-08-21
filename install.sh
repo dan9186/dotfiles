@@ -78,6 +78,44 @@ function link_skill () {
 	fi
 }
 
+function link_skills_recursive () {
+	# Recursively finds skill leaf directories under $1 (a directory
+	# containing a SKILL.md file directly is a leaf; anything else is an
+	# organizational category folder to recurse into) and links each leaf.
+	# _linked_skill_names tracks "name:path" entries seen so far (newline
+	# separated) to warn on and skip basename collisions across the tree.
+	# Uses plain string tracking rather than associative arrays for bash 3.2
+	# compatibility (default /bin/bash on macOS).
+	if (( $# > 0 )); then
+		local dir=$1
+
+		[ -d "$dir" ] || return
+
+		if [ -f "$dir/SKILL.md" ]; then
+			local skill_name
+			skill_name=$(basename "$dir")
+
+			local existing
+			existing=$(printf '%s\n' "$_linked_skill_names" | grep "^${skill_name}:" | cut -d: -f2-)
+			if [ -n "$existing" ]; then
+				echo "  ⚠ Skill $skill_name already found at $existing, skipping duplicate at $dir"
+				echo
+				return
+			fi
+			_linked_skill_names="${_linked_skill_names}
+${skill_name}:${dir}"
+			link_skill "$dir"
+			return
+		fi
+
+		local sub
+		for sub in "$dir"/*/; do
+			[ -d "$sub" ] && link_skills_recursive "${sub%/}"
+		done
+	fi
+}
+
+
 
 deps ack && link_file ackrc
 deps rg && link_file ripgreprc
@@ -94,9 +132,8 @@ deps copilot && {
   link_file copilot/lsp-config.json copilot/lsp-config.json
   link_file copilot/mcp-config.json copilot/mcp-config.json
   mkdir -p "$HOME/.copilot/skills"
-  for skill_dir in copilot/skills/*/; do
-    [ -d "$skill_dir" ] && link_skill "$skill_dir"
-  done
+  _linked_skill_names=""
+  link_skills_recursive copilot/skills
 }
 
 # TODO: setup check for osx application
