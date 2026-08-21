@@ -2,17 +2,40 @@ if (( ! $+commands[copilot] )); then
   return
 fi
 
+function _copilot_find_skill_leaves() {
+  # Recursively finds skill leaf directories under $1 (a directory containing a
+  # SKILL.md file directly is a leaf; anything else is an organizational
+  # category folder to recurse into) and prints each leaf path on its own
+  # line. Callers capture output with zsh's `(f)` flag to split into an
+  # array (zsh has no bash-style nameref support for out params).
+  local dir="$1"
+
+  [[ -d "$dir" ]] || return
+
+  setopt local_options nullglob
+
+  if [[ -f "$dir/SKILL.md" ]]; then
+    print -r -- "$dir"
+    return
+  fi
+
+  local sub
+  for sub in "$dir"/*/; do
+    [[ -d "$sub" ]] || continue
+    _copilot_find_skill_leaves "${sub%/}"
+  done
+}
+
 function _copilot_max_skill_width() {
   local -a dirs=("$@")
   local max=20
   local name len
-
-  setopt local_options nullglob
+  local -a leaves
 
   for dir in "${dirs[@]}"; do
-    [[ -d "$dir" ]] || continue
-    for skill_dir in "$dir"/*/; do
-      [[ -d "$skill_dir" ]] || continue
+    leaves=("${(f)"$(_copilot_find_skill_leaves "$dir")"}")
+    for skill_dir in "${leaves[@]}"; do
+      [[ -n "$skill_dir" ]] || continue
       name=$(basename "$skill_dir")
       len=${#name}
       (( len > max )) && max=$len
@@ -29,13 +52,22 @@ function _copilot_link_skills_from() {
 
   [[ -d "$skills_src" ]] || return
 
-  setopt local_options nullglob
+  local -a leaves
+  leaves=("${(f)"$(_copilot_find_skill_leaves "$skills_src")"}")
 
   local skill_name
   local target
-  for skill_dir in "$skills_src"/*/; do
-    [[ -d "$skill_dir" ]] || continue
+  for skill_dir in "${leaves[@]}"; do
+    [[ -n "$skill_dir" ]] || continue
     skill_name=$(basename "$skill_dir")
+
+    if (( ${+_seen_skill_names[$skill_name]} )); then
+      printf "  %-${_col_width}s %s\n" "$skill_name" "${fg[yellow]}⚠ duplicate name — keeping ${_seen_skill_names[$skill_name]}, skipping${reset_color}"
+      (( _cnt_conflict++ ))
+      continue
+    fi
+    _seen_skill_names[$skill_name]="$skill_dir"
+
     target="$skills_home/$skill_name"
     (( _cnt_exists++ ))
 
@@ -56,7 +88,42 @@ function _copilot_link_skills_from() {
   done
 }
 
+function _copilot_unlink_skills() {
+  local skills_home="$HOME/.copilot/skills"
+
+  [[ -d "$skills_home" ]] || return
+
+  setopt local_options nullglob
+
+  local -i _cnt_removed=0 _cnt_skipped=0
+  local name
+
+  for entry in "$skills_home"/*(N); do
+    name=$(basename "$entry")
+    if [[ -L "$entry" ]]; then
+      rm "$entry"
+      printf "  %-20s %s\n" "$name" "${fg[red]}✗ unlinked${reset_color}"
+      (( _cnt_removed++ ))
+    else
+      printf "  %-20s %s\n" "$name" "${fg[yellow]}⚠ not a symlink, skipping${reset_color}"
+      (( _cnt_skipped++ ))
+    fi
+  done
+
+  local _summary="${fg[red]}${_cnt_removed} unlinked${reset_color}"
+  [[ $_cnt_skipped -gt 0 ]] && _summary+="  ${fg[yellow]}${_cnt_skipped} skipped${reset_color}"
+  printf "\n  %s\n" "$_summary"
+}
+
 function skills-sync() {
+  if [[ "$1" == "unlink" ]]; then
+    _copilot_unlink_skills
+    return
+  elif [[ -n "$1" ]]; then
+    echo "Usage: skills-sync [unlink]" >&2
+    return 1
+  fi
+
   local dotfiles="${ZSH_CUSTOM%/omz}"
   local skills_home="$HOME/.copilot/skills"
 
@@ -65,6 +132,7 @@ function skills-sync() {
   setopt local_options nullglob
 
   local -i _cnt_exists=0 _cnt_already=0 _cnt_new=0 _cnt_removed=0 _cnt_conflict=0
+  local -A _seen_skill_names=()
 
   # Compute column width from all skill sources
   local -a _skill_dirs=("$dotfiles/copilot/skills")
