@@ -15,7 +15,7 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 | LSP server config | `~/dotfiles/copilot/lsp-config.json` |
 | MCP server config | `~/dotfiles/copilot/mcp-config.json` |
 | Skills directory | `~/dotfiles/copilot/skills/` |
-| Individual skill | `~/dotfiles/copilot/skills/<skill-name>/SKILL.md` |
+| Individual skill | `~/dotfiles/copilot/skills/[<category>/...]<skill-name>/SKILL.md` |
 | Language-specific instructions dir | `~/dotfiles/copilot/.github/instructions/` |
 | Install script | `~/dotfiles/install.sh` |
 | Shell env / PATH | `~/dotfiles/zprofile` |
@@ -210,8 +210,17 @@ ls -la ~/.<dest>
 
 **Skills (`copilot/skills/`)**
 
-- Each skill lives in `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`.
-- `install.sh` symlinks each skill directory into `~/.copilot/skills/<skill-name>`.
+- Each skill lives at `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`, either directly under
+  `copilot/skills/` or nested under one or more organizational category subfolders (e.g.
+  `copilot/skills/golang/<skill-name>/`, `copilot/skills/gws/<skill-name>/`) for human
+  organization — category folders are just plain directories with no `SKILL.md` of their own.
+- `install.sh` and the `skills-sync` omz plugin both recursively walk `copilot/skills/` (and, for
+  `skills-sync`, `$PRIVATE_DOTFILES/copilot/{work_skills,private_skills}`), treating any directory
+  that directly contains `SKILL.md` as a leaf to link, and any directory without one as a category
+  folder to recurse into. Every leaf is symlinked flatly into `~/.copilot/skills/<skill-name>`
+  regardless of nesting depth in the source tree.
+- If two leaf directories under different category folders share the same `<skill-name>`, the
+  first one found wins; the duplicate is skipped with a printed warning.
 - The `description` frontmatter in `SKILL.md` is what drives automatic skill matching — keep it precise and include the natural-language phrases a user would say to trigger the skill.
 - When adding or modifying a skill, edit the file in the dotfiles repo, then commit and push.
 </CopilotConfiguration>
