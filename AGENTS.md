@@ -54,8 +54,15 @@ brew bundle dump -f
 - `install.sh` uses two primitives: `link_file <src> [dest]` (unconditional symlink) and
   `deps <cmd> && link_file ...` (only links if `<cmd>` is in PATH). Both are idempotent —
   conflicts are backed up to `<dest>.old`.
-- `copilot/skills/<name>/` directories are each symlinked individually to `~/.copilot/skills/<name>/`
-  via `link_skill` in `install.sh` — not the parent directory.
+- Skill leaf directories (any directory containing `SKILL.md` directly, found by recursing
+  through `copilot/skills/`, `work_skills/`, and `private_skills/`) are each symlinked
+  individually to `~/.copilot/skills/<name>/` — never the parent directory. This lets skills be
+  grouped under organizational category subfolders (e.g. `copilot/skills/golang/<name>/`,
+  `copilot/skills/gws/<name>/`) while `~/.copilot/skills` itself stays flat. `install.sh`
+  (`link_skills_recursive`) and the `skills-sync` omz plugin
+  (`_copilot_find_skill_leaves`/`_copilot_link_skills_from`) both implement this same recursive
+  leaf-detection logic; keep them in sync if it changes. Basename collisions across category
+  folders are skipped with a warning, keeping the first one found.
 - `bootstrap.sh` detects the OS via `uname -s` and branches accordingly throughout.
 - Machine-local git overrides go in `~/.gitconfig.local` (via `[include]`), never in `gitconfig`.
 - SSH hosts are split: add to `~/.ssh/work/config` or `~/.ssh/home/config`, not directly to `sshconfig`.
