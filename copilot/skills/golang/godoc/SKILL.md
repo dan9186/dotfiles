@@ -20,6 +20,9 @@ Audit and write Go doc comments for a codebase following the established doc con
 - **Uniform families**: When a group of symbols all follow the same pattern (e.g. 16 color helpers), put the explanation once in the package or group doc comment and omit per-symbol comments.
 - **Sentinel var blocks**: A `var (...)` block of sentinel errors gets one group doc comment before the block. Do not add inline comments inside the block — godoc does not surface them.
 - **Terse**: One line is almost always better than two. No summary-then-restatement.
+- **No blind auto-write**: This is an audit-then-write skill, not a silent fixer. Findings are
+  always presented for confirmation before any file is edited, per the global `<AnalysisWorkflow>`
+  convention.
 </Constraints>
 
 <ResearchPhase>
@@ -30,40 +33,54 @@ Audit and write Go doc comments for a codebase following the established doc con
 2. For each package, list exported symbols and note which are missing comments or have poor ones. Use `go doc` or read sources directly.
 3. Read existing package doc comments — they set the context that determines whether per-symbol comments are tautological.
 4. Note any uniform families (same signature shape, same behavior pattern, only one value differs) — these get group treatment.
+5. Record every gap found (missing comment, tautological comment, stutter, missing group comment) with file:line and the specific issue.
 </ResearchPhase>
 
 <Workflow>
 <Step1>
-**Package doc comment**
+**Present Findings**
 
-Every `package` declaration must have a doc comment on the `package` line (or the file that is the natural entry point). It should describe: what the package does, who uses it, and any non-obvious constraints. One to three sentences.
+Follow the global `<AnalysisWorkflow>` convention exactly:
+- Group findings into categories, one per gap type (missing package doc, missing type/interface
+  doc, missing func/method doc, missing var/const group doc, tautological, stutter).
+- Number findings **globally** across all categories (1–N), not per category, so any item can be
+  referenced by number alone.
+- For each finding, show file:line and a one-line description of the gap.
+- Do not write anything yet. Wait for the user to say which numbers (or categories, or "all") to
+  address.
 </Step1>
 
 <Step2>
+**Package doc comment**
+
+Every `package` declaration must have a doc comment on the `package` line (or the file that is the natural entry point). It should describe: what the package does, who uses it, and any non-obvious constraints. One to three sentences.
+</Step2>
+
+<Step3>
 **Types and interfaces**
 
 - The type comment describes what the type represents, not what it is. `// Scriber is the interface for...` not `// Scriber is an interface`.
 - For interfaces, document the contract in the type comment. Per-method comments describe behavior specifics (when output is emitted, what side effects occur, non-obvious preconditions).
 - For structs with exported fields, document each field that isn't self-evident.
-</Step2>
+</Step3>
 
-<Step3>
+<Step4>
 **Functions and methods**
 
 - First word must be the function name (Go convention).
 - Describe what the function does, not how. Mention non-obvious behavior: side effects, preconditions, what is returned on error.
 - For `f`-suffix variants (`Printf`, `Errorf`): `// Printf is the formatted variant of Print.` — nothing more needed.
 - For constructors: note what is validated and what error conditions exist.
-</Step3>
+</Step4>
 
-<Step4>
+<Step5>
 **Vars and consts**
 
 - Sentinel errors in a `var (...)` block: one group comment before the block describing the shared shape (e.g. `// Sentinel errors returned by Validate for missing fields.`). No inline comments inside.
 - Const groups: one comment on the group describing the set. Individual constants only need comments when their value or meaning isn't obvious from the name.
-</Step4>
+</Step5>
 
-<Step5>
+<Step6>
 **Review pass**
 
 After writing, re-read each comment and ask:
@@ -71,7 +88,11 @@ After writing, re-read each comment and ask:
 - Does it repeat the package name needlessly (stutter)?
 - Is it longer than one line without a good reason?
 - Does it start with the symbol name?
-</Step5>
+
+If addressing findings non-sequentially across multiple rounds, **reprint the full findings list**
+from Step1 after each round with resolved items marked `✓` (not removed), per the global
+convention. Do not batch unrelated fixes into one round unless the user asked for "all".
+</Step6>
 </Workflow>
 
 <UpdateProtocol>
@@ -86,12 +107,14 @@ If at any point the user says something like:
 2. Propose the addition: show exactly what it would look like in `SKILL.md`
 3. Note whether it should be a hard constraint or a workflow step
 4. Wait for explicit confirmation before modifying
-5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/godoc/SKILL.md`
+5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/golang/godoc/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 </UpdateProtocol>
 
 <OutputContract>
-- Apply edits directly to source files.
-- Run `go vet ./...` after editing — vet checks basic doc comment formatting.
+- Phase 1 output: the numbered, categorized findings list — no comments written yet.
+- Phase 2 output (after confirmation): apply edits directly to source files for the selected
+  findings, then run `go vet ./...` — vet checks basic doc comment formatting.
 - Report: how many symbols were documented, how many comments were removed as tautological, and any symbols intentionally left without comments (with the reason).
+- Changes are left staged, uncommitted, for the user to review and commit.
 </OutputContract>
