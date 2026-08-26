@@ -1,6 +1,6 @@
 ---
 name: go-errors
-description: 'Audits a Go codebase against the error-handling standards defined in go.instructions.md and fixes confirmed violations. Use when asked to "clean up my errors", "audit error handling", "fix error wrapping", "review Go errors against my standards", "check error conventions", or "bring this repo up to my error standards". Groups violations by rule, presents them for confirmation before editing, then validates with go fmt/vet/build/test.'
+description: 'Audits a Go codebase against the error-handling standards defined in go.instructions.md, fixes confirmed violations, and proposes golangci-lint linters to prevent regressions. Use when asked to "clean up my errors", "audit error handling", "fix error wrapping", "review Go errors against my standards", "check error conventions", or "bring this repo up to my error standards". Groups violations by rule, presents them for confirmation before editing, validates with go fmt/vet/build/test, then proposes enabling errorlint/wrapcheck/stylecheck in an existing .golangci.yml.'
 ---
 
 # Go Errors
@@ -26,6 +26,9 @@ user confirms.
   presented for confirmation before any file is edited, per the global `<AnalysisWorkflow>`
   convention.
 - **No commits** — apply confirmed edits and leave them staged for the user.
+- **Identify → resolve → prevent** — after fixing confirmed violations, propose linter config to
+  catch regressions going forward. Only touch `.golangci.yml` if the repo already has one; never
+  create it (a repo with no lint config yet is out of scope for this proposal).
 </Constraints>
 
 <ResearchPhase>
@@ -85,6 +88,26 @@ go test ./...
 This matches the `<Validation>` rule in `go.instructions.md`. If any step fails, report the
 failure output and stop — do not proceed to the next validation step or claim completion.
 </Step3>
+
+<Step4>
+**Prevent**
+
+Check whether the repo has a `.golangci.yml` (or `.yaml`) at its root:
+```bash
+find . -maxdepth 1 -name '.golangci.y*ml'
+```
+- If none exists, skip this step entirely — do not create one.
+- If one exists, check whether `errorlint`, `wrapcheck`, and `stylecheck` are enabled. These
+  linters mechanically catch regressions of the rules just fixed: `errorlint` (unwrapped
+  comparisons and improper `%w` use), `wrapcheck` (unwrapped errors from external packages),
+  `stylecheck` ST1005 (capitalized/punctuated error strings). Note that `wsl`-style spacing and
+  goroutine-lifecycle judgment calls are out of scope for this skill — they belong to
+  `go-hygiene` and manual review, respectively.
+- Propose the specific YAML diff to enable any that are missing (and, for `stylecheck`, confirm
+  `ST1005` isn't excluded). Show the exact change and wait for confirmation before editing the
+  file — this follows the same confirm-before-edit gate as Step2.
+- If all three are already enabled, state that and skip silently.
+</Step4>
 </Workflow>
 
 <UpdateProtocol>
@@ -104,5 +127,7 @@ categorizes or presents findings:
 - Phase 1 output: the numbered, categorized findings table — no edits yet.
 - Phase 2 output (after confirmation): a summary of what was fixed, referencing finding numbers,
   followed by the `go fmt`/`go vet`/`go build`/`go test` results.
+- Phase 3 output (if `.golangci.yml` exists): the proposed linter-config diff, or a note that
+  nothing changed because the linters are already enabled or no config file exists.
 - Changes are left staged, uncommitted, for the user to review and commit.
 </OutputContract>
