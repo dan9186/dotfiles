@@ -7,18 +7,17 @@ lastReviewed: "2026-07-23"
 
 # Go Coding Standards
 
-## Purpose
-
+<Purpose>
 Define mandatory Go conventions for implementation, testing, and docs to keep behavior predictable across repositories.
+</Purpose>
 
-## Scope
-
+<Scope>
 - Applies to all `*.go` files matched by `applyTo`.
 - These are hard rules unless a repository-specific instruction explicitly overrides them.
+</Scope>
 
-## Hard Rules
-
-## Error Handling
+<HardRules>
+<ErrorHandling>
 
 - Never return naked errors; always wrap with `fmt.Errorf` and a short, lowercase context prefix in
   the form `"methodName: operation: %w"` — the method name (lowercase, no receiver type) followed
@@ -40,9 +39,9 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
   comparability and add context
 - Assign errors on a separate line from the `err != nil` check; do not combine into a single
   `if err := ...; err != nil` statement
+</ErrorHandling>
 
-## Code Style
-
+<CodeStyle>
 - Pass `context.Context` as the first argument to any function that does I/O, blocking work, or
   may need cancellation
 - Prefer functional options (`WithXxx(...)`) for constructors that take multiple optional settings.
@@ -66,9 +65,9 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
   something that doesn't collide (e.g. `lkp` when a package named `lookup` is in scope)
 - Prefer format-variant log calls (e.g. `log.Infof`, `log.Errorf`) over wrapping `fmt.Sprintf`
   inside a non-format log call (e.g. `log.Info(ctx, fmt.Sprintf(...))`)
+</CodeStyle>
 
-## Naming & Structure
-
+<NamingStructure>
 - Organize imports into three groups in this order: (1) Go stdlib, (2) local repo packages
   (i.e. those with the same module prefix as the current repo), (3) external third-party packages.
   Separate each group with a blank line. `go fmt` will sort within groups alphabetically but does
@@ -81,26 +80,26 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
   `Parse`, not `ParseYAMLConfig`. Getters should not have a `Get` prefix.
 - Avoid package names like `util`, `helper`, `common`, or `misc` — they are uninformative, cause
   import conflicts, and grow without bound. Name packages for what they actually provide.
+</NamingStructure>
 
-## Spacing Within Function Bodies
-
+<SpacingWithinFunctionBodies>
 - Add a blank line after every log statement before the next action.
 - Add a blank line after every `if err != nil` guard block before the next logical step.
 - Add a blank line between each `case` block in a `switch` statement.
+</SpacingWithinFunctionBodies>
 
-## Vendor Directory
-
+<VendorDirectory>
 - Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
   contents is via `go mod vendor`
 - When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
   explicitly exclude the `vendor/` directory from the scope of the review
+</VendorDirectory>
 
-## Validation
-
+<Validation>
 - After making changes to Go code, always run `go fmt`, `go vet`, `go build`, and `go test` in that order
+</Validation>
 
-## Testing
-
+<Testing>
 - Use the standard Go test runner; `testify/assert` is the preferred assertion library
 - Tests should be easy to read and have independent setup — avoid relying on production code
   internals in test setup to prevent self-fulfilling test results
@@ -113,9 +112,9 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
   output points to the call site in the test, not the line inside the helper.
 - Never call `t.Fatal` (or `t.FailNow`) from a goroutine other than the test's own goroutine —
   it is a runtime panic. Use `t.Error` + `return` inside spawned goroutines instead.
+</Testing>
 
-## Doc Comments
-
+<DocComments>
 - Every exported symbol must have a doc comment; unexported symbols only if genuinely non-obvious
 - Start each comment with the symbol name, as Go convention requires — this is not stutter
 - Stutter means redundantly embedding the package or type name in the comment body
@@ -133,11 +132,13 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
   or how it is wired at a specific call site. Avoid embedding implementation details like env var
   names, config keys, or caller-specific context in comments on types; those details belong at
   the call site, not on the type itself
+</DocComments>
+</HardRules>
 
-## Update Protocol
-
+<UpdateProtocol>
 If the user states a new Go-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
 a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
 at `~/dotfiles/copilot/.github/instructions/go.instructions.md` and remind the user to commit and
 push from `~/dotfiles`.
+</UpdateProtocol>

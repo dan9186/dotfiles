@@ -7,18 +7,17 @@ lastReviewed: "2026-07-23"
 
 # SQL Instructions
 
-## Purpose
-
+<Purpose>
 Define SQL migration, schema, and safety rules used across repositories.
+</Purpose>
 
-## Scope
-
+<Scope>
 - Applies to all `*.sql` files matched by `applyTo`.
 - Rules are mandatory unless repository-specific instructions explicitly override them.
+</Scope>
 
-## Hard Rules
-
-## Goose Migrations
+<HardRules>
+<GooseMigrations>
 
 SQL files in `ext/db/` are [goose](https://github.com/pressly/goose) migration files. Every
 migration must satisfy all of the following:
@@ -39,8 +38,7 @@ migration must satisfy all of the following:
   migration once it has been applied to any environment. Add a new migration to fix or extend
   previous ones.
 
-### Example skeleton
-
+<ExampleSkeleton>
 ```sql
 -- +goose Up
 
@@ -53,9 +51,9 @@ CREATE TABLE foo (
 
 DROP TABLE foo;
 ```
+</ExampleSkeleton>
 
-### Example with StatementBegin
-
+<ExampleWithStatementBegin>
 ```sql
 -- +goose Up
 
@@ -77,10 +75,11 @@ CREATE TRIGGER outbox_notify_trigger
 DROP TRIGGER outbox_notify_trigger ON outbox;
 DROP FUNCTION outbox_notify();
 ```
+</ExampleWithStatementBegin>
+</GooseMigrations>
 
-## Schema Conventions
-
-### Naming
+<SchemaConventions>
+<Naming>
 
 - Table and column names are `snake_case`.
 - Primary key constraint: `<table>_pk`
@@ -88,9 +87,9 @@ DROP FUNCTION outbox_notify();
 - Unique constraint: `<table>_uq_<columns>` (join multiple columns with `_`)
 - Index names follow the same snake_case convention; generated tsvector indexes use a suffix that
   matches the column name.
+</Naming>
 
-### Column Types
-
+<ColumnTypes>
 - **All timestamps** use `timestamptz` (i.e., `timestamp with time zone`). Never use bare
   `timestamp` without a time zone.
 - **Structured / semi-structured data** uses `jsonb NOT NULL`. Avoid nullable `jsonb` columns;
@@ -99,18 +98,19 @@ DROP FUNCTION outbox_notify();
   `uuid` for event/log IDs.
 - **Full-text search columns** are `tsvector GENERATED ALWAYS AS (...) STORED`. Never write to
   these columns directly.
+</ColumnTypes>
 
-### DDL Hygiene
-
+<DDLHygiene>
 - Wrap related DDL (a table plus its constraints and indexes) together without blank lines between
   logically coupled statements.
 - Always define constraints inline with `CONSTRAINT <name> ...` — do not use unnamed constraints.
 - Prefer `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` when adding columns to a table that may
   already exist in some environments.
 - Prefer `CREATE INDEX IF NOT EXISTS` when adding indexes.
+</DDLHygiene>
+</SchemaConventions>
 
-## Safety
-
+<Safety>
 - **Never run SQL directly against a live or production database.** If production data is needed
   for local testing or investigation, restore a snapshot or dump of that database to a local
   instance first and run all queries and tests against the local copy.
@@ -118,9 +118,9 @@ DROP FUNCTION outbox_notify();
   ad-hoc. Goose handles transactions for migration files automatically.
 - `DROP TABLE`, `DROP COLUMN`, and other destructive DDL belong only in migration files under
   source control — never in ad-hoc scripts applied directly to any environment.
+</Safety>
 
-## Backfill Migrations
-
+<BackfillMigrations>
 Migrations that backfill or transform existing data require additional care:
 
 - Add a comment block at the top of the `-- +goose Up` section explaining what data is being
@@ -129,11 +129,13 @@ Migrations that backfill or transform existing data require additional care:
   loop with explicit batch sizing to avoid long-running locks.
 - The `-- +goose Down` section must contain `-- cannot roll back` with a brief explanation of
   why the transformation is not reversible.
+</BackfillMigrations>
+</HardRules>
 
-## Update Protocol
-
+<UpdateProtocol>
 If the user states a new SQL-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
 a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
 at `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and remind the user to commit and
 push from `~/dotfiles`.
+</UpdateProtocol>
