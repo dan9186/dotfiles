@@ -28,18 +28,47 @@ First, infer whether this is a personal or work skill from the user's prompt. Lo
 
 > "Should this be a personal skill (stored in `~/dotfiles`) or a work skill (stored in `$PRIVATE_DOTFILES`)?"
 
-Once destination is known, check whether a skill with this name already exists in either location:
+Once destination is known, check whether a skill with this name already exists. Skills may be nested under category folders, so **search recursively** — a flat `ls` will miss them:
 
 ```bash
-ls ~/dotfiles/copilot/skills/          # personal skills
-ls $PRIVATE_DOTFILES/copilot/work_skills/  # work skills (if $PRIVATE_DOTFILES is set)
-ls -la ~/.copilot/skills/              # active symlinks — check for name conflicts
+find ~/dotfiles/copilot/skills -name SKILL.md                       # personal
+find $PRIVATE_DOTFILES/copilot/work_skills -name SKILL.md           # work
+find $PRIVATE_DOTFILES/copilot/private_skills -name SKILL.md        # private
+ls -la ~/.copilot/skills/                                            # active symlinks
 ```
+
+What matters is the **leaf directory basename**, not the full path. Symlinks are created flat in `~/.copilot/skills/<skill-name>`, so `golang/foo` and `gws/foo` collide — the first found wins and the duplicate is skipped with a warning.
 
 If `$PRIVATE_DOTFILES` is unset and the destination is work, stop and tell the user: the `PRIVATE_DOTFILES` environment variable is not set.
 
 If the skill already exists anywhere, read its `SKILL.md` fully before deciding whether to update or replace it.
 </Step0>
+
+<Step0b>
+**Determine Category Placement**
+
+Skills may live directly under the source root or nested inside an organizational **category folder** (e.g. `copilot/skills/golang/<skill-name>/`). Category folders are plain directories with no `SKILL.md` of their own and no wiring — they exist purely for human organization. They do **not** affect discovery: every leaf is symlinked flat into `~/.copilot/skills/`.
+
+Enumerate existing categories — directories under the source root that contain no `SKILL.md` directly:
+
+```bash
+find ~/dotfiles/copilot/skills -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/SKILL.md' ';' -print
+```
+
+Then **assess and propose** exactly one placement, with a one-line rationale:
+
+| Outcome | When |
+|---------|------|
+| Existing category | The skill clearly belongs to the same domain as skills already in that category |
+| New category | The skill has 2+ related siblings that already exist, or a related set is clearly imminent |
+| No category (top level) | The skill is standalone — this is the default |
+
+**Do not create a new category for a single skill.** One-off skills go top level; a category can be introduced later when siblings appear.
+
+Present the recommendation and wait for explicit confirmation before creating any directory. Example:
+
+> "I'd put this under the existing `golang/` category — it operates on Go repos like `godoc` and `go-fmt-fleet`. Sound right, or should it be top level?"
+</Step0b>
 
 <Step1>
 **Create the Skill Directory**
@@ -48,17 +77,21 @@ Skills are **sourced from a versioned dotfiles repo** and **symlinked into `~/.c
 
 | Destination | Source directory |
 |-------------|-----------------|
-| Personal | `~/dotfiles/copilot/skills/<skill-name>/` |
-| Work | `$PRIVATE_DOTFILES/copilot/work_skills/<skill-name>/` |
+| Personal | `~/dotfiles/copilot/skills/[<category>/]<skill-name>/` |
+| Work | `$PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>/` |
+| Private | `$PRIVATE_DOTFILES/copilot/private_skills/[<category>/]<skill-name>/` |
 
-Create the directory in the correct location:
+Omit the `<category>/` segment when Step0b concluded no category. Create the directory in the correct location:
 
 ```bash
-# Personal
+# Personal, no category
 mkdir ~/dotfiles/copilot/skills/<skill-name>
 
+# Personal, inside a category
+mkdir -p ~/dotfiles/copilot/skills/<category>/<skill-name>
+
 # Work
-mkdir $PRIVATE_DOTFILES/copilot/work_skills/<skill-name>
+mkdir -p $PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>
 ```
 
 After writing `SKILL.md`, tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`. Do not run it yourself — the agent does not have access to the shell environment where `skills-sync` is defined.
@@ -195,32 +228,42 @@ The following is a realistic skill body with inline comments explaining the inte
 
 <ExampleStructure>
 ```
-# Personal skill
-~/dotfiles/copilot/skills/my-skill/       ← committed to ~/dotfiles
+# Personal skill, no category
+~/dotfiles/copilot/skills/my-skill/            ← committed to ~/dotfiles
+└── SKILL.md
+
+# Personal skill inside a category folder
+~/dotfiles/copilot/skills/golang/my-go-skill/  ← "golang/" has no SKILL.md of its own
 └── SKILL.md
 
 # Work skill
 $PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfiles
 └── SKILL.md
 
-~/.copilot/skills/my-skill                → symlink managed by skills-sync
+# Symlinks are always flat, regardless of source nesting
+~/.copilot/skills/my-skill       → managed by skills-sync
+~/.copilot/skills/my-go-skill    → managed by skills-sync
 ```
 </ExampleStructure>
 
 <QuickStart>
 1. Infer personal vs. work from the prompt — ask if unclear
-2. Check both source dirs and `~/.copilot/skills/` for name conflicts
-3. Create `SKILL.md` in the correct source directory:
-   - Personal: `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`
-   - Work: `$PRIVATE_DOTFILES/copilot/work_skills/<skill-name>/SKILL.md`
-4. Add frontmatter with `name` and `description`
-5. Write the body following the annotated example above
-6. Tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`
-7. Validate against the checklist below
+2. Recursively search all source dirs and `~/.copilot/skills/` for basename conflicts
+3. Assess category placement (existing / new / none), propose it, and confirm with the user
+4. Create `SKILL.md` in the correct source directory:
+   - Personal: `~/dotfiles/copilot/skills/[<category>/]<skill-name>/SKILL.md`
+   - Work: `$PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>/SKILL.md`
+5. Add frontmatter with `name` and `description`
+6. Write the body following the annotated example above
+7. Tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`
+8. Validate against the checklist below
 </QuickStart>
 
 <ValidationChecklist>
 - [ ] Folder name is lowercase with hyphens
+- [ ] No other skill anywhere in the source trees shares this basename
+- [ ] Category placement was assessed and confirmed with the user
+- [ ] Any category folder used contains no `SKILL.md` of its own
 - [ ] `name` field matches folder name exactly
 - [ ] `description` is 10-1024 characters
 - [ ] `description` explains WHAT and WHEN
