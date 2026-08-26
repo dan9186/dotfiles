@@ -18,6 +18,20 @@ Define global behavior, workflow, and quality expectations for Copilot sessions 
 - When adding new rules, place them in the most specific section and avoid duplicates.
 </StructureContract>
 
+<AuthoringConventions>
+Applies when **creating** a new instruction file (`*.instructions.md`) or a new skill (`SKILL.md`)
+in a repo I own.
+
+- Structure every section with PascalCase pseudo-XML tags — never `##` markdown headers. Nested
+  sub-sections become nested tags.
+- Keep the document's `# Title` H1 and the YAML frontmatter (`applyTo`, `instructionType`,
+  `language`, `lastReviewed`, `name`, `description`) as-is; this rule governs section headers only.
+- Use `~/dotfiles/copilot/copilot-instructions.md` or any `~/dotfiles/copilot/skills/**/SKILL.md`
+  as the canonical shape rather than inventing a new one.
+- **Do not reformat instruction files or skills sourced from elsewhere.** Third-party and imported
+  files stay in their original format until I explicitly ask for a conversion.
+</AuthoringConventions>
+
 <PreferredLanguages>
 - Go is the primary language — used for microservices, CLIs, and libraries
 - Rust, TypeScript/Node (pnpm), Python, Ruby, and Java are present but secondary
