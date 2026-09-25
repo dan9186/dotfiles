@@ -25,20 +25,39 @@ Before scaffolding, confirm:
    - Use this as `{description}` throughout.
 </PreFlightQuestions>
 
+<IntakeInterview>
+After preflight, run a focused intake interview before scaffolding. Ask at least 6 questions
+unless the request already answers them clearly.
+
+Capture and confirm:
+1. **Problem statement** — what pain this tool solves now (`{problem_statement}`)
+2. **Primary users** — who runs it and in what context (`{primary_users}`)
+3. **Core workflows** — 2-5 key jobs/commands users must complete (`{core_workflows}`)
+4. **Inputs and outputs** — what data enters and what artifacts/results are expected
+5. **Integrations** — APIs/services/auth dependencies and failure expectations (`{integration_notes}`)
+6. **Operational constraints** — environment assumptions, safety needs, and rollout sensitivity (`{operational_notes}`)
+7. **Initial command surface** — expected top-level subcommands to scaffold first
+8. **README expectations** — any required usage, examples, or caveats to include from day one
+
+Summarize the intake back to the user before file generation, then proceed only after confirmation.
+This interview is for product and operator intent, not for low-impact naming/style choices.
+</IntakeInterview>
+
 <Process>
 1. Confirm tool name, module path, and target directory
-2. Detect the installed Go version:
+2. Complete the intake interview and confirm a concise scaffold brief
+3. Detect the installed Go version:
    ```
    go version
    ```
    Parse the `X.Y` minor version from the output (e.g. `go1.24.2` → `1.24`). Use this as `{goversion}` throughout.
-3. Create all files from the templates below, replacing `{toolname}` / `{TOOLNAME}` / `{org}` / `{module}` / `{goversion}` / `{description}` throughout
-4. `cd` into the new directory and run:
+4. Create all files from the templates below, replacing `{toolname}` / `{TOOLNAME}` / `{org}` / `{module}` / `{goversion}` / `{description}` / `{problem_statement}` / `{primary_users}` / `{core_workflows}` / `{integration_notes}` / `{operational_notes}` throughout
+5. `cd` into the new directory and run:
    ```
    go mod tidy && go mod vendor
    go fmt ./... && go vet ./... && go build . && go test ./...
    ```
-4. Report the tree of created files and confirm everything builds and tests pass
+6. Report the tree of created files and confirm everything builds and tests pass
 </Process>
 
 ---
@@ -880,6 +899,18 @@ coverage.txt
 
 {description}
 
+## Problem this tool solves
+
+{problem_statement}
+
+## Who this is for
+
+{primary_users}
+
+## Core workflows
+
+{core_workflows}
+
 ## Installation
 
 ```bash
@@ -891,6 +922,14 @@ Or via Go:
 ```bash
 go install github.com/{org}/{toolname}@latest
 ```
+
+## Integrations and dependencies
+
+{integration_notes}
+
+## Operational notes
+
+{operational_notes}
 ```
 
 ---
