@@ -129,6 +129,15 @@ Always ask clarifying questions to reduce ambiguity and avoid rework. The goal i
 - Micro-decisions that don't significantly impact the approach
 </WhenPlanning>
 
+<StakeholderDefinedDocuments>
+When producing a durable, stakeholder-defined document such as a policy, team agreement, standard,
+playbook, or process guide, load `document-interview` when it is available. Follow its workspace
+analysis, stakeholder interview, session planning, drafting, and validation workflow before writing.
+
+Do not apply its full minimum-question interview to deterministic, data-driven, or template-driven
+tasks. Use focused clarification only for inputs that cannot be inferred from authoritative sources.
+</StakeholderDefinedDocuments>
+
 <WhenImplementing>
 **Ask questions when:**
 - **Multiple valid approaches exist** (e.g., sync vs. async, centralized vs. distributed state) and the trade-offs aren't obvious from existing patterns

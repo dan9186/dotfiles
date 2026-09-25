@@ -108,6 +108,17 @@ For each file found: extract facts about purpose, tech stack, conventions, build
 
 Where sources conflict: **stop and surface each conflict to the user before writing**. Present the differing values, which files they came from, and ask the user which one is correct. Do not resolve conflicts by assumption.
 </ExistingAIContext>
+
+<RepositoryInterview>
+Treat repository evidence as the primary source. If that research still leaves a durable,
+high-impact fact unknown, ask focused questions before writing. Prioritize the repository's
+purpose and audience, ownership or service boundaries, non-obvious operating constraints, and
+how maintainers should validate changes.
+
+Do not run a minimum-question stakeholder interview for a well-documented repository or to resolve
+low-impact implementation details. Use the `document-interview` workflow only when the user also
+requests a stakeholder-defined policy, standard, playbook, or other organizational document.
+</RepositoryInterview>
 </ResearchPhase>
 
 <OutputSpec>

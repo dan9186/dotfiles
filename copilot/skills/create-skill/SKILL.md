@@ -20,6 +20,15 @@ A meta-skill for creating new Agent Skills. Use this skill when you need to scaf
 - Knowledge of any bundled resources needed (scripts, references, assets, templates)
 </Prerequisites>
 
+<ClarifyingTheSkillContract>
+When the prompt does not establish the skill's behavior, trigger phrases, output contract, or
+required integrations, ask focused questions before scaffolding. Infer routine implementation
+details from existing skills and do not interview the user about them.
+
+Use the full `document-interview` workflow only if the requested skill itself produces a
+stakeholder-defined policy, standard, playbook, or other durable organizational document.
+</ClarifyingTheSkillContract>
+
 <Workflow>
 <Step0>
 **Determine Destination and Check for Conflicts**
