@@ -34,11 +34,28 @@ where changes were applied, and produce a final table of results.
    ```sh
    for d in */; do
      [ -d "$d/.git" ] || continue
-     find "$d" -name '*.go' -not -path '*/vendor/*' -quit 2>/dev/null | grep -q . && echo "$d"
+     find "$d" -name '*.go' -not -path '*/vendor/*' -print -quit 2>/dev/null | grep -q . && echo "$d"
    done
    ```
-   Repos with no `.go` files outside `vendor/` are silently omitted — they are not Go projects and this skill does not apply to them.
+   Repos with no `.go` files outside `vendor/` are not Go projects and this skill does not apply to them.
 3. Present the resolved list (names + count) to the user before proceeding. If it looks wrong, stop and clarify.
+4. Also present every excluded git repo with its dominant file extensions and a concise reason for
+   exclusion:
+   ```
+   | Repo | Why excluded (dominant files) |
+   |------|--------------------------------|
+   | ui | json/ts/md — TypeScript frontend |
+   ```
+   Derive the dominant extensions from files outside `.git`, and describe the repository type from
+   those extensions and its recognizable project files. This gives the user visibility into the
+   repositories omitted from the batch before approval.
+5. Present one complete approval report before making changes:
+   - Go repos included in the batch
+   - Git repos excluded from the batch, with reasons
+   - Shared branch name, PR title, and exact per-repo operations
+   - Confirmation that dirty repos and repos with an existing branch will be skipped
+
+   Do not start any repository work until the user approves this complete batch plan.
 </Step0>
 
 <Step1>
@@ -50,11 +67,25 @@ where changes were applied, and produce a final table of results.
 </Step1>
 
 <Step2>
-**Fan Out via Parallel Sub-Agents**
+**Fan Out via Autopilot**
 
-Launch one `task` sub-agent per repo, capped at **10 concurrent**. Sub-agents run in
-**background mode** (autonomous, no per-step approval required) with **model `gpt-5.4-mini`**
-and **reasoning effort `low`** — this is a mechanical shell task requiring no reasoning depth.
+After the user approves the complete batch plan, execute the fleet under Copilot CLI autopilot.
+The approval of the batch plan is authorization for all listed per-repo operations. Do not request
+separate approval for individual agents, repositories, shell commands, branches, commits, pushes,
+or PR creation.
+
+If autopilot is not enabled, instruct the user to enable it with `/autopilot` before launching the
+agents. Launch one autonomous `task` sub-agent per repo, capped at **10 concurrent**. Continue
+launching successive batches until every approved repository has completed or been skipped.
+Sub-agents run in **background mode** with **model `gpt-5.4-mini`** and **reasoning effort `low`** —
+this is a mechanical shell task requiring no reasoning depth.
+
+Agents must still obey all safety boundaries:
+- Stop immediately on a dirty working tree.
+- Never stash or alter pre-existing work.
+- Never reuse, delete, or force-push an existing branch.
+- Report command failures without improvising around them.
+- Do not run builds, tests, linters, or formatting.
 
 Each sub-agent receives:
 
@@ -147,7 +178,7 @@ If at any point the user proposes a new convention or behavioral change for this
 1. Acknowledge the suggestion.
 2. Show exactly what the change would look like in this `SKILL.md`.
 3. Wait for explicit confirmation before modifying the file.
-4. After confirmation, update `~/dotfiles/copilot/skills/go-fix-fleet/SKILL.md`.
+4. After confirmation, update `~/dotfiles/copilot/skills/golang/go-fix-fleet/SKILL.md`.
 5. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it.
 </UpdateProtocol>
 
@@ -157,4 +188,3 @@ If at any point the user proposes a new convention or behavioral change for this
 - Do not emit per-repo progress logs in the final response — aggregate only.
 - Errors (e.g. push failed, branch exists) appear in the Status column of the table, not inline during execution.
 </OutputContract>
-
