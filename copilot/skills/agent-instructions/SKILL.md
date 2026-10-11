@@ -1,7 +1,7 @@
 ---
 name: agent-instructions
 description: 'Creates or updates an AGENTS.md file for the current repository, or converts existing agent/copilot instruction files into AGENTS.md. Use when asked to "add agent instructions", "create an AGENTS.md", "set up agent context", "convert copilot instructions to AGENTS.md", "generate agent instructions", "initialize agent context for this repo", or "convert my instruction file". Analyzes the codebase thoroughly and writes concise, permanent instructions that help a cloud agent understand the repo at a glance: what it does, languages/frameworks, how to build and validate, and key layout/architecture facts.'
-lastReviewed: "2026-07-31"
+lastReviewed: "2026-09-29"
 ---
 
 # Agent Instructions Skill
@@ -13,6 +13,8 @@ Produce and maintain a concise, durable `AGENTS.md` that captures repository rea
 <Scope>
 - Applies when creating, updating, or converting agent instruction files into `AGENTS.md`.
 - Prioritizes stable codebase context over task-specific guidance.
+- Any time this skill touches an `AGENTS.md` (create, convert, update, or review), the whole file
+  must be brought into alignment with this skill, including sections outside the requested change.
 </Scope>
 
 <StructureContract>
@@ -33,7 +35,9 @@ Produce and maintain a concise, durable `AGENTS.md` that captures repository rea
 - **Length**: The finished file must fit within **two printed pages** — roughly 80–120 lines. Be ruthless about brevity. Every sentence must earn its place.
 - **Not task-specific**: Do not include instructions about a current bug, feature, or PR. The file describes the codebase permanently, not a transient task.
 - **No duplication of tool output**: Never reproduce what `--help`, `make help`, or a schema already provides authoritatively. Reference the command instead.
-- **Plain markdown only**: No frontmatter, no HTML. The file is read verbatim by agents, so keep formatting clean and skimmable.
+- **Structured sections**: Keep the `# Agent Instructions` H1, then wrap every section in PascalCase
+  pseudo-XML tags (e.g. `<Overview>`…`</Overview>`) instead of `##` headers. Don't use frontmatter.
+  Markdown lists, tables, and fenced code are still fine inside tags.
 </Constraints>
 
 <ResearchPhase>
@@ -121,37 +125,57 @@ requests a stakeholder-defined policy, standard, playbook, or other organization
 </RepositoryInterview>
 </ResearchPhase>
 
+<AlignmentPass>
+Treat source content (existing `AGENTS.md`, converted files) as facts to mine, never as final text.
+Before writing, audit every line against this skill and rewrite anything non-conforming:
+
+- Structure: pseudo-XML tags, required sections present and in `<OutputSpec>` order, optional
+  sections only when justified.
+- Constraints: length, task-specific content, and duplicated `--help`/schema output.
+- Tech Stack: runtime versions verified against `<TechStack>` rules (e.g. Go version pin reasoning).
+- Build & Validate: commands match CI and the language instruction files' validation order, with
+  the database-snapshot workflow only when applicable.
+- Key Conventions: 3–8 imperative, one-to-two-line bullets. Tone and style follow `<ToneAndStyle>`.
+- Facts: re-verify stale claims against the code (versions, paths, packages that no longer exist).
+</AlignmentPass>
+
 <OutputSpec>
 <RequiredSections>
-### Required Sections (in order)
+Required sections, in order:
 
 ```markdown
 # Agent Instructions
 
-## Overview
+<Overview>
 One to three sentences: what this project does and who uses it.
+</Overview>
 
-## Tech Stack
+<TechStack>
 Bullet list: language(s) + version, primary framework(s), key libraries, infra tooling.
+</TechStack>
 
-## Build & Validate
+<BuildValidate>
 Shell commands only — no prose duplication of what `--help` says.
 Format each step as a fenced code block with the shell command.
+</BuildValidate>
 
-## Repository Layout
+<RepositoryLayout>
 Short table or bullet list mapping top-level directories to their purpose.
 Only list directories that are non-obvious. Skip `README.md`, `LICENSE`, etc.
+</RepositoryLayout>
 
-## Architecture Notes
+<ArchitectureNotes>
 A few sentences or bullets on non-obvious design decisions, patterns, or constraints
 an agent should know before making changes. Examples:
 - "All database queries go through the repository layer in internal/store/"
 - "Proto definitions live in api/; generated code in gen/ — never edit gen/ directly"
 - "Config is loaded once at startup from environment variables; no config files at runtime"
+</ArchitectureNotes>
 
-## Key Conventions
+<KeyConventions>
 Bullet list of 3–8 hard rules or patterns the agent must follow.
 Focus on things that are easy to get wrong and costly to fix.
+</KeyConventions>
 ```
 </RequiredSections>
 
@@ -159,11 +183,13 @@ Focus on things that are easy to get wrong and costly to fix.
 Include only if genuinely useful.
 
 ```markdown
-## External Dependencies
+<ExternalDependencies>
 Services, APIs, or credentials an agent needs to know about (not secrets — just names/roles).
+</ExternalDependencies>
 
-## Known Landmines
+<KnownLandmines>
 Specific files, directories, or patterns to avoid touching or to treat with extra care.
+</KnownLandmines>
 ```
 </OptionalSections>
 
@@ -197,6 +223,7 @@ If at any point the user says something like:
 <OutputContract>
 1. Write the file to `AGENTS.md` at the repository root (create it if it does not exist)
 2. If `.github/copilot-instructions.md` was the source of a conversion, delete it automatically after writing `AGENTS.md`. For any other converted instruction file, note which file was converted and offer to delete or archive it.
-3. If updating an existing `AGENTS.md`, show a brief diff summary of what changed and why
+3. When updating or converting, summarize both the content changes and every alignment fix from
+   `<AlignmentPass>` (structure, versions, conventions, removed or stale facts).
 4. Tell the user: length (line count), what was included, and any gaps you could not fill due to missing documentation
 </OutputContract>

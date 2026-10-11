@@ -72,6 +72,10 @@ are automatically injected when working on `.sql` files via `COPILOT_CUSTOM_INST
 </CodingStyle>
 
 <Documentation>
+- Keep READMEs focused primarily on why the project exists: its purpose, motivation, and value.
+  Do not document each feature or maintain a functionality catalog there; CLI behavior, commands,
+  flags, and constraints belong in the tool's internal help. Include how-to content only when
+  necessary to support or explain the why.
 - Do not duplicate information that already exists authoritatively elsewhere — link or reference it instead
 - In particular: never reproduce CLI usage, flags, or command descriptions in a README or doc file;
   that content lives in the tool's `--help` output and the two will inevitably drift
