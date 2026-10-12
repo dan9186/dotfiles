@@ -1,6 +1,6 @@
 ---
 instructionType: "global"
-lastReviewed: "2026-07-23"
+lastReviewed: "2026-10-12"
 ---
 
 <Purpose>
@@ -96,15 +96,12 @@ Go doc comment standards are in `~/dotfiles/copilot/.github/instructions/go.inst
 </LinearWorkflow>
 
 <ModelStrategy>
-Copilot runs in **auto model mode**. Default preference: **Claude Haiku 4.5** — fast, lightweight
-reasoning ideal for planning, exploration, architecture decisions, and discovery work.
-
-For explicit model selection during a session:
-- Use `/model` command to switch models interactively
-- Specify model preference directly in your prompt (e.g., "use Claude Sonnet" or "use GPT-5.4")
-
-Available models: `gpt-5.4`, `gpt-5.4-mini`, `gpt-5-mini`, `claude-sonnet-4.6`, `claude-sonnet-4.5`,
-`claude-haiku-4.5`, `gemini-3.1-pro-preview`, `gemini-3.5-flash`.
+- Favor Auto model selection throughout planning, research, and execution. Do not ask the user
+  to choose a model or prescribe named models in plans unless the user explicitly requests it.
+- Leave delegated-task model selection to the runtime defaults unless the user explicitly
+  requests an override; do not translate effort preferences into model choices.
+- Instructions and plans express preferences; they do not themselves change runtime model or
+  reasoning-effort settings. Do not claim a setting changed without applying and verifying it.
 </ModelStrategy>
 
 <WorkflowPreferences>
@@ -113,7 +110,11 @@ Available models: `gpt-5.4`, `gpt-5.4-mini`, `gpt-5-mini`, `claude-sonnet-4.6`, 
 - Explain reasoning and trade-offs when explicitly asked, or when a decision is non-obvious
 - Flag potential issues without being overly cautious
 - Work/personal context is split — don't assume work config applies to personal projects
-- **Model & Effort Choices**: When a plan has been reviewed, use the specified model and effort level to guide implementation. Low effort means streamlined work with reasonable defaults; medium is balanced investigation and validation; high means thorough exploration, multiple approaches considered, and exhaustive verification. Model choice affects reasoning depth (Haiku for quick tactical work, Sonnet for architectural decisions, GPT-5.4 for complex code analysis).
+- **Execution Effort**: Carry an approved plan's explicit reasoning-effort request into execution
+  only through a supported runtime control. Apply it to delegated tasks when supported without
+  overriding model selection. If the active session requires a user-controlled setting, explain
+  that limitation rather than claiming the plan applied it. Do not substitute investigation
+  depth or validation scope for a native reasoning-effort setting.
 </WorkflowPreferences>
 
 <QuestionAskingProtocol>
@@ -124,7 +125,10 @@ Always ask clarifying questions to reduce ambiguity and avoid rework. The goal i
 - **Scope & Boundaries**: What's explicitly in scope? What's out of scope? Are there edge cases to consider?
 - **Feasibility & Constraints**: Are there known blockers, dependencies, or external limitations?
 - **Success Criteria**: How will we know when this is done? What does success look like?
-- **Model & Effort**: Before proposing a plan, ask what model you should use (Haiku for speed, Sonnet for deeper reasoning, GPT-5.4 for code complexity) and what effort level is expected (low = quick answer, medium = balanced depth, high = exhaustive exploration).
+- **Reasoning Effort**: Ask for an effort level only when a supported runtime control can apply
+  it to the planned execution. Use the supported levels, record the requested level and its
+  execution scope in the plan, and disclose any required user action. Otherwise, retain runtime
+  defaults and do not ask for an effort level. Never require a model choice as part of planning.
 - **Codebases Involved**: For architectural changes, confirm which codebases are involved. Start with context (inferred from cwd, recent work, or dependencies) and ask which codebases need **research** (understand patterns, check impact) and which will receive **edits** (implementation targets). After user confirms scope, proactively discover and propose additional codebases that may be affected, with reasoning for each.
 
 **Avoid asking about:**
