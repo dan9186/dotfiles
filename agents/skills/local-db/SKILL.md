@@ -255,6 +255,6 @@ If at any point the user says something like:
 2. Propose the exact change: show what it would look like in `SKILL.md`
 3. Note whether it affects `<Defaults>`, `<Constraints>`, or both
 4. Wait for explicit confirmation before modifying
-5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/local-db/SKILL.md`
+5. After confirmation, update `SKILL.md` at `~/dotfiles/agents/skills/local-db/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 </UpdateProtocol>

@@ -6,7 +6,7 @@ description: 'Audits a Go codebase against the error-handling standards defined 
 # Go Errors
 
 Audit a single Go repo against the mandatory `<ErrorHandling>` rules in
-`~/dotfiles/copilot/.github/instructions/go.instructions.md`, then fix only the violations the
+`~/dotfiles/agents/.github/instructions/go.instructions.md`, then fix only the violations the
 user confirms.
 
 <TriggerPhrases>
@@ -32,7 +32,7 @@ user confirms.
 </Constraints>
 
 <ResearchPhase>
-1. Read `~/dotfiles/copilot/.github/instructions/go.instructions.md` and extract the current
+1. Read `~/dotfiles/agents/.github/instructions/go.instructions.md` and extract the current
    `<ErrorHandling>` section — this is the live rule set for this run, not a fixed list.
 2. Enumerate non-vendor Go files:
    ```bash
@@ -119,7 +119,7 @@ categorizes or presents findings:
    `<ErrorHandling>`, not here — this skill only audits against that file.
 3. If it is a change to this skill's workflow (e.g. presentation format, validation steps), show
    the exact change to this `SKILL.md` and wait for explicit confirmation before editing.
-4. After confirmation, update `~/dotfiles/copilot/skills/golang/go-errors/SKILL.md`.
+4. After confirmation, update `~/dotfiles/agents/skills/golang/go-errors/SKILL.md`.
 5. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it.
 </UpdateProtocol>
 

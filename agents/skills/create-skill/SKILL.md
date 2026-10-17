@@ -1,6 +1,6 @@
 ---
 name: create-skill
-description: 'Create new Agent Skills for GitHub Copilot from prompts or by duplicating this template. Use when asked to "create a skill", "make a new skill", "scaffold a skill", or when building specialized AI capabilities with bundled resources. Generates SKILL.md files with proper frontmatter, directory structure, and optional scripts/references/assets folders.'
+description: 'Create new Agent Skills for GitHub Copilot CLI and Claude Code from prompts or by duplicating this template. Use when asked to "create a skill", "make a new skill", "scaffold a skill", or when building specialized AI capabilities with bundled resources. Generates SKILL.md files with proper frontmatter, directory structure, and optional scripts/references/assets folders.'
 ---
 
 # Create Skill
@@ -9,7 +9,7 @@ A meta-skill for creating new Agent Skills. Use this skill when you need to scaf
 
 <TriggerPhrases>
 - User asks to "create a skill", "make a new skill", or "scaffold a skill"
-- User wants to add a specialized capability to their GitHub Copilot setup
+- User wants to add a specialized capability to their agent setup (GitHub Copilot CLI or Claude Code)
 - User needs help structuring a skill with bundled resources
 - User wants to duplicate this template as a starting point
 </TriggerPhrases>
@@ -40,13 +40,13 @@ First, infer whether this is a personal or work skill from the user's prompt. Lo
 Once destination is known, check whether a skill with this name already exists. Skills may be nested under category folders, so **search recursively** — a flat `ls` will miss them:
 
 ```bash
-find ~/dotfiles/copilot/skills -name SKILL.md                       # personal
-find $PRIVATE_DOTFILES/copilot/work_skills -name SKILL.md           # work
-find $PRIVATE_DOTFILES/copilot/private_skills -name SKILL.md        # private
-ls -la ~/.copilot/skills/                                            # active symlinks
+find ~/dotfiles/agents/skills -name SKILL.md                       # personal
+find $PRIVATE_DOTFILES/agents/work_skills -name SKILL.md           # work
+find $PRIVATE_DOTFILES/agents/private_skills -name SKILL.md        # private
+ls -la ~/.copilot/skills/ ~/.claude/skills/                         # active symlinks
 ```
 
-What matters is the **leaf directory basename**, not the full path. Symlinks are created flat in `~/.copilot/skills/<skill-name>`, so `golang/foo` and `gws/foo` collide — the first found wins and the duplicate is skipped with a warning.
+What matters is the **leaf directory basename**, not the full path. Symlinks are created flat in `~/.copilot/skills/<skill-name>` and `~/.claude/skills/<skill-name>`, so `golang/foo` and `gws/foo` collide — the first found wins and the duplicate is skipped with a warning.
 
 If `$PRIVATE_DOTFILES` is unset and the destination is work, stop and tell the user: the `PRIVATE_DOTFILES` environment variable is not set.
 
@@ -56,12 +56,12 @@ If the skill already exists anywhere, read its `SKILL.md` fully before deciding 
 <Step0b>
 **Determine Category Placement**
 
-Skills may live directly under the source root or nested inside an organizational **category folder** (e.g. `copilot/skills/golang/<skill-name>/`). Category folders are plain directories with no `SKILL.md` of their own and no wiring — they exist purely for human organization. They do **not** affect discovery: every leaf is symlinked flat into `~/.copilot/skills/`.
+Skills may live directly under the source root or nested inside an organizational **category folder** (e.g. `agents/skills/golang/<skill-name>/`). Category folders are plain directories with no `SKILL.md` of their own and no wiring — they exist purely for human organization. They do **not** affect discovery: every leaf is symlinked flat into `~/.copilot/skills/` and `~/.claude/skills/`.
 
 Enumerate existing categories — directories under the source root that contain no `SKILL.md` directly:
 
 ```bash
-find ~/dotfiles/copilot/skills -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/SKILL.md' ';' -print
+find ~/dotfiles/agents/skills -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/SKILL.md' ';' -print
 ```
 
 Then **assess and propose** exactly one placement, with a one-line rationale:
@@ -82,28 +82,28 @@ Present the recommendation and wait for explicit confirmation before creating an
 <Step1>
 **Create the Skill Directory**
 
-Skills are **sourced from a versioned dotfiles repo** and **symlinked into `~/.copilot/skills/`** by the `skills-sync` shell function. Never create a skill directly in `~/.copilot/skills/`.
+Skills are **sourced from a versioned dotfiles repo** and **symlinked into `~/.copilot/skills/` and `~/.claude/skills/`** (for whichever agents are installed) by the `skills-sync` shell function. Never create a skill directly in either skills directory.
 
 | Destination | Source directory |
 |-------------|-----------------|
-| Personal | `~/dotfiles/copilot/skills/[<category>/]<skill-name>/` |
-| Work | `$PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>/` |
-| Private | `$PRIVATE_DOTFILES/copilot/private_skills/[<category>/]<skill-name>/` |
+| Personal | `~/dotfiles/agents/skills/[<category>/]<skill-name>/` |
+| Work | `$PRIVATE_DOTFILES/agents/work_skills/[<category>/]<skill-name>/` |
+| Private | `$PRIVATE_DOTFILES/agents/private_skills/[<category>/]<skill-name>/` |
 
 Omit the `<category>/` segment when Step0b concluded no category. Create the directory in the correct location:
 
 ```bash
 # Personal, no category
-mkdir ~/dotfiles/copilot/skills/<skill-name>
+mkdir ~/dotfiles/agents/skills/<skill-name>
 
 # Personal, inside a category
-mkdir -p ~/dotfiles/copilot/skills/<category>/<skill-name>
+mkdir -p ~/dotfiles/agents/skills/<category>/<skill-name>
 
 # Work
-mkdir -p $PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>
+mkdir -p $PRIVATE_DOTFILES/agents/work_skills/[<category>/]<skill-name>
 ```
 
-After writing `SKILL.md`, tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`. Do not run it yourself — the agent does not have access to the shell environment where `skills-sync` is defined.
+After writing `SKILL.md`, tell the user to run `skills-sync` in their shell to link it into both agents' skills directories. Do not run it yourself — the agent does not have access to the shell environment where `skills-sync` is defined.
 </Step1>
 
 <Step2>
@@ -238,33 +238,35 @@ The following is a realistic skill body with inline comments explaining the inte
 <ExampleStructure>
 ```
 # Personal skill, no category
-~/dotfiles/copilot/skills/my-skill/            ← committed to ~/dotfiles
+~/dotfiles/agents/skills/my-skill/            ← committed to ~/dotfiles
 └── SKILL.md
 
 # Personal skill inside a category folder
-~/dotfiles/copilot/skills/golang/my-go-skill/  ← "golang/" has no SKILL.md of its own
+~/dotfiles/agents/skills/golang/my-go-skill/  ← "golang/" has no SKILL.md of its own
 └── SKILL.md
 
 # Work skill
-$PRIVATE_DOTFILES/copilot/work_skills/my-skill/  ← committed to private dotfiles
+$PRIVATE_DOTFILES/agents/work_skills/my-skill/  ← committed to private dotfiles
 └── SKILL.md
 
 # Symlinks are always flat, regardless of source nesting
 ~/.copilot/skills/my-skill       → managed by skills-sync
+~/.claude/skills/my-skill        → managed by skills-sync
 ~/.copilot/skills/my-go-skill    → managed by skills-sync
+~/.claude/skills/my-go-skill     → managed by skills-sync
 ```
 </ExampleStructure>
 
 <QuickStart>
 1. Infer personal vs. work from the prompt — ask if unclear
-2. Recursively search all source dirs and `~/.copilot/skills/` for basename conflicts
+2. Recursively search all source dirs and both skills directories for basename conflicts
 3. Assess category placement (existing / new / none), propose it, and confirm with the user
 4. Create `SKILL.md` in the correct source directory:
-   - Personal: `~/dotfiles/copilot/skills/[<category>/]<skill-name>/SKILL.md`
-   - Work: `$PRIVATE_DOTFILES/copilot/work_skills/[<category>/]<skill-name>/SKILL.md`
+   - Personal: `~/dotfiles/agents/skills/[<category>/]<skill-name>/SKILL.md`
+   - Work: `$PRIVATE_DOTFILES/agents/work_skills/[<category>/]<skill-name>/SKILL.md`
 5. Add frontmatter with `name` and `description`
 6. Write the body following the annotated example above
-7. Tell the user to run `skills-sync` in their shell to link it into `~/.copilot/skills/`
+7. Tell the user to run `skills-sync` in their shell to link it into both agents' skills directories
 8. Validate against the checklist below
 </QuickStart>
 
@@ -308,7 +310,7 @@ Adapt the trigger phrases and "output" noun to match the skill's domain.
 </UpdateProtocolTemplate>
 
 <ReferenceImplementations>
-These skills in `~/.copilot/skills/` are good examples to read before writing a new one:
+These skills in `~/dotfiles/agents/skills/` are good examples to read before writing a new one:
 
 | Skill | Good reference for |
 |-------|--------------------|

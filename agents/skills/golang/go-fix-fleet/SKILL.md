@@ -22,7 +22,7 @@ where changes were applied, and produce a final table of results.
 - **Same branch everywhere** — one branch name is used in every repo. If the branch already exists on the remote, report an error for that repo rather than force-pushing.
 - **No build/test/lint** — this is a fix pass only. Do not run `go build`, `go test`, or any linter.
 - **Does not format** — `go fix` rewrites deprecated API usages but does not run `go fmt`. If formatting is also desired, run the `go-fmt-fleet` skill separately.
-- **Cheap and autonomous** — sub-agents use model `gpt-5.4-mini` at effort `low`, run in background mode (no per-step approval), and are capped at 10 concurrent. This is a scripted mechanical task; do not use a heavier model or effort level.
+- **Cheap and autonomous** — sub-agents use the smallest fast model (Copilot: `gpt-5.4-mini` at effort `low`; Claude: `haiku`), run in background mode (no per-step approval), and are capped at 10 concurrent. This is a scripted mechanical task; do not use a heavier model or effort level.
 </Constraints>
 
 <Workflow>
@@ -67,18 +67,22 @@ where changes were applied, and produce a final table of results.
 </Step1>
 
 <Step2>
-**Fan Out via Autopilot**
+**Fan Out Autonomously**
 
-After the user approves the complete batch plan, execute the fleet under Copilot CLI autopilot.
+After the user approves the complete batch plan, execute the fleet autonomously (Copilot: autopilot;
+Claude: background sub-agents).
 The approval of the batch plan is authorization for all listed per-repo operations. Do not request
 separate approval for individual agents, repositories, shell commands, branches, commits, pushes,
 or PR creation.
 
-If autopilot is not enabled, instruct the user to enable it with `/autopilot` before launching the
-agents. Launch one autonomous `task` sub-agent per repo, capped at **10 concurrent**. Continue
+Copilot-only: if autopilot is not enabled, instruct the user to enable it with `/autopilot` before
+launching the agents. Claude-only: if the session's permission mode would prompt for each command,
+ask the user to switch to auto mode first. Launch one autonomous sub-agent per repo, capped at
+**10 concurrent**. Continue
 launching successive batches until every approved repository has completed or been skipped.
-Sub-agents run in **background mode** with **model `gpt-5.4-mini`** and **reasoning effort `low`** —
-this is a mechanical shell task requiring no reasoning depth.
+Sub-agents run in **background mode** with the smallest fast model (Copilot: `gpt-5.4-mini` at
+reasoning effort `low`; Claude: `haiku`) — this is a mechanical shell task requiring no reasoning
+depth.
 
 Agents must still obey all safety boundaries:
 - Stop immediately on a dirty working tree.
@@ -178,7 +182,7 @@ If at any point the user proposes a new convention or behavioral change for this
 1. Acknowledge the suggestion.
 2. Show exactly what the change would look like in this `SKILL.md`.
 3. Wait for explicit confirmation before modifying the file.
-4. After confirmation, update `~/dotfiles/copilot/skills/golang/go-fix-fleet/SKILL.md`.
+4. After confirmation, update `~/dotfiles/agents/skills/golang/go-fix-fleet/SKILL.md`.
 5. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it.
 </UpdateProtocol>
 

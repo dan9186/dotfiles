@@ -216,7 +216,7 @@ If at any point the user says something like:
 2. Propose the addition: show exactly what it would look like in `SKILL.md`
 3. Note whether it should be required or optional (and if optional, the qualifying condition)
 4. Wait for explicit confirmation before modifying
-5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/agent-instructions/SKILL.md`
+5. After confirmation, update `SKILL.md` at `~/dotfiles/agents/skills/agent-instructions/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 </UpdateProtocol>
 

@@ -21,7 +21,7 @@ where formatting changed, and produce a final table of results.
 - **Fixed PR title** — `chore: go fmt ./...`, identical across every repo in the batch.
 - **Same branch everywhere** — one branch name is used in every repo. If the branch already exists on the remote, report an error for that repo rather than force-pushing.
 - **No build/test/lint** — this is a formatting pass only. Do not run `go build`, `go test`, or any linter.
-- **Cheap and autonomous** — sub-agents use model `gpt-5.4-mini` at effort `low`, run in background mode (no per-step approval), and are capped at 10 concurrent. This is a scripted mechanical task; do not use a heavier model or effort level.
+- **Cheap and autonomous** — sub-agents use the smallest fast model (Copilot: `gpt-5.4-mini` at effort `low`; Claude: `haiku`), run in background mode (no per-step approval), and are capped at 10 concurrent. This is a scripted mechanical task; do not use a heavier model or effort level.
 </Constraints>
 
 <Workflow>
@@ -51,9 +51,10 @@ where formatting changed, and produce a final table of results.
 <Step2>
 **Fan Out via Parallel Sub-Agents**
 
-Launch one `task` sub-agent per repo, capped at **10 concurrent**. Sub-agents run in
-**background mode** (autonomous, no per-step approval required) with **model `gpt-5.4-mini`**
-and **reasoning effort `low`** — this is a mechanical shell task requiring no reasoning depth.
+Launch one sub-agent per repo, capped at **10 concurrent**. Sub-agents run in
+**background mode** (autonomous, no per-step approval required) with the smallest fast model
+(Copilot: `gpt-5.4-mini` at reasoning effort `low`; Claude: `haiku`) — this is a mechanical shell
+task requiring no reasoning depth.
 
 Each sub-agent receives:
 
@@ -146,7 +147,7 @@ If at any point the user proposes a new convention or behavioral change for this
 1. Acknowledge the suggestion.
 2. Show exactly what the change would look like in this `SKILL.md`.
 3. Wait for explicit confirmation before modifying the file.
-4. After confirmation, update `~/dotfiles/copilot/skills/go-fmt-fleet/SKILL.md`.
+4. After confirmation, update `~/dotfiles/agents/skills/golang/go-fmt-fleet/SKILL.md`.
 5. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it.
 </UpdateProtocol>
 

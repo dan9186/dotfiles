@@ -34,7 +34,7 @@ fixed. Fix confirmed violations, then propose the matching linter as a regressio
 </Constraints>
 
 <ResearchPhase>
-1. Read `~/dotfiles/copilot/.github/instructions/go.instructions.md` and extract the three rules
+1. Read `~/dotfiles/agents/.github/instructions/go.instructions.md` and extract the three rules
    listed in `<Constraints>` fresh — this is the live rule set for this run.
 2. Enumerate non-vendor Go files:
    ```bash
@@ -115,7 +115,7 @@ presents findings:
 3. If it is a change to this skill's workflow (e.g. presentation format, validation steps, which
    linters to propose), show the exact change to this `SKILL.md` and wait for explicit
    confirmation before editing.
-4. After confirmation, update `~/dotfiles/copilot/skills/golang/go-hygiene/SKILL.md`.
+4. After confirmation, update `~/dotfiles/agents/skills/golang/go-hygiene/SKILL.md`.
 5. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it.
 </UpdateProtocol>
 

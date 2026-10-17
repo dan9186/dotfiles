@@ -1,6 +1,6 @@
 ---
 name: dotfiles
-description: 'Toolkit for adding, modifying, and managing dotfiles in the centralized dotfiles repository at ~/dotfiles. Use when asked to update my dotfiles, add a new config file, update shell aliases or configuration, update SSH config, wire up any new tool config into the install script, update my custom Copilot instructions, or add/modify a Copilot skill. Understands the symlink-based install pattern, Brewfile management, and the two-stage bootstrap/install workflow.'
+description: 'Toolkit for adding, modifying, and managing dotfiles in the centralized dotfiles repository at ~/dotfiles. Use when asked to update my dotfiles, add a new config file, update shell aliases or configuration, update SSH config, wire up any new tool config into the install script, update my custom agent (Copilot or Claude) instructions, rules, MCP servers, or shell allowlist, or add/modify an agent skill. Understands the symlink-based install pattern, Brewfile management, and the two-stage bootstrap/install workflow.'
 ---
 
 # Dotfiles Skill
@@ -11,12 +11,14 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 | What | Path |
 |---|---|
 | Repo root | `~/dotfiles/` |
-| Custom Copilot instructions | `~/dotfiles/copilot/copilot-instructions.md` |
-| LSP server config | `~/dotfiles/copilot/lsp-config.json` |
-| MCP server config | `~/dotfiles/copilot/mcp-config.json` |
-| Skills directory | `~/dotfiles/copilot/skills/` |
-| Individual skill | `~/dotfiles/copilot/skills/[<category>/...]<skill-name>/SKILL.md` |
-| Language-specific instructions dir | `~/dotfiles/copilot/.github/instructions/` |
+| Global agent instructions | `~/dotfiles/agents/instructions.md` |
+| LSP server config | `~/dotfiles/agents/copilot/lsp-config.json` |
+| MCP server config | `~/dotfiles/agents/mcp.json` |
+| Agent shell allowlist | `~/dotfiles/agents/allowlist.txt` |
+| Claude sync script | `~/dotfiles/agents/sync.sh` |
+| Skills directory | `~/dotfiles/agents/skills/` |
+| Individual skill | `~/dotfiles/agents/skills/[<category>/...]<skill-name>/SKILL.md` |
+| Language-specific instructions dir | `~/dotfiles/agents/.github/instructions/` |
 | Install script | `~/dotfiles/install.sh` |
 | Shell env / PATH | `~/dotfiles/zprofile` |
 | Shell plugins / prompt | `~/dotfiles/zshrc.omz` |
@@ -25,7 +27,7 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 
 <TriggerPhrases>
 - User asks to "update my dotfiles", "add a new config file", "modify my shell aliases", "change my zsh/tmux/git/alacritty configuration", "update SSH config", or "wire up a new tool config into the install script".
-- User asks to "update my custom instructions", "update my Copilot instructions", or "add a new Copilot skill".
+- User asks to "update my custom instructions", "update my Copilot/Claude instructions", "add an MCP server", "allow a command for the agents", or "add a new skill".
 </TriggerPhrases>
 
 <RepoLayout>
@@ -49,10 +51,13 @@ Manage the centralized dotfiles repo at `~/dotfiles` (https://github.com/dan9186
 │   ├── plugins/          # Custom Oh My Zsh plugins
 │   ├── aliases.zsh
 │   └── options.zsh
-└── copilot/
-    ├── copilot-instructions.md
-    ├── lsp-config.json
-    ├── mcp-config.json
+└── agents/               # Shared by Copilot CLI and Claude Code
+    ├── instructions.md   # Global instructions (→ ~/.copilot/copilot-instructions.md, ~/.claude/CLAUDE.md)
+    ├── .github/instructions/  # Path-scoped rules (Copilot applyTo, Claude paths)
+    ├── mcp.json          # MCP servers (Copilot symlink; Claude via sync.sh)
+    ├── allowlist.txt     # Pre-approved shell commands for both agents
+    ├── sync.sh           # Registers MCP + permissions in Claude
+    ├── copilot/          # Copilot-only config (lsp-config.json)
     └── skills/
 ```
 </RepoLayout>
@@ -166,7 +171,7 @@ If at any point the user says something like:
 2. Propose the addition: show exactly what it would look like in `SKILL.md`
 3. Note whether it should be a hard rule or a guideline
 4. Wait for explicit confirmation before modifying
-5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/dotfiles/SKILL.md`
+5. After confirmation, update `SKILL.md` at `~/dotfiles/agents/skills/dotfiles/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 </UpdateProtocol>
 
@@ -180,50 +185,69 @@ ls -la ~/.<dest>
 ```
 </TestingChanges>
 
-<CopilotConfiguration>
-**Custom Instructions (`copilot/copilot-instructions.md`)**
+<AgentConfiguration>
+Everything under `~/dotfiles/agents/` is shared by GitHub Copilot CLI and Claude Code. `install.sh`
+wires each tool only when its CLI (`copilot`, `claude`) is installed. Always edit the source in
+`~/dotfiles/agents/`, never the symlink targets, then commit and push from `~/dotfiles`.
 
-- Lives at `~/dotfiles/copilot/copilot-instructions.md` and is symlinked to `~/.copilot/copilot-instructions.md` by `install.sh`.
-- This is the authoritative source for all custom Copilot behavior: tone, coding style, preferred languages, workflow preferences, etc.
-- When the user asks to update their custom instructions, edit **this file in the dotfiles repo** (not the symlink target directly).
-- After editing, commit and push from `~/dotfiles`.
+**Global Instructions (`agents/instructions.md`)**
 
-**Config Files (`copilot/lsp-config.json` and `copilot/mcp-config.json`)**
+- Symlinked to `~/.copilot/copilot-instructions.md` and `~/.claude/CLAUDE.md` by `install.sh`.
+- The authoritative source for all custom agent behavior: tone, coding style, preferred languages,
+  workflow preferences, etc.
+- Name tools by capability (e.g. "the ask-user tool", "sub-agent") and add to the `<AgentTools>`
+  mapping table rather than naming one agent's tool directly. Mark steps that apply to only one
+  agent as Copilot-only or Claude-only.
 
-- `lsp-config.json` configures Language Server Protocol (LSP) servers for the Copilot CLI (currently: `gopls` for Go).
-- `mcp-config.json` configures Model Context Protocol (MCP) servers for the Copilot CLI (currently: Linear and Notion).
-- Both files live in `~/dotfiles/copilot/` and are symlinked by `install.sh` to `~/.copilot/`.
-  - `~/.copilot/lsp-config.json` → `~/dotfiles/copilot/lsp-config.json`
-  - `~/.copilot/mcp-config.json` → `~/dotfiles/copilot/mcp-config.json`
-- **These two paths point to the exact same file via symlink.** Never be confused by seeing the file appear in both locations — there is only one copy.
-- Always edit the source in `~/dotfiles/copilot/` (not the symlink), then commit and push from `~/dotfiles`.
+**Path-Scoped Rules (`agents/.github/instructions/`)**
 
-**Language-Specific Instructions (`copilot/.github/instructions/`)**
+- Each file (`go.instructions.md`, `sql.instructions.md`, `j5.instructions.md`, etc.) carries both
+  an `applyTo:` comma-separated glob string (Copilot, read via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`)
+  and an equivalent `paths:` YAML list (Claude). Keep the two in sync.
+- `install.sh` symlinks each file to `~/.claude/rules/<lang>.md`.
+- To add a new language, create `~/dotfiles/agents/.github/instructions/<lang>.instructions.md`
+  with the same frontmatter pattern and re-run `./install.sh`.
 
-- Each file (`go.instructions.md`, `sql.instructions.md`, `j5.instructions.md`, etc.) carries an
-  `applyTo: "**/*.<ext>"` frontmatter glob and is auto-injected into context via
-  `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` whenever a matching file is being worked on.
-- To add a new language, create `~/dotfiles/copilot/.github/instructions/<lang>.instructions.md`
-  with the same frontmatter pattern — no separate wiring is needed beyond the file existing here.
-- When the user corrects or adds a language-specific convention, edit the source file in the
-  dotfiles repo, then commit and push from `~/dotfiles`.
+**MCP Servers (`agents/mcp.json`)**
 
-**Skills (`copilot/skills/`)**
+- Copilot format (currently: Linear and Notion). Symlinked to `~/.copilot/mcp-config.json`.
+- Claude stores MCP servers in `~/.claude.json`, which can't be symlinked, so `agents/sync.sh`
+  registers each server with `claude mcp add-json --scope user` (stripping Copilot-only keys such
+  as `tools`). It only adds missing servers; to change an existing one in Claude, remove it with
+  `claude mcp remove --scope user <name>` and re-run `agents-sync`.
 
-- Each skill lives at `~/dotfiles/copilot/skills/<skill-name>/SKILL.md`, either directly under
-  `copilot/skills/` or nested under one or more organizational category subfolders (e.g.
-  `copilot/skills/golang/<skill-name>/`, `copilot/skills/gws/<skill-name>/`) for human
+**Shell Allowlist (`agents/allowlist.txt`)**
+
+- One command prefix per line, space-separated words (`git log`), `#` comments allowed.
+- The `copilot()` wrapper in `zprofile` turns each line into `--allow-tool='shell(git:log:\*)'`
+  on every launch; `agents-sync` merges each into `~/.claude/settings.json` `permissions.allow`
+  as `Bash(git log *)`. Removing a line does not remove it from Claude's settings — delete it
+  there too.
+- Keep the `<ShellEnvironment>` table in `agents/instructions.md` in sync.
+
+**Copilot-Only Config (`agents/copilot/lsp-config.json`)**
+
+- LSP servers for Copilot CLI (currently: `gopls`). Symlinked to `~/.copilot/lsp-config.json`.
+
+**Skills (`agents/skills/`)**
+
+- Each skill lives at `~/dotfiles/agents/skills/<skill-name>/SKILL.md`, either directly under
+  `agents/skills/` or nested under one or more organizational category subfolders (e.g.
+  `agents/skills/golang/<skill-name>/`, `agents/skills/gws/<skill-name>/`) for human
   organization — category folders are just plain directories with no `SKILL.md` of their own.
-- `install.sh` and the `skills-sync` omz plugin both recursively walk `copilot/skills/` (and, for
-  `skills-sync`, `$PRIVATE_DOTFILES/copilot/{work_skills,private_skills}`), treating any directory
-  that directly contains `SKILL.md` as a leaf to link, and any directory without one as a category
-  folder to recurse into. Every leaf is symlinked flatly into `~/.copilot/skills/<skill-name>`
-  regardless of nesting depth in the source tree.
+- `install.sh` (via `link_skills_recursive`) and the `skills-sync` omz
+  plugin (`omz/plugins/agent-skills`) both recursively walk `agents/skills/` (and
+  `$PRIVATE_DOTFILES/agents/{work_skills,private_skills}`), treating any directory that directly
+  contains `SKILL.md` as a leaf to link, and any directory without one as a category folder to
+  recurse into. Every leaf is symlinked flatly into `~/.copilot/skills/<skill-name>` and
+  `~/.claude/skills/<skill-name>` regardless of nesting depth in the source tree.
 - If two leaf directories under different category folders share the same `<skill-name>`, the
   first one found wins; the duplicate is skipped with a printed warning.
-- The `description` frontmatter in `SKILL.md` is what drives automatic skill matching — keep it precise and include the natural-language phrases a user would say to trigger the skill.
+- The `description` frontmatter in `SKILL.md` is what drives automatic skill matching in both
+  agents — keep it precise and include the natural-language phrases a user would say to trigger
+  the skill.
 - When adding or modifying a skill, edit the file in the dotfiles repo, then commit and push.
-</CopilotConfiguration>
+</AgentConfiguration>
 
 <OSPreferences>
 `bootstrap.sh` calls `apply_preferences()` which detects the OS and runs the matching script:

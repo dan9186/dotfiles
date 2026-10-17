@@ -107,7 +107,7 @@ If at any point the user says something like:
 2. Propose the addition: show exactly what it would look like in `SKILL.md`
 3. Note whether it should be a hard constraint or a workflow step
 4. Wait for explicit confirmation before modifying
-5. After confirmation, update `SKILL.md` at `~/dotfiles/copilot/skills/golang/godoc/SKILL.md`
+5. After confirmation, update `SKILL.md` at `~/dotfiles/agents/skills/golang/godoc/SKILL.md`
 6. Tell the user to commit the change to `~/dotfiles` and run `skills-sync` to persist it
 </UpdateProtocol>
 
