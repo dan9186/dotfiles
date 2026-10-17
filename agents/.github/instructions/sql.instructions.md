@@ -1,5 +1,7 @@
 ---
 applyTo: "**/*.sql"
+paths:
+  - "**/*.sql"
 instructionType: "language"
 language: "sql"
 lastReviewed: "2026-07-23"
@@ -136,6 +138,6 @@ Migrations that backfill or transform existing data require additional care:
 If the user states a new SQL-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
 a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
-at `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and remind the user to commit and
+at `~/dotfiles/agents/.github/instructions/sql.instructions.md` and remind the user to commit and
 push from `~/dotfiles`.
 </UpdateProtocol>

@@ -4,11 +4,11 @@ lastReviewed: "2026-10-12"
 ---
 
 <Purpose>
-Define global behavior, workflow, and quality expectations for Copilot sessions across personal and work repositories.
+Define global behavior, workflow, and quality expectations for agent sessions (GitHub Copilot CLI and Claude Code) across personal and work repositories.
 </Purpose>
 
 <Scope>
-- Applies to all Copilot interactions unless a more specific repository or language instruction overrides it.
+- Applies to all agent interactions unless a more specific repository or language instruction overrides it.
 - Treat these as default hard rules for execution behavior and decision-making.
 </Scope>
 
@@ -18,6 +18,19 @@ Define global behavior, workflow, and quality expectations for Copilot sessions 
 - When adding new rules, place them in the most specific section and avoid duplicates.
 </StructureContract>
 
+<AgentTools>
+These instructions, skills, and rules are shared by GitHub Copilot CLI and Claude Code. They name
+tools by capability; map each to the tool the current agent provides:
+
+| Capability | Copilot CLI | Claude Code |
+|---|---|---|
+| ask-user tool | `ask_user` | `AskUserQuestion` |
+| sub-agent | `task` | `Agent` |
+| session plan | `~/.copilot/session-state/<session-id>/plan.md` | plan mode / plan file |
+
+Skip any step marked Copilot-only or Claude-only when running in the other agent.
+</AgentTools>
+
 <AuthoringConventions>
 Applies when **creating** a new instruction file (`*.instructions.md`) or a new skill (`SKILL.md`)
 in a repo I own.
@@ -26,7 +39,7 @@ in a repo I own.
   sub-sections become nested tags.
 - Keep the document's `# Title` H1 and the YAML frontmatter (`applyTo`, `instructionType`,
   `language`, `lastReviewed`, `name`, `description`) as-is; this rule governs section headers only.
-- Use `~/dotfiles/copilot/copilot-instructions.md` or any `~/dotfiles/copilot/skills/**/SKILL.md`
+- Use `~/dotfiles/agents/instructions.md` or any `~/dotfiles/agents/skills/**/SKILL.md`
   as the canonical shape rather than inventing a new one.
 - **Do not reformat instruction files or skills sourced from elsewhere.** Third-party and imported
   files stay in their original format until I explicitly ask for a conversion.
@@ -61,13 +74,15 @@ in a repo I own.
 </General>
 
 <Go>
-Go-specific standards are in `~/dotfiles/copilot/.github/instructions/go.instructions.md` and are
-automatically injected when working on `.go` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
+Go-specific standards are in `~/dotfiles/agents/.github/instructions/go.instructions.md` and are
+automatically injected when working on `.go` files (Copilot via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`,
+Claude via `~/.claude/rules/go.md`).
 </Go>
 
 <SQL>
-SQL-specific standards are in `~/dotfiles/copilot/.github/instructions/sql.instructions.md` and
-are automatically injected when working on `.sql` files via `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`.
+SQL-specific standards are in `~/dotfiles/agents/.github/instructions/sql.instructions.md` and
+are automatically injected when working on `.sql` files (Copilot via
+`COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, Claude via `~/.claude/rules/sql.md`).
 </SQL>
 </CodingStyle>
 
@@ -83,7 +98,7 @@ are automatically injected when working on `.sql` files via `COPILOT_CUSTOM_INST
   it rather than re-describe it
 
 <GoDocComments>
-Go doc comment standards are in `~/dotfiles/copilot/.github/instructions/go.instructions.md`.
+Go doc comment standards are in `~/dotfiles/agents/.github/instructions/go.instructions.md`.
 </GoDocComments>
 </Documentation>
 
@@ -96,7 +111,8 @@ Go doc comment standards are in `~/dotfiles/copilot/.github/instructions/go.inst
 </LinearWorkflow>
 
 <ModelStrategy>
-- Favor Auto model selection throughout planning, research, and execution. Do not ask the user
+- Favor the runtime's automatic model selection (Copilot: Auto; Claude: the session model and each
+  agent definition's configured model) throughout planning, research, and execution. Do not ask the user
   to choose a model or prescribe named models in plans unless the user explicitly requests it.
 - Leave delegated-task model selection to the runtime defaults unless the user explicitly
   requests an override; do not translate effort preferences into model choices.
@@ -162,7 +178,7 @@ tasks. Use focused clarification only for inputs that cannot be inferred from au
 </WhenImplementing>
 
 <PreferredFormat>
-Use `ask_user` tool (never plain text) with:
+Use the ask-user tool (never plain text) with:
 - Clear, specific question (not bundles of 3+ questions together)
 - Concrete choices when available (avoid open-ended questions when options are predictable)
 - One question per tool call
@@ -226,7 +242,7 @@ After each round of addressing items:
 - Work-specific environment is loaded from `~/.work_zprofile` (not committed to dotfiles)
 - Dotfiles repo lives at `~/dotfiles` — use the **`dotfiles`** skill for any changes there
 - Work/private dotfiles live at `$PRIVATE_DOTFILES` — use this env var to locate the directory;
-  work skills (e.g. `svc-refactor`) are at `$PRIVATE_DOTFILES/copilot/work_skills/`
+  work skills (e.g. `svc-refactor`) are at `$PRIVATE_DOTFILES/agents/work_skills/`
 - Primary OS is macOS
 - **Filesystem searches (find, grep, glob) must be scoped to `$GOPATH/src` (or a more specific
   subdirectory within it) — never the filesystem root or home directory.** Use `$GOPATH` to locate
@@ -234,14 +250,16 @@ After each round of addressing items:
 </Environment>
 
 <ShellEnvironment>
-The following shell tools are pre-approved via `~/.zprofile` — no runtime permission prompt
-is needed for these:
+The following shell command prefixes are pre-approved for both agents — no runtime permission
+prompt is needed for these. The single source is `~/dotfiles/agents/allowlist.txt`: the
+`copilot()` wrapper in `~/.zprofile` reads it on every launch, and `agents-sync` merges it into
+`~/.claude/settings.json` `permissions.allow`.
 
 | Category | Approved commands |
 |---|---|
-| Read / search | `go:*`, `rg:*`, `grep:*`, `cat:*`, `ls:*`, `find:*`, `head:*`, `tail:*`, `wc:*`, `sort:*`, `uniq:*`, `cut:*`, `jq:*` |
-| Git | `git:log:*`, `git:diff:*`, `git:status:*`, `git:show:*`, `git:blame:*` |
-| GitHub CLI | `gh:pr:view:*`, `gh:pr:list:*`, `gh:pr:checks:*`, `gh:issue:view:*`, `gh:issue:list:*`, `gh:repo:view:*`, `gh:run:view:*`, `gh:run:list:*` |
+| Read / search | `go`, `rg`, `grep`, `cat`, `ls`, `find`, `head`, `tail`, `wc`, `sort`, `uniq`, `cut`, `jq` |
+| Git | `git log`, `git diff`, `git status`, `git show`, `git blame` |
+| GitHub CLI | `gh pr view`, `gh pr list`, `gh pr checks`, `gh issue view`, `gh issue list`, `gh repo view`, `gh run view`, `gh run list` |
 
 Any shell command outside this list will require explicit approval at runtime.
 </ShellEnvironment>

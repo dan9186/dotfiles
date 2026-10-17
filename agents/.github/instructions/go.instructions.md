@@ -1,5 +1,7 @@
 ---
 applyTo: "**/*.go"
+paths:
+  - "**/*.go"
 instructionType: "language"
 language: "go"
 lastReviewed: "2026-08-26"
@@ -132,7 +134,7 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
 - Never directly edit or inspect the `vendor/` directory; the only permissible way to modify its
   contents is via `go mod vendor` — hand edits are silently overwritten by the next `go mod
   vendor` run and drift from the real dependency source (`go.mod`/`go.sum`)
-- When launching agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
+- When launching sub-agents (explore, general-purpose, code-review, etc.) to inspect Go code, always
   explicitly exclude the `vendor/` directory from the scope of the review
 </VendorDirectory>
 
@@ -206,6 +208,6 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
 If the user states a new Go-specific convention, correction, or rule while working, propose adding
 it here rather than applying it silently. Show the exact addition, note whether it's a hard rule or
 a guideline, and wait for explicit confirmation before editing. After confirmation, edit this file
-at `~/dotfiles/copilot/.github/instructions/go.instructions.md` and remind the user to commit and
+at `~/dotfiles/agents/.github/instructions/go.instructions.md` and remind the user to commit and
 push from `~/dotfiles`.
 </UpdateProtocol>
