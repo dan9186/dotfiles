@@ -1,0 +1,30 @@
+# Shell commands both agent tools may run without asking.
+# One command prefix per line; words are space-separated (e.g. "git log").
+# Copilot: the copilot() wrapper in zprofile turns each line into --allow-tool='shell(git:log:\*)'.
+# Claude: agents/sync.sh merges each line into ~/.claude/settings.json as "Bash(git log *)".
+go
+rg
+grep
+cat
+ls
+find
+head
+tail
+wc
+sort
+uniq
+cut
+jq
+git log
+git diff
+git status
+git show
+git blame
+gh pr view
+gh pr list
+gh pr checks
+gh issue view
+gh issue list
+gh repo view
+gh run view
+gh run list

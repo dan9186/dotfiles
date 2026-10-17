@@ -66,36 +66,17 @@ export PATH="$HOMEBREW_PREFIX/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include"
 
 # Copilot
-export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="$HOME/dotfiles/copilot"
+export COPILOT_CUSTOM_INSTRUCTIONS_DIRS="$HOME/dotfiles/agents"
 copilot() {
-    command copilot \
-        --allow-tool='shell(go:\*)' \
-        --allow-tool='shell(rg:\*)' \
-        --allow-tool='shell(grep:\*)' \
-        --allow-tool='shell(cat:\*)' \
-        --allow-tool='shell(ls:\*)' \
-        --allow-tool='shell(find:\*)' \
-        --allow-tool='shell(head:\*)' \
-        --allow-tool='shell(tail:\*)' \
-        --allow-tool='shell(wc:\*)' \
-        --allow-tool='shell(sort:\*)' \
-        --allow-tool='shell(uniq:\*)' \
-        --allow-tool='shell(cut:\*)' \
-        --allow-tool='shell(jq:\*)' \
-        --allow-tool='shell(git:log:\*)' \
-        --allow-tool='shell(git:diff:\*)' \
-        --allow-tool='shell(git:status:\*)' \
-        --allow-tool='shell(git:show:\*)' \
-        --allow-tool='shell(git:blame:\*)' \
-        --allow-tool='shell(gh:pr:view:\*)' \
-        --allow-tool='shell(gh:pr:list:\*)' \
-        --allow-tool='shell(gh:pr:checks:\*)' \
-        --allow-tool='shell(gh:issue:view:\*)' \
-        --allow-tool='shell(gh:issue:list:\*)' \
-        --allow-tool='shell(gh:repo:view:\*)' \
-        --allow-tool='shell(gh:run:view:\*)' \
-        --allow-tool='shell(gh:run:list:\*)' \
-        "$@"
+    # Shared shell allowlist: one command prefix per line in agents/allowlist.txt
+    local -a allow
+    local line
+    while IFS= read -r line; do
+        line="${line%%\#*}"
+        [[ -z "${line//[[:space:]]/}" ]] && continue
+        allow+=("--allow-tool=shell(${${(j.:.)${(z)line}}}:\\*)")
+    done < "$HOME/dotfiles/agents/allowlist.txt"
+    command copilot "${allow[@]}" "$@"
 }
 
 # PATH
