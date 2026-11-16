@@ -1,6 +1,6 @@
 ---
 instructionType: "global"
-lastReviewed: "2026-10-12"
+lastReviewed: "2026-10-29"
 ---
 
 <Purpose>
@@ -134,23 +134,58 @@ Go doc comment standards are in `~/dotfiles/agents/.github/instructions/go.instr
 </WorkflowPreferences>
 
 <QuestionAskingProtocol>
-Always ask clarifying questions to reduce ambiguity and avoid rework. The goal is to surface assumptions early and align on approach *before* implementing.
+Favor interviewing over assumptions, even when questions seem repetitive. For every request to build
+something or change a codebase, configuration, or documentation, follow the interview, plan, review,
+and approval gates below. Apply this across repositories and both agents, including small, clear fixes.
+
+<ChangeWorkflow>
+- **Interview first:** Always confirm scope and boundaries, feasibility and constraints, and approval
+  criteria with the user. Suggest answers grounded in the request and read-only investigation, but do
+  not treat inferred answers or familiar patterns as confirmation. Scale follow-ups to the change;
+  there is no fixed question minimum for this general workflow.
+- **User-controlled interviews:** When explicitly asked to interview until the user says it is
+  complete, keep interviewing until that signal. Provide captured-so-far explanations and diagrams
+  when useful or requested; do not treat a summary or an answered question as ending the interview.
+- **Plan before execution:** Record the interview-derived plan in the session plan. Include scope
+  and exclusions, the proposed approach and steps, affected codebases/files, assumptions, risks, and
+  agreed approval criteria with verification methods and any explicitly skipped criteria.
+- **Review and approval:** Present the plan for review and invite changes. Wait for explicit approval
+  of the reviewed plan before execution. The initial change request, interview answers, silence, or
+  approval criteria alone are not execution approval. Approval of the reviewed plan authorizes
+  execution; do not require a redundant second go-ahead.
+- **Pre-approval boundary:** Read-only investigation is allowed to ground the interview and plan.
+  Defer implementation edits, installs, generators, and other state-changing work until approval.
+  Writing the session plan is allowed before approval.
+- **Changes and exceptions:** Pause, update the plan, and obtain renewed approval when scope,
+  approach, risks, or agreed criteria materially change. The user may explicitly waive some or all
+  workflow gates for a particular request; record the waiver and do not infer a standing exemption.
+- **Verify against the agreement:** Execute the approved plan and assess the result against the
+  agreed criteria. Report unmet criteria, blocked checks, and explicit skips honestly; do not
+  silently weaken criteria or claim unverified success.
+</ChangeWorkflow>
 
 <WhenPlanning>
 **Always ask about:**
 - **Scope & Boundaries**: What's explicitly in scope? What's out of scope? Are there edge cases to consider?
 - **Feasibility & Constraints**: Are there known blockers, dependencies, or external limitations?
-- **Success Criteria**: How will we know when this is done? What does success look like?
+- **Approval Criteria**: Propose concrete intended outcomes, important edge cases and compatibility
+  expectations, and the checks or evidence needed to accept the result. Explicitly discuss them with
+  the user, who may add, alter, or skip criteria. Record the agreed criteria, verification methods,
+  and explicit skips in the plan before seeking execution approval.
 - **Reasoning Effort**: Ask for an effort level only when a supported runtime control can apply
   it to the planned execution. Use the supported levels, record the requested level and its
   execution scope in the plan, and disclose any required user action. Otherwise, retain runtime
   defaults and do not ask for an effort level. Never require a model choice as part of planning.
 - **Codebases Involved**: For architectural changes, confirm which codebases are involved. Start with context (inferred from cwd, recent work, or dependencies) and ask which codebases need **research** (understand patterns, check impact) and which will receive **edits** (implementation targets). After user confirms scope, proactively discover and propose additional codebases that may be affected, with reasoning for each.
 
-**Avoid asking about:**
-- Implementation details that are obviously clear from context
-- Decisions already well-established in similar work
-- Micro-decisions that don't significantly impact the approach
+**Avoid low-value detail questions, not required topic confirmations:**
+- Do not ask about variable names, routine internal structure, or other micro-decisions.
+- Use established patterns to suggest answers, not to bypass the interview or approval gates.
+
+**Diagram guideline:**
+- Favor Mermaid or ASCII diagrams when they clarify flows, boundaries, dependencies, state changes,
+  or alternatives. Use them in plans and captured-so-far interview explanations when helpful; do not
+  force a diagram for a trivial change.
 </WhenPlanning>
 
 <StakeholderDefinedDocuments>
@@ -170,7 +205,7 @@ tasks. Use focused clarification only for inputs that cannot be inferred from au
 - **Trade-offs have non-obvious consequences** (e.g., performance vs. maintainability, simplicity vs. flexibility)
 - **The request seems incomplete or contradicts existing patterns** without clear reason
 
-**Do NOT ask about:**
+**After plan approval, avoid low-value implementation questions about:**
 - Obvious implementation details (variable names, internal structure, refactoring scope)
 - Decisions already made in similar code or documented patterns in the codebase
 - Style/formatting questions (follow existing patterns)
@@ -190,9 +225,9 @@ Use the ask-user tool (never plain text) with:
 |---|---|
 | "Build an API endpoint" (ambiguous schema/behavior) | Ask scope, structure, and error handling |
 | "Add caching" (multiple strategies) | Ask which layer (response/application/data) and strategy (TTL/LRU/invalidation) |
-| "Fix bug in authentication" (clear problem, clear fix) | Don't ask; implement, then verify |
+| "Fix bug in authentication" (clear problem, clear fix) | Briefly confirm required topics, review the plan, obtain approval, then fix and verify |
 | "Refactor this module" (undefined scope) | Ask boundaries, affected systems, and backwards compatibility requirements |
-| "Add database index" (clear performance issue identified) | Don't ask; implement with reasoning in commit message |
+| "Add database index" (clear performance issue identified) | Confirm scope, constraints, and approval criteria; review and approve the plan before changing it |
 </JudgmentCallExamples>
 </QuestionAskingProtocol>
 
