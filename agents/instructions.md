@@ -252,17 +252,23 @@ After each round of addressing items:
 </AnalysisWorkflow>
 
 <GitPractices>
-- **Never run `git commit` or `git add`** — always stop after making file changes, letting the
-  user stage and commit. This keeps the user in control of what gets staged and reviewed.
+- Do not stage, commit, or push changes in normal workflows. The only exception is a bounded
+  mechanical batch run through svc-fleet, go-fix-fleet, or go-fmt-fleet: the user must explicitly
+  request commit + push + PR in that invocation or select it during its interview, then approve
+  a batch plan listing the repositories, exact operations, and publishing steps. Authorization
+  covers only that batch and its scoped sub-agents; it does not carry forward, cover feature
+  development, or authorize merging or force-pushing. Without publishing authorization, leave
+  changes unstaged. Preserve signing, existing work, and runtime permission checks.
 - Linear history is preferred: fast-forward only merges, autosquash rebases
 - Use `--force-with-lease` over `--force`
 - Commits are GPG signed
 </GitPractices>
 
 <TaskCompletion>
-- **For code changes:** The task is complete when changes are made, staged, and tested. Do not commit.
-  The user reviews the staged changes and commits as part of their workflow, acting as a confirming
-  pair on the work.
+- **For code changes:** The task is complete when changes are made and tested. Leave changes
+  unstaged for the user to review, stage, and commit, except for an explicitly authorized mechanical
+  fleet batch under `<GitPractices>`. For that batch, also complete the approved publishing steps
+  for eligible repos and report the actual outcome, including failures and partial publishing states.
 - **For other work** (config, dependencies, infrastructure): The task is complete when changes are
   applied and tested to verify they work.
 - In both cases, verification (tests passing, linting clean, etc.) is required before reporting completion.
