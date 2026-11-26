@@ -46,9 +46,11 @@ Define mandatory Go conventions for implementation, testing, and docs to keep be
 </ErrorHandling>
 
 <CodeStyle>
-- Pass `context.Context` as the first argument to any function that does I/O, blocking work, or
-  may need cancellation — this matches stdlib convention and lets callers propagate
-  cancellation, deadlines, and tracing through the entire call chain
+- Pass `context.Context` as the first argument when a function can meaningfully propagate it to
+  downstream work or use it for cancellation, deadlines, tracing, or other request-scoped behavior.
+  Propagate the caller's context through the call chain to context-aware operations. Do not add an
+  unused context parameter or imply that an operation is interruptible when it is not; simple
+  synchronous operations and pure functions need no context unless they actually use it.
 - Prefer functional options (`WithXxx(...)`) for constructors that take multiple optional settings.
   When a function's argument list grows large (beyond 3–4 non-context args), introduce an option
   struct rather than expanding the parameter list further — adding a new option later doesn't

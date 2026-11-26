@@ -5,9 +5,9 @@ description: 'Audits a Go codebase for missing context.Context-first-argument co
 
 # Go Hygiene
 
-Audit a single Go repo against three specific `go.instructions.md` rules that span multiple
-sections but share a trait: each is mechanically enforceable by a `golangci-lint` linter once
-fixed. Fix confirmed violations, then propose the matching linter as a regression guard.
+Audit a single Go repo against three specific `go.instructions.md` rules across multiple sections.
+Fix confirmed violations, then propose matching `golangci-lint` checks for the regressions they
+can catch.
 
 <TriggerPhrases>
 - User asks to audit context propagation or check for missing `context.Context` args
@@ -22,7 +22,7 @@ fixed. Fix confirmed violations, then propose the matching linter as a regressio
 - **Exclude `vendor/`** — never inspect or edit anything under `vendor/`.
 - **Never hardcode the rules** — read the live rule text from `go.instructions.md` at the start of
   every run rather than copying it here:
-  - `<CodeStyle>` — `context.Context` as first argument for I/O/blocking/cancellable functions
+  - `<CodeStyle>` — meaningful `context.Context` use and propagation, with context as the first argument
   - `<ConcurrencyLifecycle>` — `log.Fatal`/`os.Exit` only from `main.main` or `init`
   - `<NamingStructure>` — omit a method receiver's name if the method body never uses it
 - **No blind auto-fix** — audit-then-fix, not a fixer. Findings are always presented for
@@ -41,8 +41,11 @@ fixed. Fix confirmed violations, then propose the matching linter as a regressio
    find . -name '*.go' -not -path '*/vendor/*'
    ```
 3. For each file, scan for violations of each rule:
-   - **Missing context-first-arg**: functions/methods that do I/O, call something blocking, or
-     accept a `context.Context` anywhere in their signature but not as the first parameter.
+   - **Context propagation and use**: functions and methods that should propagate or use an
+     available context but do not, accept a context outside the first parameter, or accept a
+     context without meaningful use. Trace context through callers to context-aware operations;
+     do not flag pure functions or synchronous operations solely for lacking a context. A check
+     before synchronous I/O cannot interrupt an operation already in progress.
    - **Misplaced log.Fatal/os.Exit**: any call to `log.Fatal`, `log.Fatalf`, `log.Fatalln`, or
      `os.Exit` in a file/function that is not `main.main` or an `init()` function.
    - **Unused receiver names**: methods where the receiver identifier is declared but never
@@ -66,7 +69,9 @@ Follow the global `<AnalysisWorkflow>` convention exactly:
 **Apply Confirmed Fixes**
 
 - Edit only the findings the user selected:
-  - Reorder `context.Context` to be the first parameter, updating all call sites.
+  - Add, propagate, reorder, or remove `context.Context` as appropriate, updating call sites
+    through to actual consumers. Do not add unused parameters or claim cancellation for
+    operations that cannot be interrupted.
   - Replace misplaced `log.Fatal`/`os.Exit` with a returned error (or `t.Fatal`/panic if within
     a test, following `<Testing>`), letting the caller decide how to terminate.
   - Remove the receiver name where unused (e.g. `func (Worker) String() string`).
@@ -98,9 +103,11 @@ find . -maxdepth 1 -name '.golangci.y*ml'
 - If none exists, skip this step entirely — do not create one.
 - If one exists, check whether `contextcheck` and `revive` are enabled, and whether `revive`'s
   config includes the `context-as-argument`, `deep-exit`, and `unused-receiver` rules. These
-  linters mechanically catch regressions of the rules just fixed.
+  linters can catch some regressions of the rules just fixed.
 - Propose the specific YAML diff to enable any that are missing. Show the exact change and wait
   for confirmation before editing the file — same confirm-before-edit gate as Step2.
+- Treat linter results as aids, not proof: signature checks cannot establish that context is
+  meaningfully propagated, used, or capable of interrupting an operation.
 - If everything is already enabled, state that and skip silently.
 </Step4>
 </Workflow>

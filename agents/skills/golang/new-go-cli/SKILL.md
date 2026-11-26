@@ -80,6 +80,7 @@ This interview is for product and operator intent, not for low-impact naming/sty
 ├── main.go
 ├── cmd/
 │   ├── root.go
+│   ├── root_test.go
 │   ├── version.go
 │   ├── version_test.go
 │   ├── completion.go
@@ -105,11 +106,32 @@ This interview is for product and operator intent, not for low-impact naming/sty
 package main
 
 import (
+	"context"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"{module}/cmd"
 )
 
 func main() {
-	cmd.Execute()
+	err := run()
+	if err != nil {
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	err := cmd.Execute(ctx)
+	if err != nil {
+		return fmt.Errorf("running cli: %w", err)
+	}
+
+	return nil
 }
 ```
 
@@ -121,6 +143,7 @@ func main() {
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -157,12 +180,23 @@ var rootCmd = &cobra.Command{
 	Short: "{description}",
 }
 
-// Execute adds all child commands to the root command and sets flags
-// appropriately. This is called by main.main() and only needs to happen once.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		os.Exit(1)
+// Execute runs the root command with the caller's context.
+func Execute(ctx context.Context) error {
+	err := execute(ctx, rootCmd)
+	if err != nil {
+		return fmt.Errorf("executing command: %w", err)
 	}
+
+	return nil
+}
+
+func execute(ctx context.Context, command *cobra.Command) error {
+	err := command.ExecuteContext(ctx)
+	if err != nil {
+		return fmt.Errorf("running command: %w", err)
+	}
+
+	return nil
 }
 
 func setupClient(cmd *cobra.Command, args []string) {
@@ -177,6 +211,44 @@ func setupClient(cmd *cobra.Command, args []string) {
 		fmt.Printf("error: %s\n", err)
 		os.Exit(1)
 	}
+}
+```
+
+---
+
+### `cmd/root_test.go`
+
+```go
+package cmd
+
+import (
+	"context"
+	"testing"
+
+	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestExecutePropagatesCancellation(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	var received context.Context
+	root := &cobra.Command{SilenceErrors: true, SilenceUsage: true}
+	root.AddCommand(&cobra.Command{
+		Use: "work",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			received = cmd.Context()
+			return received.Err()
+		},
+	})
+	root.SetArgs([]string{"work"})
+
+	err := execute(ctx, root)
+	assert.Same(t, ctx, received)
+	assert.ErrorIs(t, err, context.Canceled)
 }
 ```
 
@@ -937,6 +1009,19 @@ go install github.com/{org}/{toolname}@latest
 </FileTemplates>
 
 <Conventions>
+<ContextPropagation>
+**Context propagation**
+
+- `main` owns the signal-aware root context. Pass it to Cobra with `ExecuteContext`, and use
+  `cmd.Context()` in handlers that perform context-aware work.
+- Pass that context as the first argument through functions that use it, including client methods
+  and their test doubles, to context-aware APIs such as HTTP requests and subprocesses. Preserve
+  Cobra's required handler signatures; do not replace the caller's context with a background context.
+- Do not add context to pure functions or constructors that do not use it. A cancellation check
+  before synchronous file I/O can prevent starting work but does not interrupt an ongoing read or
+  write.
+</ContextPropagation>
+
 <NewSubcommand>
 **Adding a New Subcommand**
 
@@ -974,6 +1059,7 @@ func NewMyCmd(out io.Writer) *cobra.Command {
 func myRun(out io.Writer) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
 		// ... implementation
+		// Pass cmd.Context() to any context-aware operations.
 
 		if err != nil {
 			cmd.SilenceUsage = true        // suppress usage on runtime errors
